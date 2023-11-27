@@ -23,3 +23,14 @@ const Product = mongoose.model("Product", {
     description: String,
     quantity: Number
 }, 'products');
+
+
+// Order mongoose model
+const Order = mongoose.model("Order", {
+    id: Number,
+    productID: Number,
+    quantity: Number,
+    userID: Number,
+    status: Number,
+    date: Date
+}, 'orders');
