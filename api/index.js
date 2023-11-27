@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 
 import corsModifier from "./corsModifier.js";
+import orderRouter from "./routes/orderRoutes.js";
 
 const kDbHost = "127.0.0.1";
 const kDbPort = "27017";
@@ -17,6 +18,9 @@ await mongoose.connect(kDbString);
 gApp.use(express.json());
 gApp.use(express.urlencoded({ extended: false }));
 gApp.use(corsModifier);
+
+// Set up the router, which handles the endpoints.
+gApp.use("/orders", orderRouter);
 
 // Listen to the specified port.
 gApp.listen(kPort);
