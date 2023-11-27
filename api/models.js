@@ -8,10 +8,7 @@ const User = mongoose.model("User", {
     email: String,
     username: String,
     password: String
-}, 'users');
-
-
-
+}, "users");
 
 // Product mongoose model
 const Product = mongoose.model("Product", {
@@ -22,24 +19,23 @@ const Product = mongoose.model("Product", {
     price: Number,
     description: String,
     quantity: Number
-}, 'products');
-
+}, "products");
 
 // Order mongoose model
 const Order = mongoose.model("Order", {
-    id: Number,
-    productID: Number,
+    id: String,
+    productId: Number,
     quantity: Number,
-    userID: Number,
+    userId: Number,
     status: Number,
     date: Date
-}, 'orders');
+}, "orders");
 
 // Cart item model
 const Cart = mongoose.model("Cart", {
-    id: Number,
+    id: String,
     items: [{
-        productID: Number,
+        productId: Number,
         quantity: Number
     }]
 }, "cart");
