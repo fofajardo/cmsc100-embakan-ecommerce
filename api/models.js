@@ -34,3 +34,14 @@ const Order = mongoose.model("Order", {
     status: Number,
     date: Date
 }, 'orders');
+
+// Cart item model
+const Cart = mongoose.model("Cart", {
+    id: Number,
+    items: [{
+        productID: Number,
+        quantity: Number
+    }]
+}, "cart");
+
+export { User, Product, Order, Cart };
