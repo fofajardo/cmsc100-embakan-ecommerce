@@ -13,10 +13,10 @@ async function getOneCart(aRequest, aResponse) {
     }
 
     try {
-        let result = [];
+        let result = null;
         let entry = await Cart.findOne({ id }).exec();
         if (entry) {
-            result.push(entry);
+            result = entry;
         }
         sendOk(aResponse, result);
     } catch (e) {
@@ -32,18 +32,27 @@ async function createNewCart(aRequest, aResponse) {
     }
 
     const { body } = aRequest;
+    if (!body.wasParsed) {
+        body.items = JSON.parse(body.items);
+    }
     if (!body.items) {
         sendError(aResponse, "One or more keys is missing or empty", 400);
         return;
     }
-    
-    const entry = new Cart({
-        id,
-        items: body.items
-    });
 
     try {
+        const cartExists = await Cart.exists({ id });
+        if (cartExists) {
+            sendError(aResponse, "Document already exists", 400);
+            return;
+        }
+
+        const entry = new Cart({
+            id,
+            items: body.items
+        });
         const result = await entry.save();
+
         let wasInserted = entry === result;
         if (!wasInserted) {
             sendError(aResponse, "Document was not inserted", 400);
@@ -63,13 +72,16 @@ async function updateOneCart(aRequest, aResponse) {
     }
 
     const { body } = aRequest;
+    if (!body.wasParsed) {
+        body.items = JSON.parse(body.items);
+    }
     if (!body.items) {
         sendError(aResponse, "One or more keys is missing or empty", 400);
         return;
     }
-    
+
     try {
-        let result = await Order.updateOne({
+        let result = await Cart.updateOne({
             id
         }, {
             $set: {
@@ -95,7 +107,7 @@ async function deleteOneCart(aRequest, aResponse) {
     }
 
     try {
-        let result = await Order.deleteOne({
+        let result = await Cart.deleteOne({
             id
         });
         let wasDeleted = result.deletedCount == 1;
@@ -145,7 +157,7 @@ async function addOrCreateCartItem(aRequest, aResponse) {
 
     var items = entry.items;
     if (cartItemIndex != -1) {
-        items[cartItemIndex].quantity = quantity;
+        items[cartItemIndex].quantity = body.quantity;
     } else {
         items.push({
             quantity: body.quantity,
@@ -153,6 +165,7 @@ async function addOrCreateCartItem(aRequest, aResponse) {
         });
     }
     aRequest.body.items = items;
+    aRequest.body.wasParsed = true;
 
     updateOneCart(aRequest, aResponse);
 }
@@ -184,12 +197,13 @@ async function deleteOneCartItem(aRequest, aResponse) {
 
     var items = entry.items;
     if (cartItemIndex != -1) {
-        items = items.splice(cartItemIndex, 1);
+        items.splice(cartItemIndex, 1);
     } else {
-        sendOk(aResponse, null);
+        sendError(aResponse, "Product not in cart", 400);
         return;
     }
     aRequest.body.items = items;
+    aRequest.body.wasParsed = true;
 
     updateOneCart(aRequest, aResponse);
 }

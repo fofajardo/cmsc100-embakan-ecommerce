@@ -35,7 +35,7 @@ const Order = mongoose.model("Order", {
 const Cart = mongoose.model("Cart", {
     id: String,
     items: [{
-        productId: Number,
+        productId: String,
         quantity: Number
     }]
 }, "carts");
