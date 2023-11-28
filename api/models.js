@@ -38,6 +38,6 @@ const Cart = mongoose.model("Cart", {
         productId: Number,
         quantity: Number
     }]
-}, "cart");
+}, "carts");
 
 export { User, Product, Order, Cart };
