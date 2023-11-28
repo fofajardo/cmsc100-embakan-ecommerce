@@ -20,6 +20,7 @@
         "@testing-library/user-event": "^13.5.0",
         "express": "^4.18.2",
         "mongoose": "^7.1.0",
+        "needle": "^3.2.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.19.0",
@@ -28,6 +29,7 @@
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
+        "mocha": "^10.2.0",
         "r3f-pack": "^2.3.0"
     },
     "eslintConfig": {
