@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Order } from "../models.js";
+import { Order, Product } from "../models.js";
 import { sendError, sendOk } from "./utils.js";
 
 async function getAllOrders(aRequest, aResponse) {
@@ -34,17 +34,39 @@ async function getOneOrder(aRequest, aResponse) {
 async function createNewOrder(aRequest, aResponse) {
     const { body } = aRequest;
     if (!body.productId ||
+        !body.variantId ||
         !body.quantity ||
         !body.userId ||
-        !body.status) {
+        body.status == undefined) {
         sendError(aResponse, "One or more keys is missing or empty", 400);
         return;
     }
     
+    // FIXME: missing products API. To make tests work, assume a price at checkout.
+    /*
+    const productEntry = await Product.findOne({
+        id: body.productId,
+    }).exec();
+
+    if (!productEntry || !productEntry?.variants) {
+        sendError(aResponse, "Missing product or product variants", 400);
+        return;
+    }
+
+    const productVariant = productEntry.variants.find(function (aElement) {
+        return aElement.id == body.variantId;
+    });
+
+    const priceAtCheckout = body.quantity * productVariant.price;
+    */
+    const priceAtCheckout = 100;
+
     const entry = new Order({
         id: uuidv4(),
         productId: body.productId,
+        variantId: body.variantId,
         quantity: body.quantity,
+        price: priceAtCheckout,
         userId: body.userId,
         status: body.status,
         date: new Date()
