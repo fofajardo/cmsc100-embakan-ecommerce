@@ -133,7 +133,7 @@ async function addOrCreateCartItem(aRequest, aResponse) {
     }
 
     const { body } = aRequest;
-    if (!body.quantity || !body.productId) {
+    if (!body.quantity || !body.productId || !body.variantId) {
         sendError(aResponse, "One or more keys is missing or empty", 400);
         return;
     }
@@ -152,7 +152,8 @@ async function addOrCreateCartItem(aRequest, aResponse) {
     }
 
     let cartItemIndex = entry.items.findIndex(function (aElement) {
-        return aElement.productId == body.productId;
+        return (aElement.productId == body.productId) &&
+               (aElement.variantId == body.variantId);
     });
 
     var items = entry.items;
@@ -160,8 +161,9 @@ async function addOrCreateCartItem(aRequest, aResponse) {
         items[cartItemIndex].quantity = body.quantity;
     } else {
         items.push({
-            quantity: body.quantity,
-            productId: body.productId
+            productId: body.productId,
+            variantId: body.variantId,
+            quantity: body.quantity
         });
     }
     aRequest.body.items = items;
@@ -178,7 +180,7 @@ async function deleteOneCartItem(aRequest, aResponse) {
     }
 
     const { body } = aRequest;
-    if (!body.productId) {
+    if (!body.productId || !body.variantId) {
         sendError(aResponse, "One or more keys is missing or empty", 400);
         return;
     }
@@ -192,7 +194,8 @@ async function deleteOneCartItem(aRequest, aResponse) {
     }
 
     let cartItemIndex = entry.items.findIndex(function (aElement) {
-        return aElement.productId == body.productId;
+        return (aElement.productId == body.productId) &&
+               (aElement.variantId == body.variantId);
     });
 
     var items = entry.items;

@@ -4,6 +4,7 @@ import needle from "needle";
 const kBaseUrl = "http://localhost:3001/";
 const kTestUserId = "29b23948-2f3c-439c-8569-2c595d604ea9";
 const kTestProductId = "298f5fa5-d1ea-4bfc-ac54-e2e642d63334";
+const kTestVariant1Id = "4a96ba74-a1b0-4a39-9958-85a0a1b3242a";
 
 describe("API: Carts", function() {
     it("should create the new cart", async function() {
@@ -13,6 +14,7 @@ describe("API: Carts", function() {
                 items: JSON.stringify(
                     [{
                         productId: kTestProductId,
+                        variantId: kTestVariant1Id,
                         quantity: 10
                     }]
                 )
@@ -64,6 +66,7 @@ describe("API: Carts", function() {
             `${kBaseUrl}carts/${kTestUserId}/items`,
             {
                 productId: kTestProductId,
+                variantId: kTestVariant1Id,
                 quantity: 5
             },
             {
@@ -83,6 +86,7 @@ describe("API: Carts", function() {
             assert.notEqual(aResponse.body.data, null);
             assert.equal(aResponse.body.data.items.length, 1);
             assert.equal(aResponse.body.data.items[0].productId, kTestProductId);
+            assert.equal(aResponse.body.data.items[0].variantId, kTestVariant1Id);
             assert.equal(aResponse.body.data.items[0].quantity, 5);
         });
     });
@@ -92,6 +96,7 @@ describe("API: Carts", function() {
             `${kBaseUrl}carts/${kTestUserId}/items`,
             {
                 productId: kTestProductId,
+                variantId: kTestVariant1Id,
                 quantity: 350
             },
             {
@@ -119,7 +124,8 @@ describe("API: Carts", function() {
         await needle("delete",
             `${kBaseUrl}carts/${kTestUserId}/items`,
             {
-                productId: kTestProductId
+                productId: kTestProductId,
+                variantId: kTestVariant1Id
             },
             {
                 json: true
@@ -129,11 +135,26 @@ describe("API: Carts", function() {
         });
     });
 
-    it("should not delete anything from the cart (product ID not in cart)", async function () {
+    it("should not delete anything from the cart (variant ID missing)", async function () {
         await needle("delete",
             `${kBaseUrl}carts/${kTestUserId}/items`,
             {
                 productId: kTestProductId
+            },
+            {
+                json: true
+            }
+        ).then(function(aResponse) {
+            assert.equal(aResponse.statusCode, 400);
+        });
+    });
+
+    it("should not delete anything from the cart (product not in cart)", async function () {
+        await needle("delete",
+            `${kBaseUrl}carts/${kTestUserId}/items`,
+            {
+                productId: kTestProductId,
+                variantId: kTestVariant1Id
             },
             {
                 json: true
