@@ -28,11 +28,11 @@ const Product = mongoose.model("Product", {
 // Order mongoose model
 const Order = mongoose.model("Order", {
     id: String,
-    productId: Number,
+    productId: String,
     variantId: String,
     quantity: Number,
     price: Number,
-    userId: Number,
+    userId: String,
     status: Number,
     date: Date
 }, "orders");
