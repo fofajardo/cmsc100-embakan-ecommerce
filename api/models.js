@@ -17,7 +17,7 @@ const Product = mongoose.model("Product", {
     slug: String,
     type: Number,
     description: String,
-    quantity: Number,
+    stock: Number,
     variants: [{
         id: String,
         name: String,
