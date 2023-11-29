@@ -8,6 +8,7 @@
         "start": "r3f-pack start",
         "build": "r3f-pack build",
         "test": "r3f-pack test",
+        "test-api": "cd api && mocha",
         "eject": "r3f-pack eject"
     },
     "dependencies": {
