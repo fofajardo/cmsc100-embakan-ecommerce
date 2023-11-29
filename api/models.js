@@ -16,15 +16,20 @@ const Product = mongoose.model("Product", {
     name: String,
     slug: String,
     type: Number,
-    price: Number,
     description: String,
-    quantity: Number
+    quantity: Number,
+    variants: [{
+        id: String,
+        name: String,
+        price: Number
+    }]
 }, "products");
 
 // Order mongoose model
 const Order = mongoose.model("Order", {
     id: String,
     productId: Number,
+    variantId: String,
     quantity: Number,
     userId: Number,
     status: Number,
@@ -36,6 +41,7 @@ const Cart = mongoose.model("Cart", {
     id: String,
     items: [{
         productId: String,
+        variantId: String,
         quantity: Number
     }]
 }, "carts");
