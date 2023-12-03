@@ -172,6 +172,7 @@ async function updateOneProduct(aRequest, aResponse) {
 		            productDataUpdated.push({ variants: success });
 		        }
     		}
+    		sendOk(aResponse, productDataUpdated);
     	}
     }
 }

@@ -122,6 +122,32 @@ async function updateOneUser(aRequest, aResponse) {
 		            fieldsUpdated.push({ middleName: success });
 		        }
     		}
+    		else if(body.lastName) {
+		        let result = await User.updateOne({
+		            id
+		        }, {
+		            $set: {
+		                lastName: body.lastName
+		            }
+		        });
+		        let wasUpdated = result.modifiedCount == 1;
+		        if (wasUpdated) {
+		            fieldsUpdated.push({ lastName: success });
+		        }
+    		}
+    		else if(body.role) {
+		        let result = await User.updateOne({
+		            id
+		        }, {
+		            $set: {
+		                role: body.role
+		            }
+		        });
+		        let wasUpdated = result.modifiedCount == 1;
+		        if (wasUpdated) {
+		            fieldsUpdated.push({ role: success });
+		        }
+    		}
     		else if(body.email) {
 		        let result = await User.updateOne({
 		            id
@@ -148,6 +174,7 @@ async function updateOneUser(aRequest, aResponse) {
 		            fieldsUpdated.push({ password: success });
 		        }
     		}
+    		sendOk(aResponse, fieldsUpdated);
     	}
     }
 }
