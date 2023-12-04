@@ -1,15 +1,30 @@
-import { Outlet, Link } from "react-router-dom";
+import React from "react";
 
-export default function Root() {    
+import { Outlet } from "react-router-dom";
+
+import {
+    ThemeProvider, createTheme
+} from "@mui/material";
+
+import Header from "../components/Header.js";
+
+const theme = createTheme({
+    palette: {
+        mode: "light",
+        primary: {
+            main: "#243516",
+        },
+        secondary: {
+            main: "#ffba4b",
+        },
+    },
+});
+
+export default function Root() {
     return (
-        <>
-            <nav>
-                <ul>
-                    <li><Link to={`/`}>Home</Link></li>
-                    <li><Link to={`/subjects`}>Subjects</Link></li>
-                </ul>
-            </nav>
+        <ThemeProvider theme={theme}>
+            <Header />
             <Outlet />
-        </>
+        </ThemeProvider>
     )
 }
