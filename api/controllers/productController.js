@@ -49,7 +49,7 @@ async function createNewProduct(aRequest, aResponse) {
     }
     else {
     	try {
-	    	const slugExists = await Product.exists({ body.slug });
+	    	const slugExists = await Product.exists({ slug: body.slug });
 	        if (emailExists || usernameExists) {
 	            sendError(aResponse, "Product already exists", 400);
 	            return;
@@ -107,7 +107,7 @@ async function updateOneProduct(aRequest, aResponse) {
 		            productDataUpdated.push({ name: success });
 		        }
     		}
-    		else if(body.slug) {
+    		if(body.slug) {
 		        let result = await Product.updateOne({
 			            id
 			        }, {
@@ -120,7 +120,7 @@ async function updateOneProduct(aRequest, aResponse) {
 		            productDataUpdated.push({ slug: success });
 		        }
     		}
-    		else if(body.type) {
+    		if(body.type) {
 		        let result = await Product.updateOne({
 			            id
 			        }, {
@@ -133,7 +133,7 @@ async function updateOneProduct(aRequest, aResponse) {
 		            productDataUpdated.push({ type: success });
 		        }
     		}
-    		else if(body.price) {
+    		if(body.price) {
 		        let result = await Product.updateOne({
 			            id
 			        }, {
@@ -146,7 +146,7 @@ async function updateOneProduct(aRequest, aResponse) {
 		            productDataUpdated.push({ price: success });
 		        }
     		}
-    		else if(body.stock) {
+    		if(body.stock) {
 		        let result = await Product.updateOne({
 			            id
 			        }, {
@@ -159,7 +159,7 @@ async function updateOneProduct(aRequest, aResponse) {
 		            productDataUpdated.push({ stock: success });
 		        }
     		}
-    		else if(body.variants) {
+    		if(body.variants) {
 		        let result = await Product.updateOne({
 			            id
 			        }, {
@@ -202,7 +202,7 @@ async function deleteOneProduct(aRequest, aResponse) {
 
 
 async function getOneProductVariant(aRequest, aResponse) {
-    const { id } = aRequest.params;
+    const { id, variantId } = aRequest.params;
     if (!id) {
         sendError(aResponse, "Parameter ':id' cannot be empty", 400);
         return;
@@ -210,10 +210,16 @@ async function getOneProductVariant(aRequest, aResponse) {
 
     try {
         let result = null;
-        let productVariant = await Product.findOne({ variants.id: id }).exec();
-        if (productVariant) {
-            result = productVariant;
+        let product = await Product.findOne({ id }).exec();
+
+        let productVariantIndex = product.variants.findIndex(function (aElement) {
+            return (aElement.id == variantId);
+        });
+        
+        if (productVariantIndex != -1) {
+            result = product.variants[productVariantIndex];
         }
+
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
@@ -222,9 +228,9 @@ async function getOneProductVariant(aRequest, aResponse) {
 
 
 async function updateOneProductVariant(aRequest, aResponse) {
-    const { productId } = aRequest.params.id;
-    const { variantId } = aRequest.params.variantId;
+    const { productId, variantId } = aRequest.params;
     const { body } = aRequest;
+
     if (!productId) {
         sendError(aResponse, "Parameter ':id' cannot be empty", 400);
         return;
@@ -235,16 +241,32 @@ async function updateOneProductVariant(aRequest, aResponse) {
     }
 
     try {
-        let result = await Product.findOneAndUpdate({
-        	{ id: productId, variants.id: variantId },
-			$set: {
-		    	variants.$.name: body.name,
-		        variants.$.price: body.price
-		    },
-			{ new: true }
+        let product = await Product.findOne({ productId }).exec();
+        let productVariantIndex = product.variants.findIndex(function (aElement) {
+            return (aElement.id == variantId);
         });
-        let wasUpdated = result.nModified == 1;
-        if (!wasUpdated) {
+
+        if (productVariantIndex != -1) {
+            if (!body.name) {
+                product.variants[productVariantIndex].name = body.name;
+            }
+            if (!body.price) {
+                product.variants[productVariantIndex].price = body.price;
+            }
+        }
+
+        let result = await Product.findOneAndUpdate(
+            {
+                id: productId
+            },
+            {
+                $set: {
+                    variants: product.variants
+                }
+            }
+        );
+
+        if (!result) {
             sendError(aResponse, "Product variant was not updated", 400);
             return;
         }
@@ -268,12 +290,33 @@ async function deleteOneProductVariant(aRequest, aResponse) {
     }
 
     try {
-        let result = await Product.findOneAndUpdate({
-        	{ id: productId, variants.id: variantId },
-			{ $pull: { variants: { id: variantId } } },
-			{ new: true }
+        let result = null;
+        let product = await Product.findOne({ productId }).exec();
+
+        let productVariantIndex = product.variants.findIndex(function (aElement) {
+            return (aElement.id == variantId);
         });
-        let wasDeleted = result.deletedCount == 1;
+
+        var variants = product.variants;
+        if (productVariantIndex != -1) {
+            variants.splice(productVariantIndex, 1);
+        } else {
+            sendError(aResponse, "Product variant not in product", 400);
+            return;
+        }
+
+        result = await Product.findOneAndUpdate(
+            {
+                id: productId
+            },
+            {
+                $set: {
+                    variants
+                }
+            }
+        );
+
+        let wasDeleted = result.modifiedCount == 1;
         if (!wasDeleted) {
             sendError(aResponse, "Product variant was not deleted", 400);
             return;
@@ -283,3 +326,14 @@ async function deleteOneProductVariant(aRequest, aResponse) {
         sendError(aResponse, e, 500);
     }
 }
+
+export default {
+    getAllProducts,
+    getOneProduct,
+    createNewProduct,
+    updateOneProduct,
+    deleteOneProduct,
+    getOneProductVariant,
+    updateOneProductVariant,
+    deleteOneProductVariant
+};

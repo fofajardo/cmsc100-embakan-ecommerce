@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 
 import corsModifier from "./corsModifier.js";
+import userRouter from "./routes/userRoutes.js";
+import productRouter from "./routes/productRoutes.js";
 import orderRouter from "./routes/orderRoutes.js";
 import cartRouter from "./routes/cartRoutes.js";
 
@@ -21,6 +23,8 @@ gApp.use(express.urlencoded({ extended: false }));
 gApp.use(corsModifier);
 
 // Set up the router, which handles the endpoints.
+gApp.use("/users", userRouter);
+gApp.use("/products", productRouter);
 gApp.use("/orders", orderRouter);
 gApp.use("/carts", cartRouter);
 

@@ -49,8 +49,8 @@ async function createNewUser(aRequest, aResponse) {
     }
     else {
     	try {
-	    	const emailExists = await User.exists({ body.email });
-	    	const usernameExists = await User.exists({ body.username });
+	    	const emailExists = await User.exists({ email: body.email });
+	    	const usernameExists = await User.exists({ username: body.username });
 	        if (emailExists || usernameExists) {
 	            sendError(aResponse, "User already exists", 400);
 	            return;
@@ -109,7 +109,7 @@ async function updateOneUser(aRequest, aResponse) {
 		            fieldsUpdated.push({ firstName: success });
 		        }
     		}
-    		else if(body.middleName) {
+    		if(body.middleName) {
 		        let result = await User.updateOne({
 		            id
 		        }, {
@@ -122,7 +122,7 @@ async function updateOneUser(aRequest, aResponse) {
 		            fieldsUpdated.push({ middleName: success });
 		        }
     		}
-    		else if(body.lastName) {
+    		if(body.lastName) {
 		        let result = await User.updateOne({
 		            id
 		        }, {
@@ -135,7 +135,7 @@ async function updateOneUser(aRequest, aResponse) {
 		            fieldsUpdated.push({ lastName: success });
 		        }
     		}
-    		else if(body.role) {
+    		if(body.role) {
 		        let result = await User.updateOne({
 		            id
 		        }, {
@@ -148,7 +148,7 @@ async function updateOneUser(aRequest, aResponse) {
 		            fieldsUpdated.push({ role: success });
 		        }
     		}
-    		else if(body.email) {
+    		if(body.email) {
 		        let result = await User.updateOne({
 		            id
 		        }, {
@@ -161,7 +161,7 @@ async function updateOneUser(aRequest, aResponse) {
 		            fieldsUpdated.push({ email: success });
 		        }
     		}
-    		else if(body.password) {
+    		if(body.password) {
 		        let result = await User.updateOne({
 		            id
 		        }, {
