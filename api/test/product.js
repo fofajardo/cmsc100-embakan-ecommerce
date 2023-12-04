@@ -7,24 +7,6 @@ const kTestProductId = "298f5fa5-d1ea-4bfc-ac54-e2e642d63334";
 const kTestVariant1Id = "4a96ba74-a1b0-4a39-9958-85a0a1b3242a";
 
 describe("API: Products", function() {
-    it("should return all products", async function() {
-        await needle("get",
-            `${kBaseUrl}products/`,
-        ).then(function(aResponse) {
-            assert.equal(aResponse.statusCode, 200);
-            assert.notEqual(aResponse.body.data, null);
-        });
-    });
-
-    it("should return 1 product", async function() {
-        await needle("get",
-            `${kBaseUrl}products/${kTestProductId}`,
-        ).then(function(aResponse) {
-            assert.equal(aResponse.statusCode, 200);
-            assert.notEqual(aResponse.body.data, null);
-        });
-    });
-
     it("should create the new product", async function() {
         await needle("post",
             `${kBaseUrl}products/`,
@@ -46,6 +28,24 @@ describe("API: Products", function() {
             }
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
+        });
+    });
+    
+    it("should return all products", async function() {
+        await needle("get",
+            `${kBaseUrl}products/`,
+        ).then(function(aResponse) {
+            assert.equal(aResponse.statusCode, 200);
+            assert.notEqual(aResponse.body.data, null);
+        });
+    });
+
+    it("should return 1 product", async function() {
+        await needle("get",
+            `${kBaseUrl}products/${kTestProductId}`,
+        ).then(function(aResponse) {
+            assert.equal(aResponse.statusCode, 200);
+            assert.notEqual(aResponse.body.data, null);
         });
     });
 
