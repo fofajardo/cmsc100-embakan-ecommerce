@@ -15,6 +15,8 @@ router.put("/:id", productController.updateOneProduct);
 
 router.delete("/:id", productController.deleteOneProduct);
 
+router.post("/:id/variants/", productController.createNewProductVariant);
+
 router.get("/:id/variants/:variantId", productController.getOneProductVariant);
 
 router.delete("/:id/variants/:variantId", productController.deleteOneProductVariant);
