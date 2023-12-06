@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { User, Order } from "../models.js";
-import { sendError, sendOk } from "./utils.js";
+import { sendError, sendOk, hasNull } from "./utils.js";
 
 /*
  * User
@@ -38,46 +38,43 @@ async function getOneUser(aRequest, aResponse) {
 
 async function createNewUser(aRequest, aResponse) {
     const { body } = aRequest;
-    if (!body.firstName ||
-        !body.middleName ||
-        !body.lastName ||
-        !body.email ||
-        !body.username ||
-        !body.password) {
+    const requiredProps = [
+        "firstName", "middleName", "lastName", "email", "username", "password"
+    ];
+
+    if (hasNull(body, requiredProps)) {
         sendError(aResponse, "One or more fields is missing or empty", 400);
         return;
     }
-    else {
-    	try {
-	    	const emailExists = await User.exists({ email: body.email });
-	    	const usernameExists = await User.exists({ username: body.username });
-	        if (emailExists || usernameExists) {
-	            sendError(aResponse, "User already exists", 400);
-	            return;
-	        }
+	try {
+    	const emailExists = await User.exists({ email: body.email });
+    	const usernameExists = await User.exists({ username: body.username });
+        if (emailExists || usernameExists) {
+            sendError(aResponse, "User already exists", 400);
+            return;
+        }
 
-	        const user = new User({
-	        	id: uuidv4(),
-	            firstName: body.firstName,
-			    middleName: body.middleName,
-			    lastName: body.lastName,
-			    role: 0,
-			    email: body.email,
-			    username: body.username,
-			    password: body.password
-	        });
-	        const result = await user.save();
+        const user = new User({
+        	id: uuidv4(),
+            firstName: body.firstName,
+		    middleName: body.middleName,
+		    lastName: body.lastName,
+		    role: 0,
+		    email: body.email,
+		    username: body.username,
+		    password: body.password
+        });
+        const result = await user.save();
 
-	        let wasInserted = user === result;
-	        if (!wasInserted) {
-	            sendError(aResponse, "New user was not created", 400);
-	            return;
-	        }
-        	sendOk(aResponse, result);
-    	} catch (e) {
-        	sendError(aResponse, e, 500);
-    }
-    }
+        let wasInserted = user === result;
+        if (!wasInserted) {
+            sendError(aResponse, "New user was not created", 400);
+            return;
+        }
+    	sendOk(aResponse, result);
+	} catch (e) {
+    	sendError(aResponse, e, 500);
+}
 }
 
 
