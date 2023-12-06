@@ -200,7 +200,7 @@ async function deleteOneProduct(aRequest, aResponse) {
 
 
 async function createNewProductVariant(aRequest, aResponse) {
-    const { productId } = aRequest.params; 
+    const { id } = aRequest.params; 
     const { body } = aRequest;
     if (!body.name ||
         !body.price) {
@@ -209,7 +209,7 @@ async function createNewProductVariant(aRequest, aResponse) {
     }
     else {
         try {
-            let product = await Product.findOne({ id: productId});
+            let product = await Product.findOne({ id });
             if(!product) {
                 sendError(aResponse, "Product not found", 400);
                 return;
@@ -233,7 +233,7 @@ async function createNewProductVariant(aRequest, aResponse) {
 
             let result = await Product.findOneAndUpdate(
             {
-                id: productId
+                id
             },
             {
                 $set: {
@@ -248,7 +248,7 @@ async function createNewProductVariant(aRequest, aResponse) {
             }
             sendOk(aResponse, result);
         } catch (e) {
-            sendError(aResponse, e, 500);
+            sendError(aResponse, e.message, 500);
     }
     }
 }
@@ -281,10 +281,10 @@ async function getOneProductVariant(aRequest, aResponse) {
 
 
 async function updateOneProductVariant(aRequest, aResponse) {
-    const { productId, variantId } = aRequest.params;
+    const { id, variantId } = aRequest.params;
     const { body } = aRequest;
 
-    if (!productId) {
+    if (!id) {
         sendError(aResponse, "Parameter ':id' cannot be empty", 400);
         return;
     }
@@ -294,7 +294,7 @@ async function updateOneProductVariant(aRequest, aResponse) {
     }
 
     try {
-        let product = await Product.findOne({ productId }).exec();
+        let product = await Product.findOne({ id }).exec();
         let productVariantIndex = product.variants.findIndex(function (aElement) {
             return (aElement.id == variantId);
         });
@@ -310,7 +310,7 @@ async function updateOneProductVariant(aRequest, aResponse) {
 
         let result = await Product.findOneAndUpdate(
             {
-                id: productId
+                id
             },
             {
                 $set: {
@@ -331,9 +331,9 @@ async function updateOneProductVariant(aRequest, aResponse) {
 
 
 async function deleteOneProductVariant(aRequest, aResponse) {
-    const { productId } = aRequest.params.id;
+    const { id } = aRequest.params.id;
     const { variantId } = aRequest.params.variantId;
-    if (!productId) {
+    if (!id) {
         sendError(aResponse, "Parameter ':id' cannot be empty", 400);
         return;
     }
@@ -344,7 +344,7 @@ async function deleteOneProductVariant(aRequest, aResponse) {
 
     try {
         let result = null;
-        let product = await Product.findOne({ productId }).exec();
+        let product = await Product.findOne({ id }).exec();
 
         let productVariantIndex = product.variants.findIndex(function (aElement) {
             return (aElement.id == variantId);
@@ -360,7 +360,7 @@ async function deleteOneProductVariant(aRequest, aResponse) {
 
         result = await Product.findOneAndUpdate(
             {
-                id: productId
+                id
             },
             {
                 $set: {
