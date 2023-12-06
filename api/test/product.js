@@ -1,15 +1,17 @@
 import assert from "node:assert/strict";
 import needle from "needle";
+import { v4 as uuidv4 } from "uuid";
 
-const kBaseUrl = "http://localhost:3001/";
+const kBaseUrl = "http://localhost:3001/products/";
 const kTestUserId = "29b23948-2f3c-439c-8569-2c595d604ea9";
-const kTestProductId = "298f5fa5-d1ea-4bfc-ac54-e2e642d63334";
-const kTestVariant1Id = "4a96ba74-a1b0-4a39-9958-85a0a1b3242a";
 
 describe("API: Products", function() {
+    var testProductId = "";
+    var testVariantId = "";
+
     it("should create the new product", async function() {
         await needle("post",
-            `${kBaseUrl}products/`,
+            `${kBaseUrl}`,
             {
               name: "Kalabasa",
               slug: "kalabasa",
@@ -18,6 +20,7 @@ describe("API: Products", function() {
               stock: 100,
               variants: [
                 {
+                  id: uuidv4(),
                   name: "San Leonardo",
                   price: 30
                 }
@@ -27,13 +30,14 @@ describe("API: Products", function() {
                 json: true
             }
         ).then(function(aResponse) {
+            testProductId = aResponse.body.data.id;
             assert.equal(aResponse.statusCode, 200);
         });
     });
 
     it("should return all products", async function() {
         await needle("get",
-            `${kBaseUrl}products/`,
+            `${kBaseUrl}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
@@ -42,27 +46,23 @@ describe("API: Products", function() {
 
     it("should return 1 product", async function() {
         await needle("get",
-            `${kBaseUrl}products/${kTestProductId}`,
+            `${kBaseUrl}${testProductId}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
         });
     });
 
-    it("should modfiy the information of product", async function() {
+    it("should modify the information of product", async function() {
         await needle("put",
-            `${kBaseUrl}products/${kTestProductId}`,
+            `${kBaseUrl}${testProductId}`,
             {
                 name: null,
                 slug: null,
                 type: null,
                 price: null,
                 description: null,
-                stock: 90,
-                variants: [{
-                    name: null,
-                    price: 25
-                }]
+                stock: 90
             },
             {
                 json: true
@@ -75,7 +75,7 @@ describe("API: Products", function() {
 
     it("should create the new product variant", async function() {
         await needle("post",
-            `${kBaseUrl}products/variants/${kTestVariant1Id}`,
+            `${kBaseUrl}${testProductId}/variants`,
             {
                 name: "Upland",
                 price: 30
@@ -84,15 +84,16 @@ describe("API: Products", function() {
                 json: true
             }
         ).then(function(aResponse) {
+            let targetIndex = aResponse.body.data.variants.length - 1;
+            testVariantId = aResponse.body.data.variants[targetIndex].id;
             assert.equal(aResponse.statusCode, 200);
         });
     });
 
     it("should modify the information of product variant", async function() {
         await needle("put",
-            `${kBaseUrl}products/variants/`,
+            `${kBaseUrl}${testProductId}/variants/${testVariantId}`,
             {
-                name: null,
                 price: 35
             },
             {
@@ -106,7 +107,7 @@ describe("API: Products", function() {
 
     it("should delete the product variant", async function () {
         await needle("delete",
-            `${kBaseUrl}products/variants/${kTestVariant1Id}`,
+            `${kBaseUrl}${testProductId}/variants/${testVariantId}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
@@ -115,7 +116,7 @@ describe("API: Products", function() {
 
     it("should delete the product", async function () {
         await needle("delete",
-            `${kBaseUrl}products/${kTestProductId}`,
+            `${kBaseUrl}${testProductId}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
