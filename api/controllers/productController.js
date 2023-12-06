@@ -224,24 +224,15 @@ async function createNewProductVariant(aRequest, aResponse) {
                 return;
             }
 
-            var updatedVariants = product.variants;
-            updatedVariants.push({
+            product.variants.push({
                 id: uuidv4(),
                 name: body.name,
                 price: body.price
             });
 
-            let result = await Product.findOneAndUpdate(
-            {
-                id
-            },
-            {
-                $set: {
-                    variants: updatedVariants
-                }
-            }
-            );
-            let wasUpdated = result.modifiedCount == 1;
+            let result = await product.save();
+
+            let wasUpdated = product === result;
             if (!wasUpdated) {
                 sendError(aResponse, "Product variant was not added", 400);
                 return;
