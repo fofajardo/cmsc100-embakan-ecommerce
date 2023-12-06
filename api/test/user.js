@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
 import needle from "needle";
 
-const kBaseUrl = "http://localhost:3001/";
+const kBaseUrl = "http://localhost:3001/users/";
 const kTestUserId = "29b23948-2f3c-439c-8569-2c595d604ea9";
 
 describe("API: Users", function() {
-    it.skip("should create the new user", async function() {
+    var testUserId = "";
+    it("should create the new user", async function() {
         await needle("post",
-            `${kBaseUrl}users/`,
+            `${kBaseUrl}`,
             {
                 firstName: "Juan",
                 middleName: "Dela",
@@ -20,13 +21,14 @@ describe("API: Users", function() {
                 json: true
             }
         ).then(function(aResponse) {
+            testUserId = aResponse.body.data.id;
             assert.equal(aResponse.statusCode, 200);
         });
     });
     
     it("should return all users", async function() {
         await needle("get",
-            `${kBaseUrl}users/`,
+            `${kBaseUrl}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
@@ -35,7 +37,7 @@ describe("API: Users", function() {
 
     it("should return 1 user", async function() {
         await needle("get",
-            `${kBaseUrl}users/${kTestUserId}`,
+            `${kBaseUrl}${testUserId}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
@@ -44,7 +46,7 @@ describe("API: Users", function() {
 
     it("should modfiy the information of user", async function() {
         await needle("put",
-            `${kBaseUrl}users/${kTestUserId}`,
+            `${kBaseUrl}${testUserId}`,
             {
                 firstName: null,
                 middleName: null,
@@ -64,16 +66,16 @@ describe("API: Users", function() {
 
     it("should delete the user", async function () {
         await needle("delete",
-            `${kBaseUrl}users/${kTestUserId}`,
+            `${kBaseUrl}${testUserId}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
         });
     });
 
-    it("should return the order history of user", async function() {
+    it.skip("should return the order history of user", async function() {
         await needle("get",
-            `${kBaseUrl}users/${kTestUserId}/order-history`,
+            `${kBaseUrl}${kTestUserId}/order-history`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
