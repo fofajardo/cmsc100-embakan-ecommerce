@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Product } from "../models.js";
-import { sendError, sendOk } from "./utils.js";
+import { sendError, sendOk, hasNull } from "./utils.js";
 
 /*
  * Product
@@ -38,43 +38,41 @@ async function getOneProduct(aRequest, aResponse) {
 
 async function createNewProduct(aRequest, aResponse) {
     const { body } = aRequest;
-    if (!body.name ||
-        !body.slug ||
-        !body.type ||
-        !body.description ||
-        !body.stock ||
-        !body.variants) {
+    const requiredProps = [
+        "name", "slug", "type", "description", "stock", "variants"
+    ];
+
+    if (hasNull(body, requiredProps)) {
         sendError(aResponse, "One or more fields is missing or empty", 400);
         return;
     }
-    else {
-    	try {
-	    	const slugExists = await Product.exists({ slug: body.slug });
-	        if (slugExists) {
-	            sendError(aResponse, "Product already exists", 400);
-	            return;
-	        }
 
-	        const product = new Product({
-	        	id: uuidv4(),
-	            name: body.name,
-			    slug: body.slug,
-			    type: body.type,
-			    description: body.description,
-			    stock: body.stock,
-			    variants: body.variants
-	        });
-	        const result = await Product.save();
+    try {
+        const slugExists = await Product.exists({ slug: body.slug });
+        if (slugExists) {
+            sendError(aResponse, "Product already exists", 400);
+            return;
+        }
 
-	        let wasInserted = user === result;
-	        if (!wasInserted) {
-	            sendError(aResponse, "New product was not added", 400);
-	            return;
-	        }
-        	sendOk(aResponse, result);
-    	} catch (e) {
-        	sendError(aResponse, e, 500);
-    }
+        const product = new Product({
+            id: uuidv4(),
+            name: body.name,
+            slug: body.slug,
+            type: body.type,
+            description: body.description,
+            stock: body.stock,
+            variants: body.variants
+        });
+        const result = await product.save();
+
+        let wasInserted = product === result;
+        if (!wasInserted) {
+            sendError(aResponse, "New product was not added", 400);
+            return;
+        }
+        sendOk(aResponse, result);
+    } catch (e) {
+        sendError(aResponse, e, 500);
     }
 }
 
