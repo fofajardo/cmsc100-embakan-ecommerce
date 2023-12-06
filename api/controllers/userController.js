@@ -106,7 +106,7 @@ async function updateOneUser(aRequest, aResponse) {
 		        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            fieldsUpdated.push({ firstName: success });
+		            fieldsUpdated.push("firstName");
 		        }
     		}
     		if(body.middleName) {
@@ -119,7 +119,7 @@ async function updateOneUser(aRequest, aResponse) {
 		        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            fieldsUpdated.push({ middleName: success });
+		            fieldsUpdated.push("middleName");
 		        }
     		}
     		if(body.lastName) {
@@ -132,7 +132,7 @@ async function updateOneUser(aRequest, aResponse) {
 		        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            fieldsUpdated.push({ lastName: success });
+		            fieldsUpdated.push("lastName");
 		        }
     		}
     		if(body.role) {
@@ -145,7 +145,7 @@ async function updateOneUser(aRequest, aResponse) {
 		        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            fieldsUpdated.push({ role: success });
+		            fieldsUpdated.push("role");
 		        }
     		}
     		if(body.email) {
@@ -158,7 +158,7 @@ async function updateOneUser(aRequest, aResponse) {
 		        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            fieldsUpdated.push({ email: success });
+		            fieldsUpdated.push("email");
 		        }
     		}
     		if(body.password) {
@@ -171,7 +171,7 @@ async function updateOneUser(aRequest, aResponse) {
 		        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            fieldsUpdated.push({ password: success });
+		            fieldsUpdated.push("password");
 		        }
     		}
     		sendOk(aResponse, fieldsUpdated);

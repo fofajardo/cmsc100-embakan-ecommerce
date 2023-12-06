@@ -50,7 +50,7 @@ async function createNewProduct(aRequest, aResponse) {
     else {
     	try {
 	    	const slugExists = await Product.exists({ slug: body.slug });
-	        if (emailExists || usernameExists) {
+	        if (slugExists) {
 	            sendError(aResponse, "Product already exists", 400);
 	            return;
 	        }
@@ -64,7 +64,7 @@ async function createNewProduct(aRequest, aResponse) {
 			    stock: body.stock,
 			    variants: body.variants
 	        });
-	        const result = await user.save();
+	        const result = await Product.save();
 
 	        let wasInserted = user === result;
 	        if (!wasInserted) {
@@ -88,8 +88,8 @@ async function updateOneProduct(aRequest, aResponse) {
         return;
     }
     else {
-    	let found = await Product.findOne({ id: id});
-    	if(!found) {
+    	let productFound = await Product.findOne({ id: id});
+    	if(!productFound) {
     	    sendError(aResponse, "Product not found", 400);
         	return;
     	}
@@ -104,7 +104,7 @@ async function updateOneProduct(aRequest, aResponse) {
 			        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            productDataUpdated.push({ name: success });
+		            productDataUpdated.push("name");
 		        }
     		}
     		if(body.slug) {
@@ -117,7 +117,7 @@ async function updateOneProduct(aRequest, aResponse) {
 			        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            productDataUpdated.push({ slug: success });
+		            productDataUpdated.push("slug");
 		        }
     		}
     		if(body.type) {
@@ -130,10 +130,10 @@ async function updateOneProduct(aRequest, aResponse) {
 			        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            productDataUpdated.push({ type: success });
+		            productDataUpdated.push("type");
 		        }
     		}
-    		if(body.price) {
+    		if(body.price >= 0) {
 		        let result = await Product.updateOne({
 			            id
 			        }, {
@@ -143,10 +143,10 @@ async function updateOneProduct(aRequest, aResponse) {
 			        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            productDataUpdated.push({ price: success });
+		            productDataUpdated.push("price");
 		        }
     		}
-    		if(body.stock) {
+    		if(body.stock >= 0) {
 		        let result = await Product.updateOne({
 			            id
 			        }, {
@@ -156,7 +156,7 @@ async function updateOneProduct(aRequest, aResponse) {
 			        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            productDataUpdated.push({ stock: success });
+		            productDataUpdated.push("stock");
 		        }
     		}
     		if(body.variants) {
@@ -169,7 +169,7 @@ async function updateOneProduct(aRequest, aResponse) {
 			        });
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
-		            productDataUpdated.push({ variants: success });
+		            productDataUpdated.push("variants");
 		        }
     		}
     		sendOk(aResponse, productDataUpdated);
@@ -197,6 +197,61 @@ async function deleteOneProduct(aRequest, aResponse) {
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
+    }
+}
+
+
+async function createNewProductVariant(aRequest, aResponse) {
+    const { productId } = aRequest.params; 
+    const { body } = aRequest;
+    if (!body.name ||
+        !body.price) {
+        sendError(aResponse, "One or more fields is missing or empty", 400);
+        return;
+    }
+    else {
+        try {
+            let product = await Product.findOne({ id: productId});
+            if(!product) {
+                sendError(aResponse, "Product not found", 400);
+                return;
+            }
+
+            let productVariantIndex = product.variants.findIndex(function (aElement) {
+                return (aElement.name == body.name);
+            });
+            
+            if (productVariantIndex != -1) {
+                sendError(aResponse, "Product already exists", 400);
+                return;
+            }
+
+            var updatedVariants = product.variants;
+            updatedVariants.push({
+                id: uuidv4(),
+                name: body.name,
+                price: body.price
+            });
+
+            let result = await Product.findOneAndUpdate(
+            {
+                id: productId
+            },
+            {
+                $set: {
+                    variants: updatedVariants
+                }
+            }
+            );
+            let wasUpdated = result.modifiedCount == 1;
+            if (!wasUpdated) {
+                sendError(aResponse, "Product variant was not added", 400);
+                return;
+            }
+            sendOk(aResponse, result);
+        } catch (e) {
+            sendError(aResponse, e, 500);
+    }
     }
 }
 
@@ -333,6 +388,7 @@ export default {
     createNewProduct,
     updateOneProduct,
     deleteOneProduct,
+    createNewProductVariant,
     getOneProductVariant,
     updateOneProductVariant,
     deleteOneProductVariant
