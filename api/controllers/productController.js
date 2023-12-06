@@ -322,13 +322,13 @@ async function updateOneProductVariant(aRequest, aResponse) {
 
 
 async function deleteOneProductVariant(aRequest, aResponse) {
-    const { id } = aRequest.params.id;
-    const { variantId } = aRequest.params.variantId;
+    const { id, variantId } = aRequest.params;
     if (!id) {
         sendError(aResponse, "Parameter ':id' cannot be empty", 400);
         return;
     }
-    else if (!variantId) {
+    
+    if (!variantId) {
         sendError(aResponse, "Parameter ':variantId' cannot be empty", 400);
         return;
     }
@@ -341,26 +341,16 @@ async function deleteOneProductVariant(aRequest, aResponse) {
             return (aElement.id == variantId);
         });
 
-        var variants = product.variants;
         if (productVariantIndex != -1) {
-            variants.splice(productVariantIndex, 1);
+            product.variants.splice(productVariantIndex, 1);
         } else {
             sendError(aResponse, "Product variant not in product", 400);
             return;
         }
 
-        result = await Product.findOneAndUpdate(
-            {
-                id
-            },
-            {
-                $set: {
-                    variants
-                }
-            }
-        );
+        result = await product.save();
 
-        let wasDeleted = result.modifiedCount == 1;
+        let wasDeleted = product === result;
         if (!wasDeleted) {
             sendError(aResponse, "Product variant was not deleted", 400);
             return;
