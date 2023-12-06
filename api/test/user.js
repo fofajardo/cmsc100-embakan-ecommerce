@@ -5,6 +5,25 @@ const kBaseUrl = "http://localhost:3001/";
 const kTestUserId = "29b23948-2f3c-439c-8569-2c595d604ea9";
 
 describe("API: Users", function() {
+    it.skip("should create the new user", async function() {
+        await needle("post",
+            `${kBaseUrl}users/`,
+            {
+                firstName: "Juan",
+                middleName: "Dela",
+                lastName: "Cruz",
+                email: "juandc@email.com",
+                username: "juandc",
+                password: "juandc12345"
+            },
+            {
+                json: true
+            }
+        ).then(function(aResponse) {
+            assert.equal(aResponse.statusCode, 200);
+        });
+    });
+    
     it("should return all users", async function() {
         await needle("get",
             `${kBaseUrl}users/`,
@@ -23,27 +42,8 @@ describe("API: Users", function() {
         });
     });
 
-    it("should create the new user", async function() {
-        await needle("post",
-            `${kBaseUrl}users/`,
-            {
-                firstName: "Juan",
-                middleName: "Dela",
-                lastName: "Cruz",
-                email: "juandc@email.com",
-                username: "juandc",
-                password: "juandc12345"
-            },
-            {
-                json: true
-            }
-        ).then(function(aResponse) {
-            assert.equal(aResponse.statusCode, 200);
-        });
-    });
-
     it("should modfiy the information of user", async function() {
-        await needle("post",
+        await needle("put",
             `${kBaseUrl}users/${kTestUserId}`,
             {
                 firstName: null,

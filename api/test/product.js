@@ -11,17 +11,17 @@ describe("API: Products", function() {
         await needle("post",
             `${kBaseUrl}products/`,
             {
-                name: "",
-                slug: "",
-                type: 0,
-                price: 0,
-                description: "",
-                stock: 0,
-                variants: [{
-                    id: "",
-                    name: "",
-                    price: 0
-                }]
+              name: "Kalabasa",
+              slug: "kalabasa",
+              type: 0,
+              description: "Pampalinaw ng mata",
+              stock: 100,
+              variants: [
+                {
+                  name: "San Leonardo",
+                  price: 30
+                }
+              ]
             },
             {
                 json: true
@@ -30,7 +30,7 @@ describe("API: Products", function() {
             assert.equal(aResponse.statusCode, 200);
         });
     });
-    
+
     it("should return all products", async function() {
         await needle("get",
             `${kBaseUrl}products/`,
@@ -50,19 +50,18 @@ describe("API: Products", function() {
     });
 
     it("should modfiy the information of product", async function() {
-        await needle("post",
+        await needle("put",
             `${kBaseUrl}products/${kTestProductId}`,
             {
-                name: "Kangkong",
+                name: null,
                 slug: null,
                 type: null,
                 price: null,
                 description: null,
-                stock: 10,
+                stock: 90,
                 variants: [{
-                    id: "",
-                    name: "",
-                    price: 0
+                    name: null,
+                    price: 25
                 }]
             },
             {
@@ -74,21 +73,12 @@ describe("API: Products", function() {
         });
     });
 
-    it("should delete the product", async function () {
-        await needle("delete",
-            `${kBaseUrl}products/${kTestProductId}`,
-        ).then(function(aResponse) {
-            assert.equal(aResponse.statusCode, 200);
-            assert.notEqual(aResponse.body.data, null);
-        });
-    });
-
     it("should create the new product variant", async function() {
         await needle("post",
             `${kBaseUrl}products/variants/${kTestVariant1Id}`,
             {
-                name: "",
-                price: 0
+                name: "Upland",
+                price: 30
             },
             {
                 json: true
@@ -99,11 +89,11 @@ describe("API: Products", function() {
     });
 
     it("should modify the information of product variant", async function() {
-        await needle("post",
-            `${kBaseUrl}products/variants/${kTestVariant1Id}`,
+        await needle("put",
+            `${kBaseUrl}products/variants/`,
             {
-                name: "Variant 1",
-                price: 20
+                name: null,
+                price: 35
             },
             {
                 json: true
@@ -117,6 +107,15 @@ describe("API: Products", function() {
     it("should delete the product variant", async function () {
         await needle("delete",
             `${kBaseUrl}products/variants/${kTestVariant1Id}`,
+        ).then(function(aResponse) {
+            assert.equal(aResponse.statusCode, 200);
+            assert.notEqual(aResponse.body.data, null);
+        });
+    });
+
+    it("should delete the product", async function () {
+        await needle("delete",
+            `${kBaseUrl}products/${kTestProductId}`,
         ).then(function(aResponse) {
             assert.equal(aResponse.statusCode, 200);
             assert.notEqual(aResponse.body.data, null);
