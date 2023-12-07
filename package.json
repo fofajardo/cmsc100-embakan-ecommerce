@@ -4,7 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "start-api": "node api/index.js",
+        "start-api": "node --watch-path=./api ./api/index.js",
         "start": "r3f-pack start",
         "build": "r3f-pack build",
         "test": "r3f-pack test",
