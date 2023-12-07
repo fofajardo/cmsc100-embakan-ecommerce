@@ -9,7 +9,7 @@ import cartRouter from "./routes/cartRoutes.js";
 
 const kDbHost = "127.0.0.1";
 const kDbPort = "27017";
-const kDbName = "aetos-commerce";
+const kDbName = "embakan";
 const kDbString = `mongodb://${kDbHost}:${kDbPort}/${kDbName}`;
 const kPort = 3001;
 
