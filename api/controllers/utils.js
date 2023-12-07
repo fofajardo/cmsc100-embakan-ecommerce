@@ -1,3 +1,19 @@
+function hasNull(aTarget, aValues) {
+    if (!Array.isArray(aValues)) {
+        aValues = [aValues];
+    }
+
+    for (let i = 0; i < aValues.length; i++) {
+        let value = aValues[i];
+        if (value in aTarget && aTarget[value] != null) {
+            continue;
+        }
+        return true;
+    }
+
+    return false;
+}
+
 function sendError(aResponse, aError, aStatus) {
     aResponse
         .status(aStatus)
@@ -16,4 +32,4 @@ function sendOk(aResponse, aData) {
     });
 }
 
-export { sendError, sendOk };
+export { sendError, sendOk, hasNull };
