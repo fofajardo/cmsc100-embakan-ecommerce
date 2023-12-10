@@ -5,8 +5,10 @@ import "./index.css";
 
 import Root from "./pages/Root.js";
 import Home from "./pages/Home.js";
-import Subjects from "./pages/Subjects.js";
-import SubjectDetail from "./pages/SubjectDetail.js";
+// import Subjects from "./pages/Subjects.js";
+// import SubjectDetail from "./pages/SubjectDetail.js";
+
+import ProductsPublic from "./pages/ProductsPublic.js";
 
 const router = createBrowserRouter([
     // { path: "/",         element: <Root /> },
@@ -16,8 +18,9 @@ const router = createBrowserRouter([
         element:  <Root />,
         children: [
             { path: "/",        element: <Home />     },
-            { path: "subjects", element: <Subjects /> },
-            { path: "subjects/:code", element: <SubjectDetail /> }
+            // { path: "subjects", element: <Subjects /> },
+            // { path: "subjects/:code", element: <SubjectDetail /> },
+            { path: "products", element: <ProductsPublic /> },
         ]
     }
 ]);
