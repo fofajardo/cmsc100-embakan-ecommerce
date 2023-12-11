@@ -3,6 +3,16 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, createHashRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
+
+/*@author rfpramos
+@date-time 09-12-2023 10:19
+
+TODO: Implement SignUp Page and SignIn page
+*/
+import SignIn from "./pages/SignIn.js";
+import SignUp from "./pages/SignUp.js";
+
+
 import Root from "./pages/Root.js";
 import Home from "./pages/Home.js";
 // import Subjects from "./pages/Subjects.js";
@@ -22,6 +32,13 @@ const router = createHashRouter([
             {
                 path: "/",
                 element: <Home />
+            },
+            {
+                path: "sign-in",
+                element:  <SignIn />
+            }, {
+                path: "sign-up",
+                element:  <SignUp />
             },
             // { path: "subjects", element: <Subjects /> },
             // { path: "subjects/:code", element: <SubjectDetail /> },
