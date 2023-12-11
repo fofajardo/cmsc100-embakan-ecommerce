@@ -14,36 +14,34 @@ import {
 
 export default function Header() {
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="sticky" color="" elevation={1}>
-                <Toolbar sx={{ justifyContent: "space-between", }}>
-                    <Link component={RouterLink} to="/" underline="none">
-                        <Stack spacing={2} direction="row" sx={{ alignItems: "center" }}>
-                            <img src="/logo.svg" width={32} height={32} />
-                            <Typography variant="h6" sx={{ ml: 3 }}>
-                            e-mbakan
-                            </Typography>
-                        </Stack>
-                    </Link>
-                    <Stack spacing={2} direction="row">
-                        {
-                            /* the home and products page are the same... include? */
-                            true ? (<></>) : (
-                                <>
-                                    <Button color="inherit" component={RouterLink} to="/">Home</Button>
-                                    <Button color="inherit" component={RouterLink} to="/products">Products</Button>
-                                </>
-                            )
-                        }
-                        <IconButton component={RouterLink} to="/cart" color="primary" aria-label="view shopping cart">
-                            <ShoppingCartOutlinedIcon />
-                        </IconButton>
-                        <IconButton component={RouterLink} to="/account" color="primary" aria-label="view account info">
-                            <AccountCircleOutlinedIcon />
-                        </IconButton>
+        <AppBar position="sticky" color="" elevation={1}>
+            <Toolbar sx={{ justifyContent: "space-between", }}>
+                <Link component={RouterLink} to="/" underline="none">
+                    <Stack spacing={2} direction="row" sx={{ alignItems: "center" }}>
+                        <img src="/logo.svg" width={32} height={32} />
+                        <Typography variant="h6" sx={{ ml: 3 }}>
+                        e-mbakan
+                        </Typography>
                     </Stack>
-                </Toolbar>
-            </AppBar>
-        </Box>
+                </Link>
+                <Stack spacing={2} direction="row">
+                    {
+                        /* the home and products page are the same... include? */
+                        true ? (<></>) : (
+                            <>
+                                <Button color="inherit" component={RouterLink} to="/">Home</Button>
+                                <Button color="inherit" component={RouterLink} to="/products">Products</Button>
+                            </>
+                        )
+                    }
+                    <IconButton component={RouterLink} to="/cart" color="primary" aria-label="view shopping cart">
+                        <ShoppingCartOutlinedIcon />
+                    </IconButton>
+                    <IconButton component={RouterLink} to="/account" color="primary" aria-label="view account info">
+                        <AccountCircleOutlinedIcon />
+                    </IconButton>
+                </Stack>
+            </Toolbar>
+        </AppBar>
     )
 }
