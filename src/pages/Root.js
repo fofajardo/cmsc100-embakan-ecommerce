@@ -6,6 +6,8 @@ import {
     Box, ThemeProvider, createTheme
 } from "@mui/material";
 
+import { SnackbarProvider } from "notistack";
+
 import Header from "../components/Header.js";
 
 const theme = createTheme({
@@ -38,11 +40,13 @@ const theme = createTheme({
 
 export default function Root() {
     return (
-        <ThemeProvider theme={theme}>
-            <Box sx={{ background: "#fff8f4" }}>
-                <Header />
-                <Outlet />
-            </Box>
-        </ThemeProvider>
+        <SnackbarProvider maxSnack={3}>
+            <ThemeProvider theme={theme}>
+                <Box sx={{ background: "#fff8f4" }}>
+                    <Header />
+                    <Outlet />
+                </Box>
+            </ThemeProvider>
+        </SnackbarProvider>
     )
 }
