@@ -3,12 +3,28 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 import {
-    ThemeProvider, createTheme
+    Box, ThemeProvider, createTheme
 } from "@mui/material";
 
 import Header from "../components/Header.js";
 
 const theme = createTheme({
+    components: {
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 16
+                },
+            },
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 0
+                },
+            },
+        },
+    },
     palette: {
         mode: "light",
         primary: {
@@ -23,8 +39,10 @@ const theme = createTheme({
 export default function Root() {
     return (
         <ThemeProvider theme={theme}>
-            <Header />
-            <Outlet />
+            <Box sx={{ background: "#fff8f4" }}>
+                <Header />
+                <Outlet />
+            </Box>
         </ThemeProvider>
     )
 }
