@@ -19,22 +19,12 @@ export default function Header() {
                 <Toolbar sx={{ justifyContent: "space-between", }}>
                     <Link component={RouterLink} to="/" underline="none">
                         <Stack spacing={2} direction="row" sx={{ alignItems: "center" }}>
-                            <img src="/logo.svg" width={48} height={48} />
+                            <img src="/logo.svg" width={32} height={32} />
                             <Typography variant="h6" sx={{ ml: 3 }}>
                             e-mbakan
                             </Typography>
                         </Stack>
                     </Link>
-                    <OutlinedInput
-                        id="outlined-adornment-weight"
-                        startAdornment={<SearchIcon sx={{ mr: 1 }} />}
-                        placeholder="Search"
-                        variant="filled"
-                        sx={{ m: 1, width: "55ch" }}
-                        inputProps={{
-                            "aria-label": "search",
-                        }}
-                    />
                     <Stack spacing={2} direction="row">
                         {
                             /* the home and products page are the same... include? */
