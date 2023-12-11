@@ -9,6 +9,7 @@ import Home from "./pages/Home.js";
 // import SubjectDetail from "./pages/SubjectDetail.js";
 
 import ProductsPublic from "./pages/ProductsPublic.js";
+import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 
 const router = createHashRouter([
@@ -33,6 +34,10 @@ const router = createHashRouter([
                     {
                         path: "products",
                         children: [
+                            {
+                                path: "",
+                                element: <ManageProductsList />
+                            },
                             {
                                 path: "create",
                                 element: <ManageProductsCreate />
