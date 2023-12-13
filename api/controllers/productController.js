@@ -39,7 +39,7 @@ async function getOneProduct(aRequest, aResponse) {
 async function createNewProduct(aRequest, aResponse) {
     const { body } = aRequest;
     const requiredProps = [
-        "name", "slug", "type", "description", "variants"
+        "name", "slug", "type", "description"
     ];
 
     if (hasNull(body, requiredProps)) {
