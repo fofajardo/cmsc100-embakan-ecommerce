@@ -18,10 +18,7 @@ export default function Header() {
             <Toolbar sx={{ justifyContent: "space-between", }}>
                 <Link component={RouterLink} to="/" underline="none">
                     <Stack spacing={2} direction="row" sx={{ alignItems: "center" }}>
-                        <img src="/logo.svg" width={32} height={32} />
-                        <Typography variant="h6" sx={{ ml: 3 }}>
-                        e-mbakan
-                        </Typography>
+                        <img src="logos/horizontallogo_colored.svg" />
                     </Stack>
                 </Link>
                 <Stack spacing={2} direction="row">
