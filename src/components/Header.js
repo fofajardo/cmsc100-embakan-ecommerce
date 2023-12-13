@@ -18,7 +18,10 @@ export default function Header() {
             <Toolbar sx={{ justifyContent: "space-between", }}>
                 <Link component={RouterLink} to="/" underline="none">
                     <Stack spacing={2} direction="row" sx={{ alignItems: "center" }}>
-                        <img src="logos/horizontallogo_colored.svg" />
+                        <img
+                            height={32}
+                            width={128}
+                            src="logos/horizontallogo_colored.svg" />
                     </Stack>
                 </Link>
                 <Stack spacing={2} direction="row">
