@@ -18,11 +18,11 @@ const Product = mongoose.model("Product", {
     slug: String,
     type: Number,
     description: String,
-    stock: Number,
     variants: [{
         id: String,
         name: String,
-        price: Number
+        price: Number,
+        stock: Number
     }]
 }, "products");
 

@@ -39,7 +39,7 @@ async function getOneProduct(aRequest, aResponse) {
 async function createNewProduct(aRequest, aResponse) {
     const { body } = aRequest;
     const requiredProps = [
-        "name", "slug", "type", "description", "stock", "variants"
+        "name", "slug", "type", "description", "variants"
     ];
 
     if (hasNull(body, requiredProps)) {
@@ -60,7 +60,6 @@ async function createNewProduct(aRequest, aResponse) {
             slug: body.slug,
             type: body.type,
             description: body.description,
-            stock: body.stock,
             variants: body.variants
         });
         const result = await product.save();
@@ -144,19 +143,6 @@ async function updateOneProduct(aRequest, aResponse) {
 		            productDataUpdated.push("price");
 		        }
     		}
-    		if(body.stock >= 0) {
-		        let result = await Product.updateOne({
-			            id
-			        }, {
-			            $set: {
-			                stock: body.stock
-			            }
-			        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            productDataUpdated.push("stock");
-		        }
-    		}
     		if(body.variants) {
 		        let result = await Product.updateOne({
 			            id
@@ -202,8 +188,12 @@ async function deleteOneProduct(aRequest, aResponse) {
 async function createNewProductVariant(aRequest, aResponse) {
     const { id } = aRequest.params; 
     const { body } = aRequest;
-    if (!body.name ||
-        !body.price) {
+
+    const requiredProps = [
+        "name", "price", "stock"
+    ];
+
+    if (hasNull(body, requiredProps)) {
         sendError(aResponse, "One or more fields is missing or empty", 400);
         return;
     }
@@ -227,7 +217,8 @@ async function createNewProductVariant(aRequest, aResponse) {
             product.variants.push({
                 id: uuidv4(),
                 name: body.name,
-                price: body.price
+                price: body.price,
+                stock: body.stock
             });
 
             let result = await product.save();
@@ -285,35 +276,32 @@ async function updateOneProductVariant(aRequest, aResponse) {
     }
 
     try {
+        let result = null;
         let product = await Product.findOne({ id }).exec();
         let productVariantIndex = product.variants.findIndex(function (aElement) {
             return (aElement.id == variantId);
         });
 
         if (productVariantIndex != -1) {
-            if (!body.name) {
+            if (body.name) {
                 product.variants[productVariantIndex].name = body.name;
             }
-            if (!body.price) {
+            if (body.price) {
                 product.variants[productVariantIndex].price = body.price;
+            }
+            if (body.stock) {
+                product.variants[productVariantIndex].stock = body.stock;
             }
         }
 
-        let result = await Product.findOneAndUpdate(
-            {
-                id
-            },
-            {
-                $set: {
-                    variants: product.variants
-                }
-            }
-        );
+        result = await product.save();
 
-        if (!result) {
+        let wasUpdated = product === result;
+        if (!wasUpdated) {
             sendError(aResponse, "Product variant was not updated", 400);
             return;
         }
+
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
