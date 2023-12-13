@@ -15,21 +15,7 @@ import {
     Add as AddIcon
 } from "@mui/icons-material";
 
-// TODO: move to a separate module.
-const productTypes = [
-    {
-        label: "Unsorted",
-        value: 0,
-    },
-    {
-        label: "Crop",
-        value: 1,
-    },
-    {
-        label: "Poultry",
-        value: 2,
-    },
-];
+import productTypes from "./productTypes.js";
 
 const kBaseUrl = "http://localhost:3001/products/";
 const kParentRoute = "/manage";

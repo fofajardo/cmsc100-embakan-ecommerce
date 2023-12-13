@@ -13,21 +13,9 @@ import {
     ArrowBack as ArrowBackIcon
 } from "@mui/icons-material";
 
-// TODO: move to a separate module.
-const productTypes = [
-    {
-        label: "Unsorted",
-        value: 0,
-    },
-    {
-        label: "Crop",
-        value: 1,
-    },
-    {
-        label: "Poultry",
-        value: 2,
-    },
-];
+import ManageProductsBase from "../base.js";
+
+import productTypes from "../productTypes.js";
 
 const kBaseUrl = "http://localhost:3001/products/";
 const kParentRoute = "/manage/products";
@@ -106,105 +94,7 @@ export default function ManageProductsCreate() {
                 component="form"
                 spacing={2}
                 onSubmit={(aEvent) => doSubmit(aEvent, setters)}>
-                <Typography variant="h6" sx={{ mb: 2 }}>General</Typography>
-                <Card sx={{ p: 3 }} elevation={0}>
-                    <Stack
-                        spacing={2}>
-                        <Stack
-                            container
-                            gap={2}
-                            direction={{ sm: "column", md: "row" }}>
-                            <TextField
-                                label="Name"
-                                name="in-name"
-                                helperText="The user-facing name of the product."
-                                required
-                                fullWidth />
-                            <TextField
-                                label="Slug"
-                                name="in-slug"
-                                helperText="The name used to represent the product in the URL."
-                                required
-                                fullWidth />
-                        </Stack>
-                        <Stack
-                            container
-                            gap={2}
-                            direction={{ sm: "column", md: "row" }}>
-                            <TextField
-                                label="Description"
-                                name="in-description"
-                                required
-                                multiline
-                                fullWidth />
-                        </Stack>
-                        <Stack
-                            container
-                            gap={2}
-                            direction={{ sm: "column", md: "row" }}>
-                            <Autocomplete
-                                disablePortal
-                                id="in-type"
-                                options={productTypes}
-                                sx={{ width: "100%" }}
-                                defaultValue={productTypes[0]}
-                                renderInput={
-                                    (params) =>
-                                        <TextField {...params} name="in-type" label="Type" required />
-                                    }
-                                />
-                            <TextField
-                                label="Stock"
-                                name="in-stock"
-                                type="number"
-                                min={0}
-                                required
-                                fullWidth />
-                        </Stack>
-                    </Stack>
-                </Card>
-                <Typography variant="h6" sx={{ mb: 2 }}>Variants</Typography>
-                <Card sx={{ p: 3 }} elevation={0}>
-                    <Stack
-                        spacing={2}>
-                        <Stack
-                            container
-                            gap={2}
-                            direction={{ sm: "column", md: "row" }}>
-                            <TextField
-                                label="Variant Name"
-                                name="in-variant-name"
-                                value="Default"
-                                required
-                                fullWidth />
-                            <TextField
-                                label="Price"
-                                name="in-variant-price"
-                                type="number"
-                                required
-                                fullWidth />
-                        </Stack>
-                        <FormLabel>
-                        You can add additional variants once the product is created. The price of a product is tied to its default variant. 
-                        </FormLabel>
-                        <FormLabel>
-                        The variant selection is hidden if there is only one variant.
-                        </FormLabel>
-                    </Stack>
-                </Card>
-                <Stack
-                    spacing={2}
-                    direction="row">
-                    <Button
-                        variant="contained"
-                        type="submit">
-                        Submit
-                    </Button>
-                    <Button
-                        type="reset">
-                        Reset
-                    </Button>
-                </Stack>
+                <ManageProductsBase />
             </Stack>
         </Box>
     );
