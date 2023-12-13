@@ -26,9 +26,9 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
 });
 
 function ProductCard(aProps) {
-    const { key, product, variant } = aProps;
+    const { index, product, variant } = aProps;
     return (
-        <Card key={key}>
+        <Card key={index}>
             <CardContent>
                 <Typography variant="h5">
                 <Link component={RouterLink} to={`/manage/products/get/${product.slug}`} underline="none">
@@ -39,7 +39,7 @@ function ProductCard(aProps) {
                 {productTypes.find((element) => element.value == product.type).label}
                 </Typography>
                 <Typography variant="body2">
-                {kCurrencyFormatter.format(variant.price)}
+                {kCurrencyFormatter.format(variant?.price)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                 {product.description}
@@ -61,14 +61,14 @@ function ProductCard(aProps) {
 }
 
 function ProductList(aProps) {
-    const { key, type, products } = aProps;
+    const { index, type, products } = aProps;
     
     const productsFiltered = products.filter(function(aElement) {
         return aElement.type == type.value;
     });
     
     return (
-        <Box key={key}>
+        <Box key={index}>
             <Typography variant="h6" sx={{ mb: 2 }}>{type.label}</Typography>
             <Grid container
                 spacing={2}>
@@ -80,10 +80,18 @@ function ProductList(aProps) {
                     ) : (
                         productsFiltered.map(function(product, i) {
                             let cards = [];
+                            if (product.variants.length == 0) {
+                                return (
+                                    <Grid item xs={18} md={4}>
+                                        <ProductCard product={product} key={i} index={i} />
+                                    </Grid>
+                                );
+                            }
+
                             product.variants.forEach(function(aVariant, aIndex) {
                                 cards.push(
                                     <Grid item xs={18} md={4}>
-                                        <ProductCard product={product} key={i} variant={aVariant} />
+                                        <ProductCard product={product} key={i} index={i} variant={aVariant} />
                                     </Grid>
                                 );
                             });
@@ -129,7 +137,7 @@ export default function ManageProductsList() {
             <Stack spacing={2} useFlexGap>
             {
                 productTypes.map(function(aType, aIndex) {
-                    return (<ProductList key={aIndex} type={aType} products={products} />)
+                    return (<ProductList key={aIndex} index={aIndex} type={aType} products={products} />)
                 })
             }
             </Stack>
