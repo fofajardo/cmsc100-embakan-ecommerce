@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { useSnackbar } from "notistack";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
@@ -20,6 +19,31 @@ import productTypes from "../productTypes.js";
 const kBaseUrl = "http://localhost:3001/products/";
 const kParentRoute = "/manage/products";
 
+// TODO: move to a utility function.
+async function callApi(aUrl, aOptions, aEnqueue, aSuccessMessage) {
+    const errorVariant = { variant: "error" };
+    const successVariant = { variant: "success" };
+
+    try {
+        const response = await fetch(aUrl, aOptions)
+        const jsonResponse = await response.json()
+        
+        if (response.ok) {
+            if (aSuccessMessage) {
+                aEnqueue(aSuccessMessage, successVariant);                        
+            }
+            return jsonResponse;
+        } else if (jsonResponse?.data?.error) {
+            aEnqueue(jsonResponse.data.error, errorVariant);
+        } else {
+            aEnqueue("Unknown API error.", errorVariant);
+        }
+    } catch (e) {
+        aEnqueue(e.message, errorVariant);
+    }
+    return false;
+}
+
 async function doSubmit(aEvent, aSetters) {
     aEvent.preventDefault();
 
@@ -31,47 +55,40 @@ async function doSubmit(aEvent, aSetters) {
         name: formJson["in-name"],
         slug: formJson["in-slug"],
         type: productTypes.find((element) => element.label == formJson["in-type"]).value,
-        description: formJson["in-description"],
-        stock: parseInt(formJson["in-stock"]),
-        variants: [{
-            id: uuidv4(),
-            name: formJson["in-variant-name"],
-            price: formJson["in-variant-price"]
-        }]
+        description: formJson["in-description"]
     };
-    const jsonData = JSON.stringify(data);
+    const variantData = {
+        name: formJson["in-variant-name"],
+        price: formJson["in-variant-price"],
+        stock: parseInt(formJson["in-variant-stock"])
+    };
 
-    const errorVariant = { variant: "error" };
-    const successVariant = { variant: "success" };
+    const productResult = await callApi(`${kBaseUrl}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    }, enqueueSnackbar, "Product was added successfully.");
 
-    try {
-        const response = await fetch(`${kBaseUrl}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: jsonData
-            }
-        ).then(function(aResponse) {
-            if (!aResponse.ok) {
-                aResponse.json().then(function(aJson) {
-                    if (aJson?.data?.error) {
-                        enqueueSnackbar(aJson.data.error, errorVariant);
-                        return;
-                    }
-                    enqueueSnackbar("API error.", errorVariant);
-                });
-            } else {
-                aResponse.json().then(function(aJson) {
-                    enqueueSnackbar("Product added successfully.", successVariant);
-                    navigate(kParentRoute);
-                });
-            }
-        });
-    } catch (e) {
-        enqueueSnackbar(e.message, errorVariant);
+    if (!productResult) {
+        return;
     }
+
+    const variantResult = await callApi(`${kBaseUrl}${productResult.data.id}/variants`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(variantData)
+    }, enqueueSnackbar);
+
+    if (variantResult) {
+        navigate(kParentRoute);
+        return;
+    }
+    
+    enqueueSnackbar("Failed to update inventory.");
 }
 
 export default function ManageProductsCreate() {
@@ -94,7 +111,7 @@ export default function ManageProductsCreate() {
                 component="form"
                 spacing={2}
                 onSubmit={(aEvent) => doSubmit(aEvent, setters)}>
-                <ManageProductsBase />
+                <ManageProductsBase hideFullInventory />
             </Stack>
         </Box>
     );
