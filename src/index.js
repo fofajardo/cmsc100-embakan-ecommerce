@@ -11,6 +11,7 @@ import Home from "./pages/Home.js";
 import ProductsPublic from "./pages/ProductsPublic.js";
 import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
+import ManageProductsEdit from "./pages/manage/products/edit/page.js"
 
 const router = createHashRouter([
     // { path: "/",         element: <Root /> },
@@ -41,6 +42,10 @@ const router = createHashRouter([
                             {
                                 path: "create",
                                 element: <ManageProductsCreate />
+                            },
+                            {
+                                path: "edit/:id",
+                                element: <ManageProductsEdit />
                             },
                         ],
                     },

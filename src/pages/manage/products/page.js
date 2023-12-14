@@ -49,7 +49,7 @@ function ProductCard(aProps) {
                 <Button size="small" color="primary">
                 View
                 </Button>
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" component={RouterLink} to={`edit/${product.id}`}>
                 Edit
                 </Button>
                 <Button size="small" color="primary">
