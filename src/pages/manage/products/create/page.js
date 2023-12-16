@@ -12,7 +12,7 @@ import {
     ArrowBack as ArrowBackIcon
 } from "@mui/icons-material";
 
-import ManageProductsBase from "../base.js";
+import { ManageProductsBase } from "../base.js";
 
 import productTypes from "../productTypes.js";
 
@@ -80,10 +80,10 @@ export default function ManageProductsCreate() {
                 </Typography>
             </Stack>
             <Stack
-                component="form"
-                spacing={2}
-                onSubmit={(aEvent) => doSubmit(aEvent, setters)}>
-                <ManageProductsBase hideFullInventory />
+                spacing={2}>
+                <ManageProductsBase
+                    hideFullInventory
+                    onMainSubmit={(aEvent) => doSubmit(aEvent, setters)} />
             </Stack>
         </Box>
     );

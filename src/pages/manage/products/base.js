@@ -5,20 +5,28 @@ import {
     Button, IconButton, Typography,
     FormControl, FormLabel, TextField, Input,
     Autocomplete, Divider,
-    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    useTheme, useMediaQuery
 } from "@mui/material";
 
 import {
+    Add as AddIcon,
     Edit as EditIcon,
     Delete as DeleteIcon
 } from "@mui/icons-material";
 
 import productTypes from "./productTypes.js";
 
-function ProductInventoryFormControl(aProps) {
-    const { readOnly, index, data } = aProps;
+const ACTIONS = {
+    ADD: 0,
+    EDIT: 1,
+    DELETE: 2
+};
 
-    const [name, setName] = useState("Default");
+function ProductInventoryFormControl(aProps) {
+    const { isModal, readOnly, index, data } = aProps;
+
+    const [name, setName] = useState();
     const [price, setPrice] = useState();
     const [stock, setStock] = useState();
 
@@ -35,7 +43,9 @@ function ProductInventoryFormControl(aProps) {
         <Stack
             container
             gap={2}
-            direction={{ sm: "column", md: "row" }}>
+            direction={
+                isModal ? "column" : { sm: "column", md: "row" }
+            }>
             <TextField
                 label="Variant/Unit Name"
                 name="in-variant-name"
@@ -74,27 +84,37 @@ function ProductInventoryFormControl(aProps) {
 }
 
 function ProductInventoryDisplayCard(aProps) {
-    const { readOnly, index, data } = aProps;
+    const { onOpenDialog, readOnly, index, inventory } = aProps;
 
     const [name, setName] = useState("Default");
     const [price, setPrice] = useState();
     const [stock, setStock] = useState();
+    const [id, setId] = useState("");
 
     useEffect(function() {
-        if (!data) {
+        if (!inventory) {
             return;
         }
-        setName(data.name);
-        setPrice(data.price);
-        setStock(data.stock);
-    }, [data]);
+        setName(inventory.name);
+        setPrice(inventory.price);
+        setStock(inventory.stock);
+        setId(inventory.id);
+    }, [inventory]);
+
+    const handleClickEdit = function() {
+        onOpenDialog(ACTIONS.EDIT, "Edit", inventory);
+    };
+
+    const handleClickDelete = function() {
+        onOpenDialog(ACTIONS.DELETE, "Delete", inventory);
+    };
 
     return (
         <Stack
             gap={2}
             direction={{ sm: "column", md: "row" }}>
             <FormControl fullWidth>
-                <FormLabel>Variant/Unit Name</FormLabel>
+                <FormLabel>Unit Name</FormLabel>
                 {name}
             </FormControl>
             <FormControl fullWidth>
@@ -110,12 +130,14 @@ function ProductInventoryDisplayCard(aProps) {
                 direction={{ sm: "column", md: "row" }}>
             <Button
                 variant="outlined"
-                startIcon={<EditIcon />}>
+                startIcon={<EditIcon />}
+                onClick={handleClickEdit}>
                 Edit
             </Button>
             <Button
                 variant="outlined"
-                startIcon={<DeleteIcon />}>
+                startIcon={<DeleteIcon />}
+                onClick={handleClickDelete}>
                 Delete
             </Button>
             </Stack>
@@ -124,10 +146,87 @@ function ProductInventoryDisplayCard(aProps) {
 }
 
 function ProductInventoryListCard(aProps) {
-    const { getter, hideFullInventory, readOnly } = aProps;
+    const { getter, hideFullInventory, readOnly, onDialogSubmit } = aProps;
+
+    const [open, setOpen] = useState(false);
+    const [dialogType, setDialogType] = useState(ACTIONS.ADD);
+    const [dialogTitle, setDialogTitle] = useState("");
+    const [dialogVariantData, setDialogVariantData] = useState();
+
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const handleOpenDialog = function(aType, aTitle, aVariantData) {
+        setDialogType(aType);
+        setDialogTitle(aTitle);
+        setDialogVariantData(aVariantData);
+        setOpen(true);
+    };
+
+    const handleClose = function() {
+        setOpen(false);
+    };
+
+    const handleClickAdd = function() {
+        handleOpenDialog(ACTIONS.ADD, "Add New", null);
+    };
+
+    const handleDialogSubmit = async function(aEvent) {
+        const result = await onDialogSubmit(aEvent);
+        if (result) {
+            setOpen(false);
+        }
+    };
 
     return (
         <Card sx={{ p: 3 }} elevation={0}>
+            <Dialog
+                id="dialog-form"
+                component="form"
+                onSubmit={handleDialogSubmit}
+                open={open}
+                onClose={handleClose}
+                maxWidth="sm"
+                fullWidth
+                fullScreen={fullScreen}>
+                <DialogTitle>{dialogTitle} Product Unit</DialogTitle>
+                <DialogContent>
+                {
+                    <Fragment>
+                        <div style={{ display: "none" }}>
+                            <input type="text" name="in-variant-id" value={dialogVariantData?.id} readOnly />
+                            <input type="number" name="in-action" value={dialogType} readOnly />
+                        </div>
+                        {
+                            dialogType == ACTIONS.DELETE ? (
+                                <DialogContentText>
+                                Are you sure you want to delete this product unit?
+                                </DialogContentText>
+                            ) : (
+                                <Fragment>
+                                    <DialogContentText sx={{ mb: 4 }}>
+                                    Your changes will take effect immediately. However, this will not affect the price for confirmed orders.
+                                    </DialogContentText>
+                                    <ProductInventoryFormControl isModal data={dialogVariantData} />
+                                </Fragment>
+                            )
+                        }
+                    </Fragment>
+                }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>
+                    {
+                        dialogType == ACTIONS.DELETE ? ("No") : ("Cancel")
+                    }
+                    </Button>
+                    <Button type="submit" form="dialog-form">
+                    {
+                        dialogType == ACTIONS.DELETE ? ("Yes") : ("Save")
+                    }
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Typography variant="h6" sx={{ mb: 2 }}>Inventory</Typography>
             <Stack
                 spacing={2}>
@@ -138,26 +237,37 @@ function ProductInventoryListCard(aProps) {
                                 index={0}
                                 {...aProps} />
                             <FormLabel>
-                            You may add additional units/variants once the initial product is created.
+                            You may add additional units once the initial product is created.
                             </FormLabel>
                         </Fragment>
                     ) : (
-                        getter?.map(function(aVariant, aIndex) {
-                            let elements = [];
-                            elements.push(
-                                <ProductInventoryDisplayCard
-                                    key={aIndex}
-                                    index={aIndex}
-                                    data={aVariant}
-                                    {...aProps} />
-                            );
-                            if (aIndex != getter.length - 1) {
-                                elements.push(
-                                    <Divider />
-                                );
+                        <Fragment>
+                            {
+                                getter?.map(function(aVariant, aIndex) {
+                                    let elements = [];
+                                    elements.push(
+                                        <Fragment>
+                                            <ProductInventoryDisplayCard
+                                                key={aIndex}
+                                                index={aIndex}
+                                                inventory={aVariant}
+                                                onOpenDialog={handleOpenDialog}
+                                                {...aProps} />
+                                            <Divider />
+                                        </Fragment>
+                                    );
+                                    return elements;
+                                })
                             }
-                            return elements;
-                        })
+                            <Box>
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<AddIcon />}
+                                    onClick={handleClickAdd}>
+                                    Add new unit
+                                </Button>
+                            </Box>
+                        </Fragment>
                     )
                 }
             </Stack>
@@ -165,9 +275,10 @@ function ProductInventoryListCard(aProps) {
     )
 }
 
-export default function ManageProductsBase(aProps) {
-    const { data, hideFullInventory, readOnly } = aProps;
-    
+function ManageProductsBase(aProps) {
+    const { onMainSubmit, product, hideFullInventory, readOnly } = aProps;
+
+    const [id, setId] = useState("");
     const [name, setName] = useState("");
     const [slug, setSlug] = useState("");
     const [description, setDescription] = useState("");
@@ -175,19 +286,25 @@ export default function ManageProductsBase(aProps) {
     const [variants, setVariants] = useState([{}]);
 
     useEffect(function() {
-        if (!data) {
+        if (!product) {
             return;
         }
-        setName(data.name);
-        setSlug(data.slug);
-        setDescription(data.description);
-        setType(data.type);
-        setVariants(data.variants);
-    }, [data]);
+        setId(product.id);
+        setName(product.name);
+        setSlug(product.slug);
+        setDescription(product.description);
+        setType(product.type);
+        setVariants(product.variants);
+    }, [product]);
 
     return (
         <Fragment>
-            <Card sx={{ p: 3 }} elevation={0}>
+            <Card
+                id="main-form"
+                component="form"
+                onSubmit={onMainSubmit}
+                sx={{ p: 3 }}
+                elevation={0}>
                 <Typography variant="h6" sx={{ mb: 2 }}>General</Typography>
                 <Stack
                     spacing={2}>
@@ -262,21 +379,24 @@ export default function ManageProductsBase(aProps) {
             </Card>
             <ProductInventoryListCard
                 getter={variants}
-                hideFullInventory={hideFullInventory}
-                readOnly={readOnly} />
+                {...aProps} />
             <Stack
                 spacing={2}
                 direction="row">
                 <Button
                     variant="contained"
-                    type="submit">
+                    type="submit"
+                    form="main-form">
                     Submit
                 </Button>
                 <Button
-                    type="reset">
+                    type="reset"
+                    form="main-form">
                     Reset
                 </Button>
             </Stack>
         </Fragment>
     )
 }
+
+export { ManageProductsBase, ACTIONS };

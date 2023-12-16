@@ -14,14 +14,16 @@ import {
     ArrowBack as ArrowBackIcon
 } from "@mui/icons-material";
 
-import ManageProductsBase from "../base.js";
+import { ManageProductsBase, ACTIONS } from "../base.js";
 
 import productTypes from "../productTypes.js";
+
+import api from "../../../apiGlue.js";
 
 const kBaseUrl = "http://localhost:3001/products/";
 const kParentRoute = "/manage/products";
 
-async function doSubmit(aEvent, aSetters) {
+async function handleMainSubmit(aEvent, aSetters) {
     aEvent.preventDefault();
 
     const { enqueueSnackbar, navigate, id } = aSetters;
@@ -34,48 +36,77 @@ async function doSubmit(aEvent, aSetters) {
         type: productTypes.find((element) => element.label == formJson["in-type"]).value,
         description: formJson["in-description"]
     };
-    const jsonData = JSON.stringify(data);
 
-    const errorVariant = { variant: "error" };
-    const successVariant = { variant: "success" };
+    const productResult = await api.put(
+        `${kBaseUrl}${id}`,
+        data,
+        enqueueSnackbar,
+        "Product was edited successfully.");
 
-    try {
-        const response = await fetch(`${kBaseUrl}${id}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: jsonData
-            }
-        ).then(function(aResponse) {
-            if (!aResponse.ok) {
-                aResponse.json().then(function(aJson) {
-                    if (aJson?.data?.error) {
-                        enqueueSnackbar(aJson.data.error, errorVariant);
-                        return;
-                    }
-                    enqueueSnackbar("API error.", errorVariant);
-                });
-            } else {
-                aResponse.json().then(function(aJson) {
-                    enqueueSnackbar("Product edited successfully.", successVariant);
-                    navigate(kParentRoute);
-                });
-            }
-        });
-    } catch (e) {
-        enqueueSnackbar(e.message, errorVariant);
+    if (productResult) {
+        navigate(kParentRoute);        
     }
+}
+
+async function handleDialogSubmit(aEvent, aSetters) {
+    aEvent.preventDefault();
+
+    const { enqueueSnackbar, id, setProductData } = aSetters;
+    const formData = new FormData(aEvent.currentTarget);
+    const formJson = Object.fromEntries(formData.entries());
+
+    const data = {
+        id: formJson["in-variant-id"],
+        name: formJson["in-variant-name"],
+        price: formJson["in-variant-price"],
+        stock: formJson["in-variant-stock"]
+    };
+
+    console.log(formJson, data);
+    
+    var result = null;
+    switch (parseInt(formJson["in-action"])) {
+        case ACTIONS.ADD:
+            result = await api.post(
+                `${kBaseUrl}${id}/variants`,
+                data,
+                enqueueSnackbar,
+                "Product unit was added successfully."
+            );
+        break;
+        case ACTIONS.EDIT:
+            result = await api.put(
+                `${kBaseUrl}${id}/variants/${data.id}`,
+                data,
+                enqueueSnackbar,
+                "Product unit was edited successfully."
+            );
+        break;
+        case ACTIONS.DELETE:
+            result = await api.del(
+                `${kBaseUrl}${id}/variants/${data.id}`,
+                null,
+                enqueueSnackbar,
+                "Product unit was deleted successfully."
+            );
+        break;
+    }
+
+    console.log(result);
+    if (result) {
+        setProductData(result.data);
+    }
+    
+    return true;
 }
 
 export default function ManageProductsEdit() {
     const { enqueueSnackbar } = useSnackbar();
     const { id } = useParams();
     const navigate = useNavigate();
-
-    const setters = { enqueueSnackbar, navigate, id };
     const [productData, setProductData] = useState([]);
+
+    const setters = { enqueueSnackbar, navigate, id, setProductData };
 
     useEffect(function() {
         console.log(id);
@@ -98,10 +129,11 @@ export default function ManageProductsEdit() {
                 </Typography>
             </Stack>
             <Stack
-                component="form"
-                spacing={2}
-                onSubmit={(aEvent) => doSubmit(aEvent, setters)}>
-                <ManageProductsBase data={productData} />
+                spacing={2}>
+                <ManageProductsBase
+                    product={productData}
+                    onMainSubmit={(aEvent) => handleMainSubmit(aEvent, setters)}
+                    onDialogSubmit={(aEvent) => handleDialogSubmit(aEvent, setters)} />
             </Stack>
         </Box>
     );
