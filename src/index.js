@@ -14,32 +14,6 @@ import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
 import ProductDetailView from "./pages/ProductDetailView.js";
 
-// crop product test case for product detail view.
-const crop_product = {
-    ID: 1,
-    Name: "Bitter Melon (Ampalaya)",
-    Type: "Crop",
-    Description: "Harvested from Benguet.",
-    Price: 96,
-    Stock: 50,
-    Variant: "KG (4-5 pcs)",
-    Quantity: 1,
-    Image:"./components/products/crops/Ampalaya.jpg"
-};
-
-// poultry product test case for product detail view.
-const poultry_product = {
-    ID: 2,
-    Name: " Whole Chicken",
-    Type: "Poultry",
-    Description: "Born and raised from Bacolod.", 
-    Price: 175,
-    Stock: 50,
-    Variant: "Whole",
-    Quantity: 1,
-    Image:"./components/products/poultry/chicken.png"
-};
-
 const router = createHashRouter([
     // { path: "/",         element: <Root /> },
     // { path: "/subjects", element: <Subjects /> }
