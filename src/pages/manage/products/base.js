@@ -189,7 +189,7 @@ function ProductInventoryListCard(aProps) {
     };
 
     return (
-        <Card sx={{ p: 3 }} elevation={0}>
+        <Card sx={{ p: 3 }} elevation={0} variant="outlined">
             <Dialog
                 id="dialog-form"
                 component="form"
@@ -309,7 +309,8 @@ function ProductDetailCard(aProps) {
         <Card
             {...cardProps}
             sx={{ p: 3 }}
-            elevation={0}>
+            elevation={0}
+            variant="outlined">
             <Typography variant="h6" sx={{ mb: 2 }}>General</Typography>
             <Stack
                 spacing={2}>

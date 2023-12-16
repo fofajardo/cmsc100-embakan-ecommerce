@@ -36,10 +36,16 @@ function ProductCard(aProps) {
                 </Link>
                 </Typography>
                 <Typography variant="body1">
-                {productTypes.find((element) => element.value == product.type).label}
+                    
                 </Typography>
                 <Typography variant="body2">
-                {kCurrencyFormatter.format(variant?.price)}
+                {
+                    variant ? (
+                        kCurrencyFormatter.format(variant?.price)
+                    ) : (
+                        ""
+                    )
+                }
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                 {product.description}
