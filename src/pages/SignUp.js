@@ -3,14 +3,10 @@ import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link
     , Paper, Box, Grid , colors, Typography, Container} from "@mui/material";
     
     
-    // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
+//REFERENCE: mui.com documentations
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
-
-
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
@@ -36,9 +32,7 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
+
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>

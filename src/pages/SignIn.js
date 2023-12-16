@@ -3,10 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox
 , Paper, Box, Grid , Typography, createTheme, ThemeProvider, colors} from "@mui/material";
 
-
-
-
-// import { green, purple } from "@mui/material/colors";
+//REFERENCE: mui.com documentation
 
 const defaultTheme = createTheme();
 
@@ -48,9 +45,7 @@ export default function SignInSide() {
               alignItems: 'center',
             }}
           >
-            {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar> */}
+    
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
