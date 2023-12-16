@@ -33,7 +33,7 @@ async function handleMainSubmit(aEvent, aSetters) {
     const data = {
         name: formJson["in-name"],
         slug: formJson["in-slug"],
-        type: productTypes.find((element) => element.label == formJson["in-type"]).value,
+        type: formJson["in-type"],
         description: formJson["in-description"]
     };
 

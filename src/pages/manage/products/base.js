@@ -3,8 +3,8 @@ import { Fragment, useState, useEffect } from "react";
 import {
     Paper, Box, Stack, Grid, Card,
     Button, IconButton, Typography,
-    FormControl, FormLabel, TextField, Input,
-    Autocomplete, Divider,
+    FormControl, FormLabel, TextField, Input, InputLabel, MenuItem,
+    Select, Divider,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     useTheme, useMediaQuery
 } from "@mui/material";
@@ -359,25 +359,29 @@ function ProductDetailCard(aProps) {
                     container
                     gap={2}
                     direction={{ sm: "column", md: "row" }}>
-                    <Autocomplete
-                        disablePortal
-                        id="in-type"
-                        options={productTypes}
-                        sx={{ width: "100%" }}
-                        defaultValue={productTypes[0]}
-                        value={productTypes[type]}
-                        disabled={readOnly}
-                        onChange={function(event, newValue) {
-                            setType(newValue.value);
-                        }}
-                        renderInput={
-                            (params) =>
-                                <TextField {...params}
-                                    name="in-type"
-                                    label="Type"
-                                    required />
+                    <FormControl fullWidth>
+                        <InputLabel id="in-type-label">Type</InputLabel>
+                        <Select
+                            label="Type"
+                            labelId="in-type-label"
+                            name="in-type"
+                            defaultValue={0}
+                            value={type}
+                            disabled={readOnly}
+                            onChange={function(event) {
+                                setType(event.target.value);
+                            }}>
+                            {
+                                productTypes.map(function(aType, aIndex) {
+                                    return (
+                                        <MenuItem value={aType.value}>
+                                            {aType.label}
+                                        </MenuItem>
+                                    )
+                                })
                             }
-                        />
+                        </Select>
+                    </FormControl>
                 </Stack>
             </Stack>
         </Card>
