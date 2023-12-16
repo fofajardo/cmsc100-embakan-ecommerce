@@ -24,7 +24,7 @@ const ACTIONS = {
 };
 
 function ProductInventoryFormControl(aProps) {
-    const { isModal, readOnly, index, data } = aProps;
+    const { isModal, useDefaultUnit, readOnly, data } = aProps;
 
     const [name, setName] = useState();
     const [price, setPrice] = useState();
@@ -49,6 +49,7 @@ function ProductInventoryFormControl(aProps) {
             <TextField
                 label="Variant/Unit Name"
                 name="in-variant-name"
+                defaultValue={useDefaultUnit ? "One Unit" : null}
                 value={name}
                 disabled={readOnly}
                 onChange={function(event) {
@@ -243,7 +244,7 @@ function ProductInventoryListCard(aProps) {
                     isCreateProduct ? (
                         <Fragment>
                             <ProductInventoryFormControl
-                                index={0}
+                                useDefaultUnit
                                 {...aProps} />
                             <FormLabel>
                             You may add additional units once the initial product is created.
