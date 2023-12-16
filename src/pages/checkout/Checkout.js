@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {CssBaseline, AppBar, Box, Container, Toolbar,
-  Paper, Stepper, Stepper, Step, StepLabel, Button, Link,
-  Typography} from '@mui/material/CssBaseline';
+  Paper, Stepper, Step, StepLabel, Button, Link,
+  Typography} from '@mui/material';
 
-import AddressForm from './AddressForm';
-import PaymentForm from './PaymentForm';
-import Review from './Review';
+import AddressForm from './AddressForm.js';
+import PaymentForm from './PaymentForm.js';
+import Review from './Review.js';
 
 
 
@@ -98,7 +98,7 @@ export default function Checkout() {
             </React.Fragment>
           )}
         </Paper>
-        <Copyright />
+   
       </Container>
     </React.Fragment>
   );

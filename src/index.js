@@ -13,7 +13,11 @@ import SignIn from "./pages/SignIn.js";
 import SignUp from "./pages/SignUp.js";
 
 //TODO (rfpramos): This is to implement the current Forms for checkout
-import SignIn from "./pages/Checkout.js";
+import Checkout from "./pages/checkout/Checkout.js";
+
+
+//TODO (cart): This is to implement the current Forms for checkout
+import Cart from "./pages/Cart.js";
 
 
 
@@ -54,7 +58,12 @@ const router = createHashRouter([
             {
                 //Checkout
                 path: "checkout",
-                element:  <CheckoutCart />
+                element:  <Checkout />
+
+            }, {
+                //Checkout
+                path: "cart",
+                element:  <Cart />
 
             },{
                 path: "manage",
