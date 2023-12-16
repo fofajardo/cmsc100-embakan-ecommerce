@@ -12,17 +12,18 @@ import Header from "../components/Header.js";
 
 const theme = createTheme({
     components: {
-        MuiPaper: {
+        MuiCard: {
             styleOverrides: {
                 root: {
                     borderRadius: 16
                 },
             },
         },
-        MuiAppBar: {
+        MuiDrawer: {
             styleOverrides: {
-                root: {
-                    borderRadius: 0
+                paper: {
+                    borderTopRightRadius: 24,
+                    borderBottomRightRadius: 24
                 },
             },
         },
@@ -30,7 +31,7 @@ const theme = createTheme({
     palette: {
         mode: "light",
         primary: {
-            main: "#243516",
+            main: "#517644",
         },
         secondary: {
             main: "#ffba4b",
@@ -42,7 +43,7 @@ export default function Root() {
     return (
         <SnackbarProvider maxSnack={3}>
             <ThemeProvider theme={theme}>
-                <Box sx={{ background: "#fff8f4" }}>
+                <Box>
                     <Header />
                     <Outlet />
                 </Box>
