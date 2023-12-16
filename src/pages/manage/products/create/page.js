@@ -16,33 +16,10 @@ import ManageProductsBase from "../base.js";
 
 import productTypes from "../productTypes.js";
 
+import api from "../../../apiGlue.js";
+
 const kBaseUrl = "http://localhost:3001/products/";
 const kParentRoute = "/manage/products";
-
-// TODO: move to a utility function.
-async function callApi(aUrl, aOptions, aEnqueue, aSuccessMessage) {
-    const errorVariant = { variant: "error" };
-    const successVariant = { variant: "success" };
-
-    try {
-        const response = await fetch(aUrl, aOptions)
-        const jsonResponse = await response.json()
-        
-        if (response.ok) {
-            if (aSuccessMessage) {
-                aEnqueue(aSuccessMessage, successVariant);                        
-            }
-            return jsonResponse;
-        } else if (jsonResponse?.data?.error) {
-            aEnqueue(jsonResponse.data.error, errorVariant);
-        } else {
-            aEnqueue("Unknown API error.", errorVariant);
-        }
-    } catch (e) {
-        aEnqueue(e.message, errorVariant);
-    }
-    return false;
-}
 
 async function doSubmit(aEvent, aSetters) {
     aEvent.preventDefault();
@@ -63,25 +40,20 @@ async function doSubmit(aEvent, aSetters) {
         stock: parseInt(formJson["in-variant-stock"])
     };
 
-    const productResult = await callApi(`${kBaseUrl}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
-    }, enqueueSnackbar, "Product was added successfully.");
+    const productResult = await api.post(
+        `${kBaseUrl}`,
+        data,
+        enqueueSnackbar,
+        "Product was added successfully.");
 
     if (!productResult) {
         return;
     }
 
-    const variantResult = await callApi(`${kBaseUrl}${productResult.data.id}/variants`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(variantData)
-    }, enqueueSnackbar);
+    const variantResult = await api.post(
+        `${kBaseUrl}${productResult.data.id}/variants`,
+        variantData,
+        enqueueSnackbar);
 
     if (variantResult) {
         navigate(kParentRoute);
