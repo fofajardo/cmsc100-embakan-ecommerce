@@ -1,10 +1,7 @@
-import * as React from 'react'; 
-import { Grid, Typography, Divider, Button, Box } from "@mui/material";
+// import { Grid, Typography, Divider, Button, Box } from "@mui/material";
 
-
-export default function ProductDetailView(prop){
-    return {
-        
-
-    }
+export default function ProductDetailView(){
+    return (
+        <h1>Hello</h1>
+    )
 }
