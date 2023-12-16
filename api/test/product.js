@@ -17,12 +17,12 @@ describe("API: Products", function() {
               slug: "kalabasa",
               type: 0,
               description: "Pampalinaw ng mata",
-              stock: 100,
               variants: [
                 {
                   id: uuidv4(),
                   name: "San Leonardo",
-                  price: 30
+                  price: 30,
+                  stock: 100
                 }
               ]
             },
@@ -61,8 +61,7 @@ describe("API: Products", function() {
                 slug: null,
                 type: null,
                 price: null,
-                description: null,
-                stock: 90
+                description: "desc was updated",
             },
             {
                 json: true
@@ -78,7 +77,8 @@ describe("API: Products", function() {
             `${kBaseUrl}${testProductId}/variants`,
             {
                 name: "Upland",
-                price: 30
+                price: 30,
+                stock: 100
             },
             {
                 json: true
@@ -94,7 +94,8 @@ describe("API: Products", function() {
         await needle("put",
             `${kBaseUrl}${testProductId}/variants/${testVariantId}`,
             {
-                price: 35
+                price: 35,
+                stock: 90
             },
             {
                 json: true

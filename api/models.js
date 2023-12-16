@@ -18,12 +18,15 @@ const Product = mongoose.model("Product", {
     slug: String,
     type: Number,
     description: String,
-    stock: Number,
-    variants: [{
-        id: String,
-        name: String,
-        price: Number
-    }]
+    variants: {
+        type: [{
+            id: String,
+            name: String,
+            price: Number,
+            stock: Number,
+        }],
+        default: []
+    }
 }, "products");
 
 // Order mongoose model
