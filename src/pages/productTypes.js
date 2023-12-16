@@ -1,14 +1,18 @@
 const productTypes = [
     {
-        label: "Unsorted",
+        id: "unpublished",
+        label: "⛔ Unpublished",
         value: 0,
+        isPrivate: true,
     },
     {
-        label: "Crop",
+        id: "crops",
+        label: "🌾 Crops",
         value: 1,
     },
     {
-        label: "Poultry",
+        id: "poultry",
+        label: "🐔 Poultry",
         value: 2,
     },
 ];
