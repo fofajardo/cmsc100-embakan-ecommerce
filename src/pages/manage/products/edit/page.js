@@ -104,7 +104,7 @@ export default function ManageProductsEdit() {
     const { enqueueSnackbar } = useSnackbar();
     const { id } = useParams();
     const navigate = useNavigate();
-    const [productData, setProductData] = useState([]);
+    const [productData, setProductData] = useState();
 
     const setters = { enqueueSnackbar, navigate, id, setProductData };
 
