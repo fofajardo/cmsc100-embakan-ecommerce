@@ -62,8 +62,6 @@ async function handleDialogSubmit(aEvent, aSetters) {
         stock: formJson["in-variant-stock"]
     };
 
-    console.log(formJson, data);
-    
     var result = null;
     switch (parseInt(formJson["in-action"])) {
         case ACTIONS.ADD:
@@ -92,7 +90,6 @@ async function handleDialogSubmit(aEvent, aSetters) {
         break;
     }
 
-    console.log(result);
     if (result) {
         setProductData(result.data);
     }
@@ -109,13 +106,12 @@ export default function ManageProductsEdit() {
     const setters = { enqueueSnackbar, navigate, id, setProductData };
 
     useEffect(function() {
-        console.log(id);
         fetch(`${kBaseUrl}${id}`,
             {
                 method: "GET",
             }
         ).then(response => response.json()
-        ).then(body => { setProductData(body.data); console.log(body); });
+        ).then(body => { setProductData(body.data); });
     }, []);
 
     return (

@@ -116,7 +116,7 @@ export default function ManageProductsList() {
                 method: "GET",
             }
         ).then(response => response.json()
-        ).then(body => { setProducts(body.data); console.log(body); });
+        ).then(body => { setProducts(body.data); });
     }, []);
 
     return (
