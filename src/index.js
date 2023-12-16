@@ -12,7 +12,7 @@ import ProductsPublic from "./pages/ProductsPublic.js";
 import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
-import ProductDetailView from "./pages/ProductDetailView.js";
+import ProductDetailView from "./pages/ProductDetailView.js"
 
 const router = createHashRouter([
     // { path: "/",         element: <Root /> },
@@ -29,14 +29,13 @@ const router = createHashRouter([
             // { path: "subjects/:code", element: <SubjectDetail /> },
             {
                 path: "products",
-                element:  <ProductsPublic />,
-                children: [
-                    {
-                        path:"view",
-                        element: <ProductDetailView />
-                    }
-                ],
-            }, {
+                element:  <ProductsPublic />
+            },
+            {
+                path: "view",
+                element: <ProductDetailView />
+            }, 
+            {
                 path: "manage",
                 children: [
                     {
