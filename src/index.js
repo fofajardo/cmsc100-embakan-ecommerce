@@ -16,7 +16,7 @@ import ProductDetailView from "./pages/ProductDetailView.js";
 
 // crop product test case for product detail view.
 const crop_product = {
-    id: 1,
+    ID: 1,
     Name: "Bitter Melon (Ampalaya)",
     Type: "Crop",
     Description: "Harvested from Benguet.",
@@ -24,11 +24,12 @@ const crop_product = {
     Stock: 50,
     Variant: "KG (4-5 pcs)",
     Quantity: 1,
+    Image:"./components/products/crops/Ampalaya.jpg"
 };
 
 // poultry product test case for product detail view.
 const poultry_product = {
-    id: 2,
+    ID: 2,
     Name: " Whole Chicken",
     Type: "Poultry",
     Description: "Born and raised from Bacolod.", 
@@ -36,6 +37,7 @@ const poultry_product = {
     Stock: 50,
     Variant: "Whole",
     Quantity: 1,
+    Image:"./components/products/poultry/chicken.png"
 };
 
 const router = createHashRouter([
@@ -56,13 +58,11 @@ const router = createHashRouter([
                 element:  <ProductsPublic />,
                 children: [
                     {
-                        path:"view/:id",
-                        element: <ProductDetailView data = {crop_product} />    // test for crop
-                        // element: <ProductDetailView data = {poultry_view} />    // test for poultry
+                        path:"view",
+                        element: <ProductDetailView />
                     }
-                ]
-            },
-            {
+                ],
+            }, {
                 path: "manage",
                 children: [
                     {
