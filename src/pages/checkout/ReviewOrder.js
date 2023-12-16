@@ -1,6 +1,10 @@
 import * as React from 'react';
 import {Typography, List, ListItem, ListItemText, Grid} from '@mui/material';
-//
+
+
+
+
+
 const products = [
   {
     name: 'Product 1',
@@ -26,16 +30,39 @@ const products = [
 ];
 
 
-export default function Cart() {
+export default function Review() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Bayong
+        Order summary
       </Typography>
-
-      <List enablePadding>
+      <List disablePadding>
         {products.map((product) => (
           <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
+
+{/* https://www.geeksforgeeks.org/how-to-create-shopping-cart-button-in-reactjs */}
+            
+             <ButtonGroup>
+                    <Button
+                        onClick={() => {
+                            setItemCount(Math.max(itemCount - 1, 0));
+                        }}
+                    >
+                        {" "}
+                        <RemoveIcon fontSize="small" />
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setItemCount(itemCount + 1);
+                        }}
+                    >
+                        {" "}
+                        <AddIcon fontSize="small" />
+                    </Button>
+                </ButtonGroup>
+
+
+
             <ListItemText primary={product.name} secondary={product.desc} />
             <Typography variant="body2">{product.price}</Typography>
           </ListItem>
@@ -44,11 +71,10 @@ export default function Cart() {
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
             $34.06
-            {/* TODO */}
           </Typography>
         </ListItem>
       </List>
-   
+     
     </React.Fragment>
   );
 }

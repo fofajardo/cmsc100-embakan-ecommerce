@@ -4,12 +4,12 @@ import {CssBaseline, AppBar, Box, Container, Toolbar,
   Typography} from '@mui/material';
 
 import AddressForm from './AddressForm.js';
-import PaymentForm from './PaymentForm.js';
-import Review from './Review.js';
+import PaymentForm from './DeliveryConfirmation.js';
+import Review from './ReviewOrder.js';
 
 
 
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
+const steps = ['Order and Delivery Details', 'Confirm Payment'];
 
 //This will contain the 
 function getStepContent(step) {
@@ -18,8 +18,6 @@ function getStepContent(step) {
       return <AddressForm />;
     case 1:
       return <PaymentForm />;
-    case 2:
-      return <Review />;
     default:
       throw new Error('Unknown step');
   }
@@ -39,33 +37,13 @@ export default function Checkout() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar
-        position="absolute"
-        color="default"
-        elevation={0}
-        sx={{
-          position: 'relative',
-          borderBottom: (t) => `1px solid ${t.palette.divider}`,
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Company name
-          </Typography>
-        </Toolbar>
-      </AppBar>
+
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
             Checkout
           </Typography>
-          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
+        
           {activeStep === steps.length ? (
             <React.Fragment>
               <Typography variant="h5" gutterBottom>
@@ -79,8 +57,20 @@ export default function Checkout() {
             </React.Fragment>
           ) : (
             <React.Fragment>
+
+          
+                {/* @rfpramos : This returns the review so that we can show the product list. */}
+            
+                {activeStep == 0 && (
+                  <Review />
+                )}
               {getStepContent(activeStep)}
+
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+
+
+                
+
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                     Back
