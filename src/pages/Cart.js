@@ -1,7 +1,19 @@
 import * as React from 'react';
-import {Typography, List, ListItem, ListItemText, Grid} from '@mui/material';
+import { useState } from 'react';
+
+import { Outlet, Link, useNavigate, Link as RouterLink } from "react-router-dom";
+import Checkout from "./checkout/Checkout.js";
+
+// import Carder from
+import {Paper, Divider, Button, Typography, List, ListItem, ListItemText, Grid, IconButton} from '@mui/material';
+
+import {
+  Add as AddIcon ,
+  Remove as RemoveIcon ,
+  
+} from "@mui/icons-material";
 //
-const products = [
+const cartItems = [
   {
     name: 'Product 1',
     desc: 'A nice thing',
@@ -27,28 +39,68 @@ const products = [
 
 
 export default function Cart() {
-  return (
-    <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Bayong
-      </Typography>
 
-      <List enablePadding>
-        {products.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
-          </ListItem>
-        ))}
-        <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText primary="Total" />
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            $34.06
-            {/* TODO */}
+  const [quantity, setQuantity] = useState(1);
+
+  const increaseQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+  return (
+    <Paper elevation={3} sx={{ p: 2 }}>
+    <Typography variant="h6" gutterBottom>
+      Shopping Cart
+    </Typography>
+    <Divider />
+    <List>
+      {cartItems.map((item, index) => (
+        <ListItem key={index} divider>
+          <ListItemText
+            primary={item.name}
+            secondary={`Quantity: ${item.quantity}`}
+          />
+          <Typography variant="body2">
+            ${(item.price * item.quantity).toFixed(2)}
+
+            <IconButton  size = "small" /*component={RouterLink} to={kParentRoute}*/ color="secondary" aria-label="add" onClick={increaseQuantity}>
+                    <AddIcon />
+                </IconButton>
+           
+            
+              <IconButton   size = "small" /*component={RouterLink} to={kParentRoute}*/ color="secondary" aria-label="minus" onClick={decreaseQuantity}>
+                    <RemoveIcon />
+                </IconButton>
+
+
           </Typography>
         </ListItem>
-      </List>
-   
-    </React.Fragment>
+      ))}
+    </List>
+    <Typography variant="h6">
+      Total: $
+      {cartItems
+        .reduce((total, item) => total + item.price * item.quantity, 0)
+        .toFixed(2)}
+    </Typography>  
+
+    <Button
+                type ="button"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                   <Link to={`/checkout`}>Checkout</Link>
+              </Button>
+
+    
+    </Paper>
+
+    
   );
+
 }
