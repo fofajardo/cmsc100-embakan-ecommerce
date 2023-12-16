@@ -146,7 +146,16 @@ function ProductInventoryDisplayCard(aProps) {
 }
 
 function ProductInventoryListCard(aProps) {
-    const { getter, hideFullInventory, readOnly, onDialogSubmit } = aProps;
+    const { product, isCreateProduct, readOnly, onDialogSubmit } = aProps;
+
+    const [variants, setVariants] = useState([{}]);
+
+    useEffect(function() {
+        if (!product) {
+            return;
+        }
+        setVariants(product.variants);
+    }, [product]);
 
     const [open, setOpen] = useState(false);
     const [dialogType, setDialogType] = useState(ACTIONS.ADD);
@@ -231,7 +240,7 @@ function ProductInventoryListCard(aProps) {
             <Stack
                 spacing={2}>
                 {
-                    hideFullInventory ? (
+                    isCreateProduct ? (
                         <Fragment>
                             <ProductInventoryFormControl
                                 index={0}
@@ -243,7 +252,7 @@ function ProductInventoryListCard(aProps) {
                     ) : (
                         <Fragment>
                             {
-                                getter?.map(function(aVariant, aIndex) {
+                                variants?.map(function(aVariant, aIndex) {
                                     let elements = [];
                                     elements.push(
                                         <Fragment>
@@ -275,15 +284,14 @@ function ProductInventoryListCard(aProps) {
     )
 }
 
-function ManageProductsBase(aProps) {
-    const { onMainSubmit, product, hideFullInventory, readOnly } = aProps;
-
+function ProductDetailCard(aProps) {
+    const { product, readOnly, cardProps } = aProps;
+    
     const [id, setId] = useState("");
     const [name, setName] = useState("");
     const [slug, setSlug] = useState("");
     const [description, setDescription] = useState("");
     const [type, setType] = useState(0);
-    const [variants, setVariants] = useState([{}]);
 
     useEffect(function() {
         if (!product) {
@@ -294,91 +302,108 @@ function ManageProductsBase(aProps) {
         setSlug(product.slug);
         setDescription(product.description);
         setType(product.type);
-        setVariants(product.variants);
     }, [product]);
 
     return (
-        <Fragment>
-            <Card
-                id="main-form"
-                component="form"
-                onSubmit={onMainSubmit}
-                sx={{ p: 3 }}
-                elevation={0}>
-                <Typography variant="h6" sx={{ mb: 2 }}>General</Typography>
+        <Card
+            {...cardProps}
+            sx={{ p: 3 }}
+            elevation={0}>
+            <Typography variant="h6" sx={{ mb: 2 }}>General</Typography>
+            <Stack
+                spacing={2}>
                 <Stack
-                    spacing={2}>
-                    <Stack
-                        container
-                        gap={2}
-                        direction={{ sm: "column", md: "row" }}>
-                        <TextField
-                            label="Name"
-                            name="in-name"
-                            helperText="The user-facing name of the product."
-                            value={name}
-                            disabled={readOnly}
-                            onChange={function(event) {
-                                setName(event.target.value);
-                            }}
-                            required
-                            fullWidth />
-                        <TextField
-                            label="Slug"
-                            name="in-slug"
-                            helperText="The name used to represent the product in the URL."
-                            value={slug}
-                            disabled={readOnly}
-                            onChange={function(event) {
-                                setSlug(event.target.value);
-                            }}
-                            required
-                            fullWidth />
-                    </Stack>
-                    <Stack
-                        container
-                        gap={2}
-                        direction={{ sm: "column", md: "row" }}>
-                        <TextField
-                            label="Description"
-                            name="in-description"
-                            value={description}
-                            disabled={readOnly}
-                            onChange={function(event) {
-                                setDescription(event.target.value);
-                            }}
-                            required
-                            multiline
-                            fullWidth />
-                    </Stack>
-                    <Stack
-                        container
-                        gap={2}
-                        direction={{ sm: "column", md: "row" }}>
-                        <Autocomplete
-                            disablePortal
-                            id="in-type"
-                            options={productTypes}
-                            sx={{ width: "100%" }}
-                            defaultValue={productTypes[0]}
-                            value={productTypes[type]}
-                            disabled={readOnly}
-                            onChange={function(event, newValue) {
-                                setType(newValue.value);
-                            }}
-                            renderInput={
-                                (params) =>
-                                    <TextField {...params}
-                                        name="in-type"
-                                        label="Type"
-                                        required />
-                                }
-                            />
-                    </Stack>
+                    container
+                    gap={2}
+                    direction={{ sm: "column", md: "row" }}>
+                    <TextField
+                        label="Name"
+                        name="in-name"
+                        helperText="The user-facing name of the product."
+                        value={name}
+                        disabled={readOnly}
+                        onChange={function(event) {
+                            setName(event.target.value);
+                        }}
+                        required
+                        fullWidth />
+                    <TextField
+                        label="Slug"
+                        name="in-slug"
+                        helperText="The name used to represent the product in the URL."
+                        value={slug}
+                        disabled={readOnly}
+                        onChange={function(event) {
+                            setSlug(event.target.value);
+                        }}
+                        required
+                        fullWidth />
                 </Stack>
-            </Card>
+                <Stack
+                    container
+                    gap={2}
+                    direction={{ sm: "column", md: "row" }}>
+                    <TextField
+                        label="Description"
+                        name="in-description"
+                        value={description}
+                        disabled={readOnly}
+                        onChange={function(event) {
+                            setDescription(event.target.value);
+                        }}
+                        required
+                        multiline
+                        fullWidth />
+                </Stack>
+                <Stack
+                    container
+                    gap={2}
+                    direction={{ sm: "column", md: "row" }}>
+                    <Autocomplete
+                        disablePortal
+                        id="in-type"
+                        options={productTypes}
+                        sx={{ width: "100%" }}
+                        defaultValue={productTypes[0]}
+                        value={productTypes[type]}
+                        disabled={readOnly}
+                        onChange={function(event, newValue) {
+                            setType(newValue.value);
+                        }}
+                        renderInput={
+                            (params) =>
+                                <TextField {...params}
+                                    name="in-type"
+                                    label="Type"
+                                    required />
+                            }
+                        />
+                </Stack>
+            </Stack>
+        </Card>
+    )
+}
+
+function ManageProductsBase(aProps) {
+    const { product, isCreateProduct, readOnly, onMainSubmit } = aProps;
+
+    const mainFormProps = {
+        id: "main-form",
+        component: "form",
+        onSubmit: onMainSubmit
+    };
+    const parentBoxProps = isCreateProduct ? mainFormProps : {};
+    const detailBoxProps = isCreateProduct ? {} : mainFormProps;
+
+    return (
+        <Stack
+            spacing={2}
+            useFlexGap
+            {...parentBoxProps}>
+            <ProductDetailCard
+                cardProps={detailBoxProps}
+                {...aProps} />
             <ProductInventoryListCard
-                getter={variants}
                 {...aProps} />
             <Stack
                 spacing={2}
@@ -395,7 +420,7 @@ function ManageProductsBase(aProps) {
                     Reset
                 </Button>
             </Stack>
-        </Fragment>
+        </Stack>
     )
 }
 

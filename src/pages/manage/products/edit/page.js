@@ -128,13 +128,10 @@ export default function ManageProductsEdit() {
                     Edit Product
                 </Typography>
             </Stack>
-            <Stack
-                spacing={2}>
-                <ManageProductsBase
-                    product={productData}
-                    onMainSubmit={(aEvent) => handleMainSubmit(aEvent, setters)}
-                    onDialogSubmit={(aEvent) => handleDialogSubmit(aEvent, setters)} />
-            </Stack>
+            <ManageProductsBase
+                product={productData}
+                onMainSubmit={(aEvent) => handleMainSubmit(aEvent, setters)}
+                onDialogSubmit={(aEvent) => handleDialogSubmit(aEvent, setters)} />
         </Box>
     );
 }

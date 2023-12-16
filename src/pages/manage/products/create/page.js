@@ -79,12 +79,9 @@ export default function ManageProductsCreate() {
                     Create Product
                 </Typography>
             </Stack>
-            <Stack
-                spacing={2}>
-                <ManageProductsBase
-                    hideFullInventory
-                    onMainSubmit={(aEvent) => doSubmit(aEvent, setters)} />
-            </Stack>
+            <ManageProductsBase
+                isCreateProduct
+                onMainSubmit={(aEvent) => doSubmit(aEvent, setters)} />
         </Box>
     );
 }
