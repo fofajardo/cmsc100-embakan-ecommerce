@@ -54,8 +54,8 @@ const router = createHashRouter([
             {
                 //Checkout
                 path: "checkout",
-                element:  <Checkout />
-                
+                element:  <CheckoutCart />
+
             },{
                 path: "manage",
                 children: [
