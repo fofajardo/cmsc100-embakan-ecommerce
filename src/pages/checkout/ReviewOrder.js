@@ -40,26 +40,6 @@ export default function Review() {
         {products.map((product) => (
           <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
 
-{/* https://www.geeksforgeeks.org/how-to-create-shopping-cart-button-in-reactjs */}
-            
-             <ButtonGroup>
-                    <Button
-                        onClick={() => {
-                            setItemCount(Math.max(itemCount - 1, 0));
-                        }}
-                    >
-                        {" "}
-                        <RemoveIcon fontSize="small" />
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setItemCount(itemCount + 1);
-                        }}
-                    >
-                        {" "}
-                        <AddIcon fontSize="small" />
-                    </Button>
-                </ButtonGroup>
 
 
 

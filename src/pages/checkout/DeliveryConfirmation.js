@@ -5,19 +5,19 @@ export default function PaymentForm() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Receiver's Name
+        Remarks
       </Typography>
       <Typography variant="p" gutterBottom>
-        Input the name of the receiver in the Delivery Address.
+        If you need specific instructions regarding the door-to-door delivery. Input here.
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <TextField
             required
-            id="nameOfReceiver"
-            label="Name of Receiver"
+            id="remarks"
+            label="Remarks"
             fullWidth
-            autoComplete="Name"
+            autoComplete="Comment..."
             variant="standard"
           />
         </Grid>
