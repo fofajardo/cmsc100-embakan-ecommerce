@@ -15,7 +15,7 @@ import {
     Add as AddIcon
 } from "@mui/icons-material";
 
-import productTypes from "./productTypes.js";
+import productTypes from "../../productTypes.js";
 
 const kBaseUrl = "http://localhost:3001/products/";
 const kParentRoute = "/manage";
