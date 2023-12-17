@@ -20,6 +20,15 @@ import Checkout from "./pages/checkout/Checkout.js";
 import Cart from "./pages/Cart.js";
 
 
+//TODO (cart): This is to implement merchant dashboards and its view
+import MerchantDashboard from "./pages/manage/merchant-dashboard/Dashboard.js"
+import MerchantAccounts from "./pages/manage/merchant-dashboard/Accounts.js"
+import MerchantOrders from "./pages/manage/merchant-dashboard/Orders.js"
+import MerchantSales from "./pages/manage/merchant-dashboard/Sales.js"
+
+
+
+
 
 import Root from "./pages/Root.js";
 import Home from "./pages/Home.js";
@@ -30,6 +39,8 @@ import ProductsPublic from "./pages/ProductsPublic.js";
 import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
+
+
 
 
 const router = createHashRouter([
@@ -85,7 +96,29 @@ const router = createHashRouter([
                                 element: <ManageProductsEdit />
                             },
                         ],
-                    },
+                        
+                        path: "dashboard",
+                            children:[
+                                {
+                                path : "merchant-view",
+                                element:  <MerchantDashboard />
+                                }, 
+                                {
+                                    path : "accounts",
+                                    element:  <MerchantAccounts />
+                                },
+                                {
+                                    path : "orders",
+                                    element:  <MerchantOrders />
+                                },  {
+                                    path : "sales",
+                                    element:  <MerchantSales />
+                                }
+                            ]
+                            
+                        
+                    }
+                   
                 ]
             },
         ]

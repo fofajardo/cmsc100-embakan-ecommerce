@@ -16,6 +16,7 @@ import {
     Delete as DeleteIcon
 } from "@mui/icons-material";
 
+// [ +  - ]
 import productTypes from "./productTypes.js";
 
 const ACTIONS = {
@@ -24,6 +25,8 @@ const ACTIONS = {
     DELETE: 2
 };
 
+
+//This can be used as editor of for number
 function ProductInventoryFormControl(aProps) {
     const { isModal, useDefaultUnit, readOnly, data } = aProps;
 
