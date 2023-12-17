@@ -22,17 +22,12 @@ async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
     return false;
 }
 
-async function get(aUrl, aData, aEnqueue, aSuccessMessage) {
-    if (!aData) {
-        aData = {};
-    }
-
+async function get(aUrl, aEnqueue, aSuccessMessage) {
     return await base(aUrl, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(aData)
     }, aEnqueue, aSuccessMessage);
 }
 
