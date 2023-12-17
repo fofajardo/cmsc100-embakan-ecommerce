@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Outlet } from "react-router-dom";
+import { useLocation, useNavigate, Outlet } from "react-router-dom";
 
 import {
     Box, ThemeProvider, createTheme
@@ -9,6 +9,7 @@ import {
 import { SnackbarProvider } from "notistack";
 
 import Header from "../components/Header.js";
+import api from "./apiGlue.js";
 
 const theme = createTheme({
     components: {
@@ -39,13 +40,32 @@ const theme = createTheme({
     },
 });
 
+const signRoutes = [
+    "/sign-in",
+    "/sign-up",
+    "/sign-out"
+];
+
 export default function Root() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const isSignPage = signRoutes.indexOf(location.pathname) >= 0;
+
+    if (!isSignPage) {
+        api.blockSignedOut(navigate);
+    }
+
     return (
         <SnackbarProvider maxSnack={3}>
             <ThemeProvider theme={theme}>
                 <Box>
-                
-                    <Header />
+                    {
+                        isSignPage ? (
+                            <></>
+                        ) : (
+                            <Header />
+                        )
+                    }
                     <Outlet />
                 </Box>
             </ThemeProvider>

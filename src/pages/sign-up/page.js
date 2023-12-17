@@ -19,11 +19,7 @@ export default function SignUp() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
 
-    api.identify().then(function(aUser) {
-        if (aUser.data) {
-            navigate(kTargetRoute);
-        }
-    });
+    api.blockSignedIn(navigate);
 
     const handleSubmit = async function(aEvent) {
         aEvent.preventDefault();

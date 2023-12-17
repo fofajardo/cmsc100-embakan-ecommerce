@@ -90,4 +90,25 @@ async function identify() {
     return response;
 }
 
-export default { base, get, post, put, del, identify };
+const kSignedInRoute = "/";
+const kSignedOutRoute = "/sign-in";
+
+async function blockSignedIn(aNavigate) {
+    const user = await identify()
+    if (user.data) {
+        aNavigate(kSignedInRoute);
+        return true;
+    }
+    return false;
+}
+
+async function blockSignedOut(aNavigate) {
+    const user = await identify()
+    if (!user.data) {
+        aNavigate(kSignedOutRoute);
+        return true;
+    }
+    return false;
+}
+
+export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut };
