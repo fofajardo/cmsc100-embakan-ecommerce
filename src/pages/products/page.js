@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
+import { useSnackbar } from "notistack";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
@@ -15,6 +16,7 @@ import {
     Add as AddIcon
 } from "@mui/icons-material";
 
+import api from "../apiGlue.js";
 import productTypes from "../productTypes.js";
 
 const kBaseUrl = "http://localhost:3001/products/";
@@ -27,6 +29,7 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
 
 function ProductCard(aProps) {
     const { index, product, variant } = aProps;
+    const { enqueueSnackbar } = useSnackbar();
     return (
         <Card
             key={index}
@@ -60,18 +63,28 @@ function ProductCard(aProps) {
                 </CardContent>
             </CardActionArea>
             <CardActions sx={{ justifyContent: "space-between" }}>
-                    <Typography variant="h5">
-                        {
-                            variant ? (
-                                kCurrencyFormatter.format(variant?.price)
-                            ) : (
-                                ""
-                            )
+                <Typography variant="h5">
+                    {
+                        variant ? (
+                            kCurrencyFormatter.format(variant?.price)
+                        ) : (
+                            ""
+                        )
+                    }
+                </Typography>
+                <Button
+                    startIcon={<AddIcon/>}
+                    size="small"
+                    color="primary"
+                    variant="contained"
+                    onClick={async function(aEvent) {
+                        const result = await api.handleCart(product?.id, variant?.id, 1, true);
+                        if (result.status == "OK") {
+                            enqueueSnackbar("Product added to cart.");
                         }
-                    </Typography>
-                    <Button startIcon={<AddIcon/>} size="small" color="primary" variant="contained">
-                    Add to Cart
-                    </Button>
+                    }}>
+                Add to Cart
+                </Button>
             </CardActions>
         </Card>
     )
