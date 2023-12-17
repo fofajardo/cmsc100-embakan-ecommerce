@@ -42,8 +42,6 @@ async function createNewOrder(aRequest, aResponse) {
         return;
     }
     
-    // FIXME: missing products API. To make tests work, assume a price at checkout.
-    /*
     const productEntry = await Product.findOne({
         id: body.productId,
     }).exec();
@@ -58,8 +56,6 @@ async function createNewOrder(aRequest, aResponse) {
     });
 
     const priceAtCheckout = body.quantity * productVariant.price;
-    */
-    const priceAtCheckout = 100;
 
     const entry = new Order({
         id: uuidv4(),

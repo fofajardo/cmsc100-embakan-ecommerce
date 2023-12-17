@@ -26,10 +26,10 @@ import Home from "./pages/Home.js";
 // import Subjects from "./pages/Subjects.js";
 // import SubjectDetail from "./pages/SubjectDetail.js";
 
-import ProductsPublic from "./pages/ProductsPublic.js";
-import ManageProductsList from "./pages/manage/products/page.js"
-import ManageProductsCreate from "./pages/manage/products/create/page.js"
-import ManageProductsEdit from "./pages/manage/products/edit/page.js"
+import CustomerProductsList from "./pages/products/page.js";
+import ManageProductsList from "./pages/manage/products/page.js";
+import ManageProductsCreate from "./pages/manage/products/create/page.js";
+import ManageProductsEdit from "./pages/manage/products/edit/page.js";
 
 
 const router = createHashRouter([
@@ -53,20 +53,30 @@ const router = createHashRouter([
             // { path: "subjects", element: <Subjects /> },
             // { path: "subjects/:code", element: <SubjectDetail /> },
             {
-                path: "products",
-                element:  <ProductsPublic />
-            }, 
-            {
                 //Checkout
                 path: "checkout",
                 element:  <Checkout />
 
-            }, {
+            },
+            {
                 //Checkout
                 path: "cart",
                 element:  <Cart />
 
-            },{
+            },
+            {
+                path: "products",
+                element:  <CustomerProductsList filterType={-1} />
+            },
+            {
+                path: "crops",
+                element:  <CustomerProductsList filterType={1} />
+            },
+            {
+                path: "poultry",
+                element:  <CustomerProductsList filterType={2} />
+            },
+            {
                 path: "manage",
                 children: [
                     {
