@@ -36,6 +36,9 @@ async function get(aUrl, aData, aEnqueue, aSuccessMessage) {
     }, aEnqueue, aSuccessMessage);
 }
 
+//Return ay raw response. Will use json
+// a and ques
+
 async function post(aUrl, aData, aEnqueue, aSuccessMessage) {
     if (!aData) {
         aData = {};
