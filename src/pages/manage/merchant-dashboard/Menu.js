@@ -27,29 +27,29 @@ export const mainListItems = (
   <React.Fragment>
 
 
-    <ListItemButton>
+    <ListItemButton component={RouterLink} to={"/manage/dashboard/merchant-view"}>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" component={RouterLink} to={"/merchant-view"}/>
+      <ListItemText primary="Dashboard" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton  component={RouterLink} to={"/manage/dashboard/orders"}>
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
       <ListItemText primary="Orders" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton  component={RouterLink} to={"/manage/dashboard/accounts"} >
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Accounts" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton component={RouterLink} to={"/manage/dashboard/sales"}>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
-      <ListItemText primary="Sales" />
+      <ListItemText primary="Sales"  />
     </ListItemButton>
     
   </React.Fragment>

@@ -28,6 +28,7 @@ const hideForRoutes = [
 ];
 
 export default function Header() {
+    
     const location = useLocation();
 
     if (hideForRoutes.indexOf(location.pathname) >= 0) {
