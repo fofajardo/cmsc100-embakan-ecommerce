@@ -58,30 +58,41 @@ export default function SignUp() {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
             <CssBaseline />
-            <Box
+            <Paper
+                variant="outlined"
                 sx={{
-                    marginTop: 8,
+                    my: 8,
+                    p: 3,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                 }}>
-
+                <img
+                    src="/logos/logo_colored.svg"
+                    width="64"
+                    height="64"
+                    style={{
+                        marginBottom: 10,
+                    }}/>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Sign Up
+                </Typography>
+                <Typography variant="body1">
+                    <em>E-mbakan: Palengke sa Palad ng Kamay Mo</em>
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            autoComplete="given-name"
-                            name="firstName"
-                            required
-                            fullWidth
-                            id="firstName"
-                            label="First Name"
-                            autoFocus />
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                autoComplete="given-name"
+                                name="firstName"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="First Name"
+                                autoFocus />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -130,13 +141,13 @@ export default function SignUp() {
                     </Button>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link component={RouterLink} to="/sign-in" variant="body2">
                                 Sign in instead.
                             </Link>
                         </Grid>
                     </Grid>
                 </Box>
-            </Box>
+            </Paper>
         </Container>
     );
 }

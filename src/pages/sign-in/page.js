@@ -1,106 +1,113 @@
-import * as React from 'react';
-import { Outlet, Link } from "react-router-dom";
-import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox
-, Paper, Box, Grid , Typography, createTheme, ThemeProvider, colors} from "@mui/material";
+import * as React from "react";
 
-//REFERENCE: mui.com documentation
+import {
+    Avatar, Button, CssBaseline, TextField, FormControlLabel,
+    Checkbox, Link, Paper, Box, Grid, Typography, Container
+} from "@mui/material";
 
-export default function SignInSide() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+import { useSnackbar } from "notistack";
+
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+
+const kBaseUrl = "http://localhost:3001/users/";
+const kAuthUrl = "http://localhost:3001/auth/";
+const kTargetRoute = "/";
+
+import api from "../apiGlue.js";
+
+export default function SignIn() {
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
+
+    api.identify().then(function(aUser) {
+        if (aUser.data) {
+            navigate(kTargetRoute);
+        }
     });
-  };
 
-  return (
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: 'url(https://manilatoday.net/wp-content/uploads/2016/06/Logo_of_the_Department_of_Agrarian_Reform.svg_.png)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-    
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-          
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
+    const handleSubmit = async function(aEvent) {
+        aEvent.preventDefault();
+        const formData = new FormData(aEvent.currentTarget);
+        const formJson = Object.fromEntries(formData.entries());
 
+        const signInResult = await api.post(    
+            `${kAuthUrl}sign-in`,
+            {
+                usernameOrEmail: formJson.usernameOrEmail,
+                password: formJson.password,
+            },
+            enqueueSnackbar,
+        );
 
-              <Button
-                type ="button"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In as Administator
-              </Button>
+        if (signInResult) {
+            navigate(kTargetRoute);
+            return;
+        }
+    };
 
-              
-
-              <Grid container>
-                <Grid item xs>
-                
-                </Grid>
-                <Grid item>
-                <Link to={`/sign-up`}>No account yet? Sign Up</Link>
-                </Grid>
-              </Grid>
-            
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-  );
+    return (
+        <Container component="main" maxWidth="sm">
+            <CssBaseline />
+            <Paper
+                variant="outlined"
+                sx={{
+                    my: 8,
+                    p: 3,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}>
+                <img
+                    src="/logos/logo_colored.svg"
+                    width="64"
+                    height="64"
+                    style={{
+                        marginBottom: 10,
+                    }}/>
+                <Typography component="h1" variant="h5">
+                    Sign In
+                </Typography>
+                <Typography variant="body1">
+                    Use your E-mbakan Account
+                </Typography>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id="usernameOrEmail"
+                                label="Email Address or Username"
+                                name="usernameOrEmail"
+                                autoComplete="email" />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="new-password"/>
+                        </Grid>
+                    </Grid>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}>
+                        Sign In
+                    </Button>
+                    <Grid container justifyContent="flex-end">
+                        <Grid item>
+                            <Link component={RouterLink} to="/sign-up" variant="body2">
+                                No account yet? Sign Up
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Paper>
+        </Container>
+    );
 }

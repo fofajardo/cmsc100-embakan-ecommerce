@@ -9,6 +9,7 @@ import "./index.css";
 
 TODO: Implement SignUp Page and SignIn page
 */
+import SignOut from "./pages/sign-out/page.js";
 import SignIn from "./pages/sign-in/page.js";
 import SignUp from "./pages/sign-up/page.js";
 
@@ -50,13 +51,17 @@ const router = createHashRouter([
             {
                 path: "sign-in",
                 element:  <SignIn />
-            }, {
+            },
+            {
+                path: "sign-out",
+                element:  <SignOut />
+            },
+            {
                 path: "sign-up",
                 element:  <SignUp />
             },
             // { path: "subjects", element: <Subjects /> },
             // { path: "subjects/:code", element: <SubjectDetail /> },
-           
             {
                 //Checkout
                 path: "cart",
