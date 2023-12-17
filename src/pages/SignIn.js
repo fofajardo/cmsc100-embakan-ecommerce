@@ -27,7 +27,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://manilatoday.net/wp-content/uploads/2016/06/Logo_of_the_Department_of_Agrarian_Reform.svg_.png)',
+            backgroundImage: "url('banners/SignInPageBanner.svg')",
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

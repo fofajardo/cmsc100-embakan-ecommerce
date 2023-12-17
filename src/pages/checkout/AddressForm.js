@@ -1,7 +1,14 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import {Grid, Typography, TextField, FormControlLabel, Checkbox}from '@mui/material';
 
 export default function AddressForm() {
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [address, setAddress] = useState();
+  const [postalCode, setPostalCode] = useState();
+  const [city, setCity] = useState();
+  const [country, setCountry] = useState();
+  const [province, setProvince] = useState();
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -17,6 +24,10 @@ export default function AddressForm() {
             fullWidth
             autoComplete="given-name"
             variant="standard"
+            value = {firstName}
+            onChange = {e => setFirstName(e.target.value)}
+            helperText = {!firstName ? "This field is required" : ' '}
+            error = {!firstName}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -28,6 +39,10 @@ export default function AddressForm() {
             fullWidth
             autoComplete="family-name"
             variant="standard"
+            value = {lastName}
+            onChange = {e => setLastName(e.target.value)}
+            helperText = {!lastName ? "This field is required" : ' '}
+            error = {!lastName}
           />
         </Grid>
         <Grid item xs={12}>
@@ -39,6 +54,10 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping address-line1"
             variant="standard"
+            value = {address}
+            onChange = {e => setAddress(e.target.value)}
+            helperText = {!address ? "This field is required" : ' '}
+            error = {!address}
           />
         </Grid>
         <Grid item xs={12}>
@@ -60,15 +79,24 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping address-level2"
             variant="standard"
+            value = {city}
+            onChange = {e => setCity(e.target.value)}
+            helperText = {!city ? "This field is required" : ' '}
+            error = {!city}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
+            required
             id="state"
             name="state"
             label="State/Province/Region"
             fullWidth
             variant="standard"
+            value = {province}
+            onChange = {e => setProvince(e.target.value)}
+            helperText = {!province ? "This field is required" : ' '}
+            error = {!province}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -80,6 +108,10 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping postal-code"
             variant="standard"
+            value = {postalCode}
+            onChange = {e => setPostalCode(e.target.value)}
+            helperText = {!postalCode ? "This field is required" : ' '}
+            error = {!postalCode}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -91,6 +123,10 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping country"
             variant="standard"
+            value = {country}
+            onChange = {e => setCountry(e.target.value)}
+            helperText = {!country ? "This field is required" : ' '}
+            error = {!country}
           />
         </Grid>
         <Grid item xs={12}>
