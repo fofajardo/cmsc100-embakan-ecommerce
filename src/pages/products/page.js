@@ -146,9 +146,9 @@ export default function CustomerProductsList(aProps) {
             <Stack spacing={2} useFlexGap sx={{ mb: 3, alignItems: "center" }}>
                 <img
                     style={{
-                        maxWidth: "100%"
+                        maxWidth: "75%"
                     }}
-                    src="/banners/E-mbakanShopBanner.svg" />
+                    src="/assets/images/banner-steps.png" />
             </Stack>
             <Stack spacing={2} useFlexGap>
             {
