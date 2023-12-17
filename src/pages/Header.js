@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useLocation, Link as RouterLink } from "react-router-dom";
 
@@ -19,13 +19,29 @@ import {
     Search as SearchIcon,
     LoginOutlined as LoginOutlinedIcon,
     LogoutOutlined as LogoutOutlinedIcon,
-    ReceiptLongOutlined as ReceiptLongOutlinedIcon
+    ReceiptLongOutlined as ReceiptLongOutlinedIcon,
+
+    ShoppingCart as ShoppingCartIcon,
+    People as PeopleIcon,
+    BarChart as BarChartIcon,
+    Layers as LayersIcon,
+    Assignment as AssignmentIcon,
+    Dashboard as DashboardIcon,
 } from "@mui/icons-material";
+
+import api from "./apiGlue.js";
 
 export default function Header() {
     const location = useLocation();
 
+    const [user, setUser] = useState();
     const [drawerOpen, setDrawerOpen] = useState(false);
+
+    useEffect(function() {
+        api.identify().then(function(aUser) {
+            setUser(aUser.data);
+        });
+    }, []);
 
     const productLinks = [
         {
@@ -45,21 +61,11 @@ export default function Header() {
         }
     ];
 
-    const drawerLinks = [
+    var drawerLinks = [
         {
             icon: <AccountCircleOutlinedIcon />,
             to: "/account",
             label: "Account"
-        },
-        {
-            icon: <ReceiptLongOutlinedIcon />,
-            to: "/orders",
-            label: "Orders"
-        },
-        {
-            icon: <LoginOutlinedIcon />,
-            to: "/sign-in",
-            label: "Sign In"
         },
         {
             icon: <LogoutOutlinedIcon />,
@@ -69,12 +75,54 @@ export default function Header() {
         {
             divider: true
         },
+        { title: "Products" },
         ...productLinks,
     ];
+
+    if (user?.role > 0) {
+        drawerLinks = [
+            ...drawerLinks,
+            { divider: true },
+            { title: "Merchant" },
+            {
+                icon: <DashboardIcon />,
+                to: "/manage/products",
+                label: "Products"
+            },
+            {
+                icon: <BarChartIcon />,
+                to: "/manage/sales",
+                label: "Sales"
+            },
+            {
+                icon: <ReceiptLongOutlinedIcon />,
+                to: "/manage/orders",
+                label: "Order Fulfillment"
+            },
+            {
+                icon: <PeopleIcon />,
+                to: "/manage/accounts",
+                label: "Accounts"
+            },
+        ];
+    }
 
     const drawerList = drawerLinks.map(function(aLink, aIndex) {
         if (aLink.divider) {
             return(<Divider/>)
+        }
+        if (aLink.title) {
+            return(
+                <ListItem key={aIndex}>
+                    <Typography
+                        sx={{
+                            fontWeight: "500",
+                            mt: 0.5,
+                        }}>
+                        {aLink.title}
+                    </Typography>
+                </ListItem>
+            )
         }
         return (
             <ListItem key={aIndex} disablePadding>
@@ -105,7 +153,6 @@ export default function Header() {
                 <IconButton
                     color="inherit"
                     aria-label="menu"
-                    sx={{ display: { xs: "flex", sm: "none" } }}
                     onClick={toggleDrawer}>
                     <MenuIcon />
                 </IconButton>
@@ -120,22 +167,6 @@ export default function Header() {
                         </Typography>                            
                     </Stack>
                 </Link>
-                <Stack spacing={2} direction="row" sx={{ display: { xs: "none", sm: "flex" } }}>
-                    {
-                        productLinks.map(function(aLink, aIndex) {
-                            return (
-                                <Button
-                                    key={aIndex}
-                                    color="inherit"
-                                    startIcon={aLink.icon}
-                                    component={RouterLink}
-                                    to={aLink.to}>
-                                    {aLink.label}
-                                </Button>
-                            )
-                        })
-                    }
-                </Stack>
                 <Stack spacing={2} direction="row">
                     <IconButton
                         component={RouterLink}
@@ -144,14 +175,6 @@ export default function Header() {
                         aria-label="view shopping cart">
                         <ShoppingCartOutlinedIcon />
                     </IconButton>
-                    <IconButton
-                        component={RouterLink}
-                        to="/account"
-                        color="inherit"
-                        aria-label="view account info"
-                        sx={{ display: { xs: "none", sm: "flex" } }}>
-                        <AccountCircleOutlinedIcon />
-                    </IconButton>
                 </Stack>
             </Toolbar>
             <Drawer
@@ -159,7 +182,10 @@ export default function Header() {
                 open={drawerOpen}
                 onClose={toggleDrawer}>
                 <Box
-                    sx={{ width: 250 }}
+                    sx={{
+                        width: 250,
+                        overflowX: "hidden",
+                    }}
                     role="presentation"
                     onClick={toggleDrawer}
                     onKeyDown={toggleDrawer}>
