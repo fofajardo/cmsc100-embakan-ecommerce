@@ -1,64 +1,72 @@
 import { User } from "../models.js";
 import { sendError, sendOk, hasNull } from "./utils.js";
 
-import passport from "passport";
-import LocalStrategy from "passport-local";
 import bcrypt from "bcrypt";
 
-function testUser(aPassword, aUser, aDone) {
-    if (!aUser) {
-        return aDone(null, false, { message: "Incorrect username or email." });
+async function signIn(aRequest, aResponse) {
+    const { body } = aRequest;
+
+    const requiredProps = [
+        "usernameOrEmail", "password"
+    ];
+
+    if (hasNull(body, requiredProps)) {
+        sendError(aResponse, "One or more fields is missing or empty", 400);
+        return;
     }
 
-    const match = bcrypt.compareSync(aPassword, aUser.password);
+    const { usernameOrEmail, password } = body;
+
+    let user = await User.findOne({ email: usernameOrEmail }).exec();
+    if (!user) {
+        user = await User.findOne({ username: usernameOrEmail }).exec();
+    }
+    if (!user) {
+        sendError(aResponse, "Incorrect username or email." , 400);
+        return;
+    }
+
+    const match = await bcrypt.compare(password, user.password);
     if (match) {
-        return aDone(null, aUser);
+        aRequest.session.regenerate(function(aError) {
+            if (aError) {
+                sendError(aResponse, "Failed to regenerate session.", 500);
+                return;
+            }
+            aRequest.session.user = user;
+            aRequest.session.isAuthenticated = true;
+            aRequest.session.save(function(aError) {
+                if (aError) {
+                    sendError(aResponse, "Failed to save session.", 500);
+                    return;
+                }
+                console.log(aRequest.session);
+                sendOk(aResponse, true);
+            });
+        });
+        return;
     }
 
-    return aDone(null, false, { message: "Incorrect username, email, or password." });
+    sendError(aResponse, "Incorrect username, email, or password.");
 }
 
-passport.use(new LocalStrategy(function verify(username, password, done) {
-    return User.findOne({ email: username }, function(aError, aUser) {
-        if (aError) {
-            return User.findOne({ username: username }, function(aError, aUser) {
-                if (aError) {
-                    return done(null, false, { message: "Incorrect username or email." });
-                }
-                return testUser(password, aUser, done);
-            });
-        }
-        return testUser(password, aUser, done);
-    });
-
-}));
-
-passport.serializeUser(function (aUser, aCallback) {
-    process.nextTick(function () {
-        aCallback(null, aUser);
-    });
-});
-
-passport.deserializeUser(function (aUser, aCallback) {
-    process.nextTick(function () {
-        return aCallback(null, aUser);
-    });
-});
-
-const signIn = passport.authenticate("local");
-
-function signOut(aRequest, aResponse, aNext) {
-    aRequest.logout(function(aError) {
-        if (aError) {
-            return aNext(aError);
-        }
-        sendOk(aResponse, true);
-    });
+async function signOut(aRequest, aResponse, aNext) {
+    aRequest.session.destroy();
 }
 
-function dumpSession(aRequest, aResponse) {
+async function signedInUser(aRequest, aResponse) {
+    console.log("taking");
+    console.log(aRequest.session);
+    if (aRequest.session.isAuthenticated) {
+        sendOk(aResponse, aRequest.session.user);
+        return;
+    }
+    sendOk(aResponse, false);
+}
+
+async function dumpSession(aRequest, aResponse) {
     console.log(aRequest.session);
     sendOk(aResponse, aRequest.session);
 }
 
-export default { signIn, signOut, dumpSession };
+export default { signIn, signOut, signedInUser, dumpSession };

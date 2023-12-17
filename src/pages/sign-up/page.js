@@ -7,56 +7,54 @@ import {
 
 import { useSnackbar } from "notistack";
 
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+
 const kBaseUrl = "http://localhost:3001/users/";
+const kAuthUrl = "http://localhost:3001/auth/";
+const kTargetRoute = "/";
 
 import api from "../apiGlue.js";
 
-//REFERENCE: mui.com documentations
-
 export default function SignUp() {
     const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
+
+    api.identify().then(function(aUser) {
+        if (aUser.data) {
+            navigate(kTargetRoute);
+        }
+    });
 
     const handleSubmit = async function(aEvent) {
         aEvent.preventDefault();
         const formData = new FormData(aEvent.currentTarget);
         const formJson = Object.fromEntries(formData.entries());
-        console.log(formJson);
 
         const userResult = await api.post(
             `${kBaseUrl}`,
             formJson,
             enqueueSnackbar,
-            "Sign up test");
+            "Your account was successfully created.");
 
-        if (userResult) {
-            /*const signInResult = await api.post(    
-                "http://localhost:3001/auth/sign-in",
-                {
-                    username: formJson.username,
-                    password: formJson.password,
-                },
-                enqueueSnackbar,
-                "test"
-            );*/
-            const bd = JSON.stringify({
-                    username: formJson.username,
-                    password: formJson.password,
-                });
-                console.log(bd);
-            const signInResult = await fetch("http://localhost:3001/auth/sign-in",
-            {
-                method: "POST",
-                body: bd,
-            });
-
-            console.log(signInResult);
-            await api.get(
-                "http://localhost:3001/auth/dump-session",
-                enqueueSnackbar,
-                ""
-            );
+        if (!userResult) {
             return;
         }
+
+        const signInResult = await api.post(    
+            `${kAuthUrl}sign-in`,
+            {
+                usernameOrEmail: formJson.username,
+                password: formJson.password,
+            },
+            enqueueSnackbar,
+        );
+
+        if (signInResult) {
+            navigate(kTargetRoute);
+            return;
+        }
+        
+        enqueueSnackbar("Failed to create and sign in to your account.");
     };
 
     return (
