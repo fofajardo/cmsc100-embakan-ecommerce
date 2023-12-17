@@ -9,8 +9,8 @@ import "./index.css";
 
 TODO: Implement SignUp Page and SignIn page
 */
-import SignIn from "./pages/SignIn.js";
-import SignUp from "./pages/SignUp.js";
+import SignIn from "./pages/sign-in/page.js";
+import SignUp from "./pages/sign-up/page.js";
 
 //TODO (cart): This is to implement the current Forms for checkout
 import Cart from "./pages/Cart.js";
@@ -25,10 +25,6 @@ import MerchantAccounts from "./pages/manage/merchant-dashboard/Accounts.js"
 import MerchantOrders from "./pages/manage/merchant-dashboard/Orders.js"
 import MerchantSales from "./pages/manage/merchant-dashboard/Sales.js"
 
-
-
-
-
 import Root from "./pages/Root.js";
 import Home from "./pages/Home.js";
 // import Subjects from "./pages/Subjects.js";
@@ -39,9 +35,6 @@ import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
 import ProductDetailView from "./pages/ProductDetailView.js"
-
-
-
 
 const router = createHashRouter([
     // { path: "/",         element: <Root /> },
