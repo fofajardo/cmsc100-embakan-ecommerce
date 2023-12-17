@@ -14,7 +14,7 @@ import {
 
 import { ManageProductsBase } from "../base.js";
 
-import productTypes from "../productTypes.js";
+import productTypes from "../../../productTypes.js";
 
 import api from "../../../apiGlue.js";
 
@@ -31,9 +31,12 @@ async function doSubmit(aEvent, aSetters) {
     const data = {
         name: formJson["in-name"],
         slug: formJson["in-slug"],
-        type: productTypes.find((element) => element.label == formJson["in-type"]).value,
+        type: productTypes.find(function(element) {
+            return element.value == formJson["in-type"]
+        }).value,
         description: formJson["in-description"]
     };
+
     const variantData = {
         name: formJson["in-variant-name"],
         price: formJson["in-variant-price"],
