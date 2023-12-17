@@ -8,7 +8,7 @@ import {
 
 import { SnackbarProvider } from "notistack";
 
-import Header from "../components/Header.js";
+import Header from "./Header.js";
 import api from "./apiGlue.js";
 
 const theme = createTheme({
