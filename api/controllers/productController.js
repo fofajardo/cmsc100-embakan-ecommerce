@@ -36,6 +36,26 @@ async function getOneProduct(aRequest, aResponse) {
 }
 
 
+async function getOneProductBySlug(aRequest, aResponse) {
+    const { slug } = aRequest.params;
+    if (!slug) {
+        sendError(aResponse, "Parameter ':slug' cannot be empty", 400);
+        return;
+    }
+
+    try {
+        let result = null;
+        let product = await Product.findOne({ slug }).exec();
+        if (product) {
+            result = product;
+        }
+        sendOk(aResponse, result);
+    } catch (e) {
+        sendError(aResponse, e, 500);
+    }
+}
+
+
 async function createNewProduct(aRequest, aResponse) {
     const { body } = aRequest;
     const requiredProps = [
@@ -352,6 +372,7 @@ async function deleteOneProductVariant(aRequest, aResponse) {
 export default {
     getAllProducts,
     getOneProduct,
+    getOneProductBySlug,
     createNewProduct,
     updateOneProduct,
     deleteOneProduct,
