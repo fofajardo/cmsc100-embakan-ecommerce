@@ -1,40 +1,19 @@
 import * as React from 'react';
 import {CssBaseline, AppBar, Box, Container, Toolbar,
   Paper, Stepper, Step, StepLabel, Button, Link,
-  Typography} from '@mui/material';
+  Typography, Link as RouterLink, Divider} from '@mui/material';
 
-import AddressForm from './Details.js';
-import PaymentForm from './DeliveryConfirmation.js';
+import Details from './Details.js';
 import Review from './ReviewOrder.js';
 
-
-
-const steps = ['Order and Delivery Details', 'Confirm Payment'];
-
-//This will contain the 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    default:
-      throw new Error('Unknown step');
-  }
+function handlePost(event) {
+  return
 }
 
 export default function Checkout() {
-  const [activeStep, setActiveStep] = React.useState(0);
-
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
 
   return (
+   
     <React.Fragment>
       <CssBaseline />
 
@@ -44,47 +23,24 @@ export default function Checkout() {
             Checkout
           </Typography>
         
-          {activeStep === steps.length ? (
+       
             <React.Fragment>
-              <Typography variant="h5" gutterBottom>
-                Maraming Salamat po!
-              </Typography>
-              <Typography variant="subtitle1">
-                Your order number is [LAGAY NUMBER]. Thank you!
-              </Typography>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-
-          
-                {/* @rfpramos : This returns the review so that we can show the product list. */}
-            
-                {activeStep == 0 && (
-                  <Review />
-                )}
-              {getStepContent(activeStep)}
+              <Review />
+              <Divider />
+              <Details/>
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
 
 
-                
-
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                    Back
+           
+                  <Button onClick={handlePost} tosx={{ mt: 3, ml: 1}}>
+                    Place Order
                   </Button>
-                )}
+          
 
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                >
-                  {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-                </Button>
               </Box>
             </React.Fragment>
-          )}
+        
         </Paper>
    
       </Container>
