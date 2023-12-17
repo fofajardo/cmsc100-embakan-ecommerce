@@ -40,7 +40,6 @@ async function signIn(aRequest, aResponse) {
                     sendError(aResponse, "Failed to save session.", 500);
                     return;
                 }
-                console.log(aRequest.session);
                 sendOk(aResponse, true);
             });
         });
@@ -51,7 +50,21 @@ async function signIn(aRequest, aResponse) {
 }
 
 async function signOut(aRequest, aResponse, aNext) {
-    aRequest.session.destroy();
+    aRequest.session.user = null;
+    aRequest.session.isAuthenticated = false;
+    aRequest.session.save(function(aError) {
+        if (aError) {
+            sendError(aResponse, "Failed to save session.", 500);
+            return;
+        }
+        aRequest.session.regenerate(function(aError) {
+            if (aError) {
+                sendError(aResponse, "Failed to regenerate session.", 500);
+                return;
+            }
+            sendOk(aResponse, true);
+        });
+    });
 }
 
 async function signedInUser(aRequest, aResponse) {
