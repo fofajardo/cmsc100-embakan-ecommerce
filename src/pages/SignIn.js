@@ -14,6 +14,8 @@ export default function SignInSide() {
       password: data.get('password'),
     });
   };
+  
+  const defaultTheme = createTheme();
 
   return (
     <ThemeProvider theme={defaultTheme}>
