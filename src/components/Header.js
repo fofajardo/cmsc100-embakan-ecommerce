@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Link as RouterLink } from "react-router-dom";
+import { useLocation, Link as RouterLink } from "react-router-dom";
 
 import {
     Box, AppBar, Toolbar, Button, IconButton, Typography, ThemeProvider,
@@ -22,7 +22,18 @@ import {
     ReceiptLongOutlined as ReceiptLongOutlinedIcon
 } from "@mui/icons-material";
 
+const hideForRoutes = [
+    "/sign-in",
+    "/sign-up"
+];
+
 export default function Header() {
+    const location = useLocation();
+
+    if (hideForRoutes.indexOf(location.pathname) >= 0) {
+        return;
+    }
+
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const productLinks = [
