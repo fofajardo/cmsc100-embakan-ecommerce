@@ -134,29 +134,22 @@ const router = createHashRouter([
                                 element: <ManageProductsEdit />
                             },
                         ],
-                        
-                        path: "dashboard",
-                            children:[
-                                {
-                                path : "merchant-view",
-                                element:  <MerchantDashboard />
-                                }, 
-                                {
-                                    path : "accounts",
-                                    element:  <MerchantAccounts />
-                                },
-                                {
-                                    path : "orders",
-                                    element:  <MerchantOrders />
-                                },  {
-                                    path : "sales",
-                                    element:  <MerchantSales />
-                                }
-                            ]
-                            
-                        
+                    },
+                    {
+                        path : "merchant-view",
+                        element:  <MerchantDashboard />
+                    }, 
+                    {
+                        path : "accounts",
+                        element:  <MerchantAccounts />
+                    },
+                    {
+                        path : "orders",
+                        element:  <MerchantOrders />
+                    },  {
+                        path : "sales",
+                        element:  <MerchantSales />
                     }
-                   
                 ]
             },
         ]
