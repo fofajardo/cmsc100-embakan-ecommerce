@@ -27,9 +27,10 @@ import Home from "./pages/Home.js";
 // import SubjectDetail from "./pages/SubjectDetail.js";
 
 import CustomerProductsList from "./pages/products/page.js";
-import ManageProductsList from "./pages/manage/products/page.js";
-import ManageProductsCreate from "./pages/manage/products/create/page.js";
-import ManageProductsEdit from "./pages/manage/products/edit/page.js";
+import ManageProductsList from "./pages/manage/products/page.js"
+import ManageProductsCreate from "./pages/manage/products/create/page.js"
+import ManageProductsEdit from "./pages/manage/products/edit/page.js"
+import ProductDetailView from "./pages/ProductDetailView.js"
 
 
 const router = createHashRouter([
@@ -67,14 +68,36 @@ const router = createHashRouter([
             {
                 path: "products",
                 element:  <CustomerProductsList filterType={-1} />
+                // children: [
+                //     {
+                //         path: "view/:id",  
+                //         element: <ProductDetailView />
+                //     }  
+                // ]
             },
             {
                 path: "crops",
-                element:  <CustomerProductsList filterType={1} />
+                element:  <CustomerProductsList filterType={1} />,
+                // children: [
+                //     {
+                //         path: "view/:id",  
+                //         element: <ProductDetailView />
+                //     }  
+                // ]
             },
             {
                 path: "poultry",
-                element:  <CustomerProductsList filterType={2} />
+                element:  <CustomerProductsList filterType={2} />,
+                // children: [
+                //     {
+                //         path: "view/:id",  
+                //         element: <ProductDetailView />
+                //     }  
+                // ] 
+            },
+            {
+                path: "view",
+                element: <ProductDetailView />      // for testing purposes, no API integration.
             },
             {
                 path: "manage",
