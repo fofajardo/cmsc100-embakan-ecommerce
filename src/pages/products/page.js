@@ -28,7 +28,15 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
 function ProductCard(aProps) {
     const { index, product, variant } = aProps;
     return (
-        <Card key={index} variant="outlined">
+        <Card
+            key={index}
+            variant="outlined"
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                justifyContent: "space-between"
+            }}>
             <CardActionArea component={RouterLink} to={`/products/${product.slug}`}>
                 <CardMedia
                     component="img"
@@ -40,19 +48,10 @@ function ProductCard(aProps) {
                     <Typography variant="h5">
                     {product.name}
                     </Typography>
-                    <Typography variant="body1">
-                    {
-                        variant ? (
-                            kCurrencyFormatter.format(variant?.price)
-                        ) : (
-                            ""
-                        )
-                    }
-                    </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="h6">
                         {variant?.name}
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="body1">
                         {variant?.stock} units left
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -60,10 +59,19 @@ function ProductCard(aProps) {
                     </Typography>
                 </CardContent>
             </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">
-                Add to Cart
-                </Button>
+            <CardActions sx={{ justifyContent: "space-between" }}>
+                    <Typography variant="h5">
+                        {
+                            variant ? (
+                                kCurrencyFormatter.format(variant?.price)
+                            ) : (
+                                ""
+                            )
+                        }
+                    </Typography>
+                    <Button startIcon={<AddIcon/>} size="small" color="primary" variant="contained">
+                    Add to Cart
+                    </Button>
             </CardActions>
         </Card>
     )
@@ -84,7 +92,9 @@ function ProductList(aProps) {
             <Typography variant="h4" sx={{ mb: 2 }}>
                 {listAll ? "📃 All Products" : type?.label}
             </Typography>
-            <Grid container
+            <Grid
+                container
+                direction="row"
                 spacing={2}>
                 {
                     productsFiltered.length == 0 ? (
