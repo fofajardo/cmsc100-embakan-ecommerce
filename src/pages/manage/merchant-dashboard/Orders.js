@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import {Link, Table, TableBody, TableCell, TableHead, TableRow, Typography} from '@mui/material';
+import {Link, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box, Button, Divider} from '@mui/material';
 
 
 const kBaseUrl = "http://localhost:3001/orders/";
@@ -141,6 +141,22 @@ export default function Orders() {
               <TableCell>
                 {row.status === 0 ? 'Pending' : row.status === 1 ? 'Accomplished' : 'Cancelled'}
               </TableCell>
+
+              {row.status === 0 && (
+                <Box display="flex" flexDirection="column" >
+                 
+                  <Button variant="contained" color="primary" style={{ marginBottom: '8px' }}>
+                    Confirm
+                  </Button>
+                
+                  <Button variant="outlined" color="primary">
+                    Cancel
+                  </Button>
+                </Box>
+              )}
+
+              
+
     
             </TableRow>
           ))}
