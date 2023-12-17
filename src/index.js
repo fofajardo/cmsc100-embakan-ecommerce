@@ -30,14 +30,12 @@ import Home from "./pages/Home.js";
 // import SubjectDetail from "./pages/SubjectDetail.js";
 
 import CustomerProductsList from "./pages/products/page.js";
+import CustomerProductDetailView from "./pages/products/slug/page.js"
 import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
-import ProductDetailView from "./pages/ProductDetailView.js"
 
 const router = createHashRouter([
-    // { path: "/",         element: <Root /> },
-    // { path: "/subjects", element: <Subjects /> }
     {
         path: "/",
         element:  <Root />,
@@ -58,61 +56,48 @@ const router = createHashRouter([
                 path: "sign-up",
                 element:  <SignUp />
             },
-            // { path: "subjects", element: <Subjects /> },
-            // { path: "subjects/:code", element: <SubjectDetail /> },
             {
                 //Checkout
                 path: "cart",
-                children:[{
-                    path: "shopping-cart",
-                    element:  <Cart />
-                }, {
-                    path: "checkout",
-                    element:  <Checkout />
-                }, {
-                    path: "review",
-                    element:  <ReviewOrder />
-                }, {
-                    path: "details",
-                    element:  <Details />
-                }
+                children: [
+                    {
+                        path: "shopping-cart",
+                        element:  <Cart />
+                    },
+                    {
+                        path: "checkout",
+                        element:  <Checkout />
+                    },
+                    {
+                        path: "review",
+                        element:  <ReviewOrder />
+                    },
+                    {
+                        path: "details",
+                        element:  <Details />
+                    }
                 ]
-          
-
             },
             {
                 path: "products",
-                element:  <CustomerProductsList filterType={-1} />
-                // children: [
-                //     {
-                //         path: "view/:id",  
-                //         element: <ProductDetailView />
-                //     }  
-                // ]
+                children: [
+                    {
+                        path: "",
+                        element:  <CustomerProductsList filterType={-1} />
+                    },
+                    {
+                        path: ":slug",
+                        element: <CustomerProductDetailView />
+                    },
+                ]
             },
             {
                 path: "crops",
                 element:  <CustomerProductsList filterType={1} />,
-                // children: [
-                //     {
-                //         path: "view/:id",  
-                //         element: <ProductDetailView />
-                //     }  
-                // ]
             },
             {
                 path: "poultry",
                 element:  <CustomerProductsList filterType={2} />,
-                // children: [
-                //     {
-                //         path: "view/:id",  
-                //         element: <ProductDetailView />
-                //     }  
-                // ] 
-            },
-            {
-                path: "view",
-                element: <ProductDetailView />      // for testing purposes, no API integration.
             },
             {
                 path: "manage",
