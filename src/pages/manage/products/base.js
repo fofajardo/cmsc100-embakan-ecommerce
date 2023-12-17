@@ -18,12 +18,15 @@ import {
 
 import productTypes from "../../productTypes.js";
 
+
 const ACTIONS = {
     ADD: 0,
     EDIT: 1,
     DELETE: 2
 };
 
+
+//This can be used as editor of for number
 function ProductInventoryFormControl(aProps) {
     const { isModal, useDefaultUnit, readOnly, data } = aProps;
 

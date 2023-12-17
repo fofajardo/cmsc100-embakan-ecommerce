@@ -44,6 +44,7 @@ export default function Root() {
         <SnackbarProvider maxSnack={3}>
             <ThemeProvider theme={theme}>
                 <Box>
+                
                     <Header />
                     <Outlet />
                 </Box>

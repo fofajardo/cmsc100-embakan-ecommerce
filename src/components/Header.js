@@ -28,6 +28,7 @@ const hideForRoutes = [
 ];
 
 export default function Header() {
+    
     const location = useLocation();
 
     if (hideForRoutes.indexOf(location.pathname) >= 0) {
@@ -107,7 +108,9 @@ export default function Header() {
     };
 
     return (
+        
         <AppBar position="sticky" elevation={0}>
+
             <Toolbar sx={{ justifyContent: "space-between", alignItems: "center" }}>
                 <IconButton
                     color="inherit"

@@ -12,12 +12,20 @@ TODO: Implement SignUp Page and SignIn page
 import SignIn from "./pages/SignIn.js";
 import SignUp from "./pages/SignUp.js";
 
-//TODO (rfpramos): This is to implement the current Forms for checkout
-import Checkout from "./pages/checkout/Checkout.js";
-
-
 //TODO (cart): This is to implement the current Forms for checkout
 import Cart from "./pages/Cart.js";
+import Details from "./pages/checkout/Details.js";
+import DeliveryConfirmation from "./pages/checkout/DeliveryConfirmation.js";
+import ReviewOrder from "./pages/checkout/ReviewOrder.js";
+import Checkout from "./pages/checkout/Checkout.js";
+
+//TODO (cart): This is to implement merchant dashboards and its view
+import MerchantDashboard from "./pages/manage/merchant-dashboard/Dashboard.js"
+import MerchantAccounts from "./pages/manage/merchant-dashboard/Accounts.js"
+import MerchantOrders from "./pages/manage/merchant-dashboard/Orders.js"
+import MerchantSales from "./pages/manage/merchant-dashboard/Sales.js"
+
+
 
 
 
@@ -31,6 +39,8 @@ import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
 import ProductDetailView from "./pages/ProductDetailView.js"
+
+
 
 
 const router = createHashRouter([
@@ -53,16 +63,28 @@ const router = createHashRouter([
             },
             // { path: "subjects", element: <Subjects /> },
             // { path: "subjects/:code", element: <SubjectDetail /> },
-            {
-                //Checkout
-                path: "checkout",
-                element:  <Checkout />
-
-            },
+           
             {
                 //Checkout
                 path: "cart",
-                element:  <Cart />
+                children:[{
+                    path: "shopping-cart",
+                    element:  <Cart />
+                }, {
+                    path: "checkout",
+                    element:  <Checkout />
+                }, {
+                    path: "delivery-remarks",
+                    element:  <DeliveryConfirmation />
+                }, {
+                    path: "review",
+                    element:  <ReviewOrder />
+                }, {
+                    path: "details",
+                    element:  <Details />
+                }
+                ]
+          
 
             },
             {
@@ -118,7 +140,29 @@ const router = createHashRouter([
                                 element: <ManageProductsEdit />
                             },
                         ],
-                    },
+                        
+                        path: "dashboard",
+                            children:[
+                                {
+                                path : "merchant-view",
+                                element:  <MerchantDashboard />
+                                }, 
+                                {
+                                    path : "accounts",
+                                    element:  <MerchantAccounts />
+                                },
+                                {
+                                    path : "orders",
+                                    element:  <MerchantOrders />
+                                },  {
+                                    path : "sales",
+                                    element:  <MerchantSales />
+                                }
+                            ]
+                            
+                        
+                    }
+                   
                 ]
             },
         ]

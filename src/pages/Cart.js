@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { Outlet, Link, useNavigate, Link as RouterLink } from "react-router-dom";
-import Checkout from "./checkout/Checkout.js";
+
 
 // import Carder from
 import {Paper, Divider, Button, Typography, List, ListItem, ListItemText, Grid, IconButton} from '@mui/material';
@@ -52,7 +52,7 @@ export default function Cart() {
     }
   };
   return (
-    <Paper elevation={3} sx={{ p: 2 }}>
+    <Paper elevation={3} sx={{ p: 10 }}>
     <Typography variant="h6" gutterBottom>
       Shopping Cart
     </Typography>
@@ -87,16 +87,16 @@ export default function Cart() {
         .reduce((total, item) => total + item.price * item.quantity, 0)
         .toFixed(2)}
     </Typography>  
-
-    <Button
-                type ="button"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                   <Link to={`/checkout`}>Checkout</Link>
-              </Button>
-
+    <Link to={`/checkout`}>
+      <Button
+          type ="button"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+                   Checkout
+        </Button>
+      </Link>
     
     </Paper>
 

@@ -3,7 +3,7 @@ import {CssBaseline, AppBar, Box, Container, Toolbar,
   Paper, Stepper, Step, StepLabel, Button, Link,
   Typography} from '@mui/material';
 
-import AddressForm from './AddressForm.js';
+import AddressForm from './Details.js';
 import PaymentForm from './DeliveryConfirmation.js';
 import Review from './ReviewOrder.js';
 

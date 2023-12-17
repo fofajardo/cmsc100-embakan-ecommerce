@@ -5,8 +5,6 @@ import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox
 
 //REFERENCE: mui.com documentation
 
-const defaultTheme = createTheme();
-
 export default function SignInSide() {
   const handleSubmit = (event) => {
     event.preventDefault();
