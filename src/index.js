@@ -45,7 +45,7 @@ const router = createHashRouter([
         children: [
             {
                 path: "/",
-                element: <Home />
+                element: <CustomerProductsList />
             },
             {
                 path: "sign-in",
