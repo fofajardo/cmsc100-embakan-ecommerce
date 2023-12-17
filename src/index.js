@@ -9,8 +9,9 @@ import "./index.css";
 
 TODO: Implement SignUp Page and SignIn page
 */
-import SignIn from "./pages/SignIn.js";
-import SignUp from "./pages/SignUp.js";
+import SignOut from "./pages/sign-out/page.js";
+import SignIn from "./pages/sign-in/page.js";
+import SignUp from "./pages/sign-up/page.js";
 
 //TODO (cart): This is to implement the current Forms for checkout
 import Cart from "./pages/Cart.js";
@@ -19,14 +20,9 @@ import ReviewOrder from "./pages/checkout/ReviewOrder.js";
 import Checkout from "./pages/checkout/Checkout.js";
 
 //TODO (cart): This is to implement merchant dashboards and its view
-import MerchantDashboard from "./pages/manage/merchant-dashboard/Dashboard.js"
 import MerchantAccounts from "./pages/manage/merchant-dashboard/Accounts.js"
 import MerchantOrders from "./pages/manage/merchant-dashboard/Orders.js"
 import MerchantSales from "./pages/manage/merchant-dashboard/Sales.js"
-
-
-
-
 
 import Root from "./pages/Root.js";
 import Home from "./pages/Home.js";
@@ -34,88 +30,74 @@ import Home from "./pages/Home.js";
 // import SubjectDetail from "./pages/SubjectDetail.js";
 
 import CustomerProductsList from "./pages/products/page.js";
+import CustomerProductDetailView from "./pages/products/slug/page.js"
 import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
-import ProductDetailView from "./pages/ProductDetailView.js"
-
-
-
 
 const router = createHashRouter([
-    // { path: "/",         element: <Root /> },
-    // { path: "/subjects", element: <Subjects /> }
     {
         path: "/",
         element:  <Root />,
         children: [
             {
                 path: "/",
-                element: <Home />
+                element: <CustomerProductsList />
             },
             {
                 path: "sign-in",
                 element:  <SignIn />
-            }, {
+            },
+            {
+                path: "sign-out",
+                element:  <SignOut />
+            },
+            {
                 path: "sign-up",
                 element:  <SignUp />
             },
-            // { path: "subjects", element: <Subjects /> },
-            // { path: "subjects/:code", element: <SubjectDetail /> },
-           
             {
                 //Checkout
                 path: "cart",
-                children:[{
-                    path: "shopping-cart",
-                    element:  <Cart />
-                }, {
-                    path: "checkout",
-                    element:  <Checkout />
-                }, {
-                    path: "review",
-                    element:  <ReviewOrder />
-                }, {
-                    path: "details",
-                    element:  <Details />
-                }
+                children: [
+                    {
+                        path: "shopping-cart",
+                        element:  <Cart />
+                    },
+                    {
+                        path: "checkout",
+                        element:  <Checkout />
+                    },
+                    {
+                        path: "review",
+                        element:  <ReviewOrder />
+                    },
+                    {
+                        path: "details",
+                        element:  <Details />
+                    }
                 ]
-          
-
             },
             {
                 path: "products",
-                element:  <CustomerProductsList filterType={-1} />
-                // children: [
-                //     {
-                //         path: "view/:id",  
-                //         element: <ProductDetailView />
-                //     }  
-                // ]
+                children: [
+                    {
+                        path: "",
+                        element:  <CustomerProductsList filterType={-1} />
+                    },
+                    {
+                        path: ":slug",
+                        element: <CustomerProductDetailView />
+                    },
+                ]
             },
             {
                 path: "crops",
                 element:  <CustomerProductsList filterType={1} />,
-                // children: [
-                //     {
-                //         path: "view/:id",  
-                //         element: <ProductDetailView />
-                //     }  
-                // ]
             },
             {
                 path: "poultry",
                 element:  <CustomerProductsList filterType={2} />,
-                // children: [
-                //     {
-                //         path: "view/:id",  
-                //         element: <ProductDetailView />
-                //     }  
-                // ] 
-            },
-            {
-                path: "view",
-                element: <ProductDetailView />      // for testing purposes, no API integration.
             },
             {
                 path: "manage",
@@ -136,29 +118,18 @@ const router = createHashRouter([
                                 element: <ManageProductsEdit />
                             },
                         ],
-                        
-                        path: "dashboard",
-                            children:[
-                                {
-                                path : "merchant-view",
-                                element:  <MerchantDashboard />
-                                }, 
-                                {
-                                    path : "accounts",
-                                    element:  <MerchantAccounts />
-                                },
-                                {
-                                    path : "orders",
-                                    element:  <MerchantOrders />
-                                },  {
-                                    path : "sales",
-                                    element:  <MerchantSales />
-                                }
-                            ]
-                            
-                        
+                    },
+                    {
+                        path : "accounts",
+                        element:  <MerchantAccounts />
+                    },
+                    {
+                        path : "orders",
+                        element:  <MerchantOrders />
+                    },  {
+                        path : "sales",
+                        element:  <MerchantSales />
                     }
-                   
                 ]
             },
         ]

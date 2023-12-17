@@ -158,7 +158,11 @@ async function addOrCreateCartItem(aRequest, aResponse) {
 
     var items = entry.items;
     if (cartItemIndex != -1) {
-        items[cartItemIndex].quantity = body.quantity;
+        if (body.relative) {
+            items[cartItemIndex].quantity += body.quantity;
+        } else {
+            items[cartItemIndex].quantity = body.quantity;
+        }
     } else {
         items.push({
             productId: body.productId,

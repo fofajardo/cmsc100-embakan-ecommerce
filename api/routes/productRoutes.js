@@ -9,6 +9,8 @@ router.get("/", productController.getAllProducts);
 
 router.get("/:id", productController.getOneProduct);
 
+router.get("/by/:slug", productController.getOneProductBySlug);
+
 router.post("/", productController.createNewProduct);
 
 router.put("/:id", productController.updateOneProduct);

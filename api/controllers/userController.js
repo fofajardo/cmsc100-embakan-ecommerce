@@ -2,9 +2,14 @@ import { v4 as uuidv4 } from "uuid";
 import { User, Order } from "../models.js";
 import { sendError, sendOk, hasNull } from "./utils.js";
 
+import * as emailValidator from "email-validator";
+import bcrypt from "bcrypt";
+
 /*
  * User
  */
+
+const SALT_ROUNDS = 10;
 
 async function getAllUsers(aRequest, aResponse) {
     try {
@@ -14,7 +19,6 @@ async function getAllUsers(aRequest, aResponse) {
         sendError(aResponse, e, 500);
     }
 }
-
 
 async function getOneUser(aRequest, aResponse) {
     const { id } = aRequest.params;
@@ -35,24 +39,36 @@ async function getOneUser(aRequest, aResponse) {
     }
 }
 
-
 async function createNewUser(aRequest, aResponse) {
     const { body } = aRequest;
     const requiredProps = [
-        "firstName", "middleName", "lastName", "email", "username", "password"
+        "firstName", "lastName", "email", "username", "password"
     ];
 
     if (hasNull(body, requiredProps)) {
         sendError(aResponse, "One or more fields is missing or empty", 400);
         return;
     }
+
 	try {
     	const emailExists = await User.exists({ email: body.email });
     	const usernameExists = await User.exists({ username: body.username });
-        if (emailExists || usernameExists) {
-            sendError(aResponse, "User already exists", 400);
+        if (emailExists) {
+            sendError(aResponse, "An account with this email address already exists.", 400);
             return;
         }
+
+        if (usernameExists) {
+            sendError(aResponse, "Please use a different username.", 400);
+            return;
+        }
+
+        if (!emailValidator.validate(body.email)) {
+            sendError(aResponse, "Please use a valid email address.", 400);
+            return;
+        }
+
+        const hashedPassword = await bcrypt.hash(body.password, SALT_ROUNDS);
 
         const user = new User({
         	id: uuidv4(),
@@ -62,7 +78,7 @@ async function createNewUser(aRequest, aResponse) {
 		    role: 0,
 		    email: body.email,
 		    username: body.username,
-		    password: body.password
+		    password: hashedPassword
         });
         const result = await user.save();
 
@@ -74,9 +90,8 @@ async function createNewUser(aRequest, aResponse) {
     	sendOk(aResponse, result);
 	} catch (e) {
     	sendError(aResponse, e, 500);
+    }
 }
-}
-
 
 async function updateOneUser(aRequest, aResponse) {
 	var fieldsUpdated = [];
@@ -159,11 +174,13 @@ async function updateOneUser(aRequest, aResponse) {
 		        }
     		}
     		if(body.password) {
+                const hashedPassword = await bcrypt.hash(body.password, SALT_ROUNDS);
+
 		        let result = await User.updateOne({
 		            id
 		        }, {
 		            $set: {
-		                password: body.password
+		                password: hashedPassword
 		            }
 		        });
 		        let wasUpdated = result.modifiedCount == 1;
@@ -199,7 +216,6 @@ async function deleteOneUser(aRequest, aResponse) {
         return;
     }
 }
-
 
 async function getUserOrderHistory(aRequest, aResponse) {
 	const { id } = aRequest.params;
