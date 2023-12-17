@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-
+import { put } from '../../apiGlue.js';
 import {Link, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box, Button, Divider} from '@mui/material';
 
 
@@ -102,6 +102,42 @@ const testCases = [
   }
 ];
 
+// async function put(aUrl, aData, aEnqueue, aSuccessMessage) {
+//   if (!aData) {
+//       aData = {};
+//   }
+
+//   return await base(aUrl, {
+//       method: "PUT",
+//       headers: {
+//           "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(aData)
+//   }, aEnqueue, aSuccessMessage);
+// }
+
+async function toCancel (){
+  const data = {
+    status: formJson[0],
+};
+  const productResult = await api.put(
+    `${kBaseUrl}${id}`,
+    data,
+    enqueueSnackbar,
+    "Transaction Cancelled.");
+}
+
+async function toConfirm (){
+  const data = {
+    status: formJson[1],
+};
+  const productResult = await api.put(
+    `${kBaseUrl}${id}`,
+    data,
+    enqueueSnackbar,
+    "Transaction Confirmed.");
+}
+
 export default function Orders() {
 
   const [orders, setOrders] = useState(testCases);
@@ -145,11 +181,11 @@ export default function Orders() {
               {row.status === 0 && (
                 <Box display="flex" flexDirection="column" >
                  
-                  <Button variant="contained" color="primary" style={{ marginBottom: '8px' }}>
+                  <Button onClick={toConfirm} variant="contained" color="primary" style={{ marginBottom: '8px' }}>
                     Confirm
                   </Button>
                 
-                  <Button variant="outlined" color="primary">
+                  <Button onClick={toCancel}  variant="outlined" color="primary">
                     Cancel
                   </Button>
                 </Box>
