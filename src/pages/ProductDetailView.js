@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Grid, Typography, Divider, Button, Box, TextField, createTheme, 
-    ThemeProvider } from "@mui/material";
+        Snackbar, ThemeProvider, IconButton  } from "@mui/material";
+
+import { ArrowBack } from '@mui/icons-material';
 
 // crop product test case for product detail view.
 const crop_product = {
@@ -20,7 +22,7 @@ const poultry_product = {
     ID: 2,
     Name: " Whole Chicken",
     Type: "Poultry",
-    Description: "Born and raised from Bacolod.", 
+    Description: "Born and raised from Bacolod, this is great for dishes like inasal, tinola, and more.", 
     Price: 175,
     Stock: 50,
     Variant: "Whole",
@@ -30,56 +32,79 @@ const poultry_product = {
 
 const defaultTheme = createTheme();
 
+const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP"
+});
+  
+
 export default function ProductDetailView(){
+    function back(){
+        // TO DO: Add a function that goes back to the product listing when pressed.
+        alert("back");
+    }
+
+    function addToCart(){
+        // TO DO: Add a function that adds the product with its quantity to the cart.
+        alert("added to cart");
+    }
+
+
     return (
         <ThemeProvider theme = {defaultTheme}>
             <Grid 
             container 
-            spacing = {2}
-            alignItems= "top"
-            mt = "15px"
-            justifyContent="center"
-            sx={{ minHeight: '100vh' }}>
+            spacing = {5}
+            alignItems = "top"
+            justifyContent = "space-evenly"
+            mt = "15px">
+
+                <Box>
+                    <IconButton style={{ bottom: 3, right: 3 }} onClick = {back}>
+                        <ArrowBack />
+                    </IconButton>
+                </Box>
+
                 <Grid item sx = {7} alignItems = "center">
                    <img 
-                        height={550}
-                        width={400}
-                        src = {crop_product.Image} />
+                        height= {500}
+                        width= {500}
+                        src = {poultry_product.Image} 
+                        alt = {poultry_product.Name} />
                 </Grid>
+
                 <Grid item sx = {4} ml = "25px">
-                    <Typography variant = "subtitle1" fontStyle = {'italic'}>{crop_product.Type}</Typography>
+                    <Typography variant = "subtitle1" fontStyle = {'italic'}>{poultry_product.Type}</Typography>
                     <Box mt ={2}>
-                        <Typography variant = "h3" fontWeight = {'bold'}>{crop_product.Name}</Typography>
-                        <Typography variant = "h4">{crop_product.Price}</Typography>
-                        <Box mt = {5} sx = {{width: '70%'}}>
-                            <Typography variant = "subtitle1" sx = {{wordBreak: 'break-word'}}>{crop_product.Description}</Typography>
+                        <Typography variant = "h3" fontWeight = {'bold'} sx = {{width: '75%'}}>{poultry_product.Name}</Typography>
+                        <Typography variant = "h4">{kCurrencyFormatter.format(poultry_product.Price)}</Typography>
+                        <Box mt = {5} sx = {{width: '75%'}}>
+                            <Typography variant = "subtitle1" sx = {{wordBreak: 'break-word'}}>{poultry_product.Description}</Typography>
                             <Divider />
                             <Box mt = {2}>
-                                <Typography variant = "h5">{crop_product.Variant}</Typography>
-                                <Typography variant = "subtitle1" fontStyle = {'italic'}>Stock: {crop_product.Stock}</Typography>
-                                <Box mt = {5}>
+                                <Typography variant = "h5">{poultry_product.Variant}</Typography>
+                                <Typography variant = "subtitle1" fontStyle = {'italic'}>Stock: {poultry_product.Stock}</Typography>
+                                <Box mt = {5} display = "flex" justifyContent = "space-between" pb = "25px" sx = {{width: '60%'}}>
                                     <TextField
+                                        sx = {{width: "30%"}}
                                         label = "Quantity"
-                                        placeholder = {crop_product.Quantity}
+                                        placeholder = {poultry_product.Quantity}
                                         type = "number"
-                                        InputProps = {{inputProps: {min: crop_product.Quantity, max: crop_product.Stock, step: 1}}}>
-
+                                        InputProps = {{inputProps: {min: poultry_product.Quantity, max: poultry_product.Stock, step: 1}}}>
                                     </TextField>
-
                                     <Button
                                         variant = "contained"
                                         color = "success"
-                                        onClick={() => {
-                                            alert('clicked');
-                                        }}
-                                    >
+                                        onClick = {addToCart}>
                                         Add to Cart
                                     </Button>
                                 </Box>
                             </Box>
                         </Box>  
                     </Box>
+
                 </Grid> 
+                
             </Grid>
         </ThemeProvider>  
     );
