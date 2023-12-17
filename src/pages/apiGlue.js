@@ -117,4 +117,41 @@ async function blockSignedOut(aNavigate) {
     return false;
 }
 
-export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut };
+const kCartUrl = "http://localhost:3001/carts/";
+
+async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
+    const user = await identify();
+    if (!user.data) {
+        return;
+    }
+
+    const cartBaseUrl = `${kCartUrl}${user?.data?.id}`;
+    var cart = await get(cartBaseUrl);
+    if (cart.data == null) {
+        cart = await post(cartBaseUrl, { items: JSON.stringify([]) });
+    }
+    
+    const cartItemsUrl = `${cartBaseUrl}/items`;
+    var result = null;
+    if (aQuantity <= 0) {
+        result = await del(cartItemsUrl,
+            {
+                productId: aProductId,
+                variantId: aVariantId
+            });
+    } else {
+        result = await post(cartItemsUrl,
+            {
+                productId: aProductId,
+                variantId: aVariantId,
+                quantity: aQuantity,
+                relative: aIsRelative
+            });
+    }
+
+    cart = await get(cartBaseUrl);
+
+    return cart;
+}
+
+export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, handleCart };
