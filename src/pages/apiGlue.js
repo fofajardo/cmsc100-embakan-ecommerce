@@ -40,6 +40,12 @@ async function get(aUrl, aEnqueue, aSuccessMessage) {
 
 //Return ay raw response. Will use json
 // a and ques
+// aurl: URL of the API (e.g. kroute)
+// aData : the datea (e.g. string) that will be submitted
+//e.g. "statusL order"
+// aEnqueue: for the snack bar creation
+// aSuccessMEssage: nagpapakita
+
 
 async function post(aUrl, aData, aEnqueue, aSuccessMessage) {
     if (!aData) {
