@@ -63,7 +63,7 @@ export default function Dashboard() {
       <Box sx={{ display: 'flex'}}>
         <CssBaseline />
    
-        <Drawer variant="permanent" open={open}  disableScrollLock= {false} > 
+        <Drawer variant="permanent" open={open} disableScrollLock= {false} > 
           <Toolbar
             sx={{
               display: 'flex',

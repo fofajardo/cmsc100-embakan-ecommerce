@@ -1,10 +1,14 @@
 import * as React from 'react';
+import { useState } from 'react';
 import {Link, Typography, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 
 
+const kBaseUrl = "http://localhost:3001/users/";
 
 
-const users = [
+
+
+const users1 = [
   {
     firstName: "Ramona",
     middleName: "Grace",
@@ -86,6 +90,17 @@ function Counter( object ) {
 
 
 export default function Accounts() {
+  
+    
+    const [users, setUsers] = useState();
+
+    const userResponse = fetch(kBaseUrl,
+      {
+          method: "GET",
+      }
+    ).then(response => response.json()
+    ).then(body => setUsers(body.data));
+
   return (
     <React.Fragment>
       <Typography variant="h3" gutterBottom>
@@ -103,7 +118,8 @@ export default function Accounts() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((row) => (
+        
+          {users?.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.firstName}</TableCell>
               <TableCell>{row.lastName}</TableCell>
