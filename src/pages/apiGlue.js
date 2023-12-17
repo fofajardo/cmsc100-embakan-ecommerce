@@ -3,8 +3,12 @@ async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
     const successVariant = { variant: "success" };
 
     try {
-        const response = await fetch(aUrl, aOptions)
-        const jsonResponse = await response.json()
+        const response = await fetch(aUrl,
+        {
+            ...aOptions,
+            credentials: "include"
+        });
+        const jsonResponse = await response.json();
         
         if (response.ok) {
             if (aSuccessMessage) {
