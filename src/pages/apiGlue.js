@@ -1,4 +1,7 @@
 async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
+    if (!aEnqueue) {
+        aEnqueue = console.log;
+    }
     const errorVariant = { variant: "error" };
     const successVariant = { variant: "success" };
 
@@ -80,4 +83,11 @@ async function del(aUrl, aData, aEnqueue, aSuccessMessage) {
     }, aEnqueue, aSuccessMessage);
 }
 
-export default { base, get, post, put, del };
+const kUserInfoUrl = "http://localhost:3001/auth/signed-in-user";
+
+async function identify() {
+    const response = await get(kUserInfoUrl);
+    return response;
+}
+
+export default { base, get, post, put, del, identify };
