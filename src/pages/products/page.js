@@ -157,7 +157,6 @@ export default function CustomerProductsList(aProps) {
     return (
         <Box component="section" maxWidth="62.5rem" position="relative" margin="auto" sx={{ p: 2 }}>
             <Stack spacing={2} useFlexGap sx={{ mb: 3, alignItems: "center" }}>
-                <Typography variant="h6">3 Easy Steps</Typography>
                 <img
                     style={{
                         maxWidth: "75%"

@@ -47,6 +47,7 @@ async function get(aUrl, aEnqueue, aSuccessMessage) {
 // aSuccessMEssage: nagpapakita
 
 
+//aData: {compete}
 async function post(aUrl, aData, aEnqueue, aSuccessMessage) {
     if (!aData) {
         aData = {};
@@ -61,6 +62,8 @@ async function post(aUrl, aData, aEnqueue, aSuccessMessage) {
     }, aEnqueue, aSuccessMessage);
 }
 
+
+//this is for the update
 async function put(aUrl, aData, aEnqueue, aSuccessMessage) {
     if (!aData) {
         aData = {};
