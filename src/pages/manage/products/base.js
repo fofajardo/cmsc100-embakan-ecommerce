@@ -83,6 +83,11 @@ function ProductInventoryFormControl(aProps) {
                 onChange={function(event) {
                     setStock(event.target.value);
                 }}
+                InputProps = {{
+                    inputProps: {
+                        min: 0
+                    }
+                }}
                 min={0}
                 required
                 fullWidth />
