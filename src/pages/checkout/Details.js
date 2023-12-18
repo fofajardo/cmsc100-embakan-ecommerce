@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {Grid, Typography, TextField, FormControlLabel, Checkbox}from '@mui/material';
-
+// Reference/Tutorials : https://mui.com/material-ui/getting-started/
 export default function AddressForm() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Shipping address
+        Receiver Information
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
@@ -13,7 +13,7 @@ export default function AddressForm() {
             required
             id="firstName"
             name="firstName"
-            label="First name"
+            label="First Name"
             fullWidth
             autoComplete="given-name"
             variant="standard"
@@ -24,12 +24,15 @@ export default function AddressForm() {
             required
             id="lastName"
             name="lastName"
-            label="Last name"
+            label="Last Name"
             fullWidth
             autoComplete="family-name"
             variant="standard"
           />
         </Grid>
+        <Typography variant="h6" gutterBottom>
+        Delivery Details
+      </Typography>
         <Grid item xs={12}>
           <TextField
             required
@@ -93,12 +96,7 @@ export default function AddressForm() {
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
-          />
-        </Grid>
+       
       </Grid>
     </React.Fragment>
   );

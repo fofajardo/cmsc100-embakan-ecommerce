@@ -116,6 +116,7 @@ const testCases = [
 //   }, aEnqueue, aSuccessMessage);
 // }
 
+//Function for the canceling (put function containng the update of status)
 async function toCancel (){
   const data = {
     status: formJson[0],
@@ -126,7 +127,7 @@ async function toCancel (){
     enqueueSnackbar,
     "Transaction Cancelled.");
 }
-
+//Function for the confirming (put function containng the update of status)
 async function toConfirm (){
   const data = {
     status: formJson[1],
@@ -175,9 +176,10 @@ export default function Orders() {
               <TableCell>{row.userId}</TableCell>
               <TableCell>{row.date.toLocaleString()}</TableCell>
               <TableCell>
+              {/* Will display the status accordingly */}
                 {row.status === 0 ? 'Pending' : row.status === 1 ? 'Accomplished' : 'Cancelled'}
               </TableCell>
-
+              {/* If pednign, buttons will be returned too for the confirmation the canceling*/}
               {row.status === 0 && (
                 <Box display="flex" flexDirection="column" >
                  

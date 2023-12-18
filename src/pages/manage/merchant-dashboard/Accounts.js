@@ -7,25 +7,22 @@ const kBaseUrl = "http://localhost:3001/users/";
 
 
 
-function preventDefault(event) {
-  event.preventDefault();
-}
 //https://stackoverflow.com/questions/16976904/javascript-counting-number-of-objects-in-object
 
 function Counter( object ) {
   var length = 0;
-  for( var key in object ) {
-      if( object.hasOwnProperty(key) ) {
+  for( var i in object ) {
+      if( object.hasOwnProperty(i) ) {
           ++length;
       }
   }
   return length;
 };
 
-
+// This will return the components for the accounts in the dashboard
 export default function Accounts() {
   
-    
+    //Gets the content of the users using this GET method
     const [users, setUsers] = useState();
 
     const userResponse = fetch(kBaseUrl,
