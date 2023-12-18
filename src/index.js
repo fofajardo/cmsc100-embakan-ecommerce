@@ -14,7 +14,7 @@ import SignIn from "./pages/sign-in/page.js";
 import SignUp from "./pages/sign-up/page.js";
 
 //TODO (cart): This is to implement the current Forms for checkout
-import Cart from "./pages/Cart.js";
+import Cart from "./pages/cart/page.js";
 import Details from "./pages/checkout/Details.js";
 import ReviewOrder from "./pages/checkout/ReviewOrder.js";
 import Checkout from "./pages/checkout/Checkout.js";
@@ -61,7 +61,7 @@ const router = createHashRouter([
                 path: "cart",
                 children: [
                     {
-                        path: "shopping-cart",
+                        path: "",
                         element:  <Cart />
                     },
                     {
