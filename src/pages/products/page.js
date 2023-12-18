@@ -38,7 +38,9 @@ function ProductCard(aProps) {
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
+                opacity: variant?.stock == 0 ? 0.45 : 1,
+                pointerEvents: variant?.stock == 0 ? "none" : ""
             }}>
             <CardActionArea component={RouterLink} to={`/products/${product.slug}`}>
                 <CardMedia
