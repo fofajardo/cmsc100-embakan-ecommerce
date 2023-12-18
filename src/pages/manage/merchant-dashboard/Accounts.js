@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {Link, Typography, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import {Link, Typography, Table, TableBody, TableCell, TableHead, TableRow, Container} from '@mui/material';
 
 
 const kBaseUrl = "http://localhost:3001/users/";
@@ -35,8 +35,8 @@ export default function Accounts() {
 
 
   return (
-    <React.Fragment>
-      <Typography variant="h3" gutterBottom>
+    <Container>
+      <Typography variant="h4" gutterBottom>
       Accounts
         </Typography>
         <Typography variant="h6" gutterBottom>
@@ -62,6 +62,6 @@ export default function Accounts() {
         </TableBody>
       </Table>
      
-    </React.Fragment>
+    </Container>
   );
 }
