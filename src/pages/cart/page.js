@@ -79,6 +79,7 @@ function CartListItem(aProps) {
                     size="small"
                     value={quantity}
                     sx={{ px: 1 }}
+                    disabled={true}
                     onChange={function(aEvent) {
                         setQuantity(aEvent.target.value);
                     }}
