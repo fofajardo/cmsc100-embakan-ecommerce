@@ -12,7 +12,7 @@ export default function Review() {
         Order Summary
       </Typography>
       <List disablePadding>
-        {products.map((product) => (
+        {products?.map((product) => (
           <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
 
             <ListItemText primary={product.name} secondary={product.desc} />

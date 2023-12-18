@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {Link, Typography, Table, TableBody, TableCell, TableHead, TableRow, Container} from '@mui/material';
+import {Link, Typography, Table, TableBody, TableCell, TableHead, TableRow, Container, Card, CardContent} from '@mui/material';
 
 
 const kBaseUrl = "http://localhost:3001/users/";
@@ -36,11 +36,13 @@ export default function Accounts() {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
+        <Card sx={{ my: 2 }}>
+        <CardContent>
+      <Typography variant="h5" gutterBottom>
       Accounts
         </Typography>
-        <Typography variant="h6" gutterBottom>
-      Count: {Counter(users)}
+        <Typography variant="body1" gutterBottom>
+      Total Users: {Counter(users)}
         </Typography>
       <Table size="small">
         <TableHead>
@@ -61,7 +63,8 @@ export default function Accounts() {
           ))}
         </TableBody>
       </Table>
-     
+      </CardContent>
+     </Card>
     </Container>
   );
 }

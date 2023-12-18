@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Link, Typography, Grid, Table, TableBody, TableCell, 
-TableContainer, TableHead, TableRow, TablePagination, Paper} from '@mui/material';
+TableContainer, TableHead, TableRow, TablePagination, Paper, Container} from '@mui/material';
 
 const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -67,6 +67,7 @@ export default function Deposits() {
   };
 
   return (
+  <Container>
     <Grid 
     container
     direction="column"
@@ -244,5 +245,6 @@ export default function Deposits() {
       </Grid>
       
     </Grid>
+    </Container>
   );
 }
