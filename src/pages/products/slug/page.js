@@ -57,7 +57,7 @@ export default function ProductDetailView() {
                     <img
                         height={500}
                         width={500}
-                        src="{product.Image}"
+                        src={variant?.imageUrl ? variant?.imageUrl : "/assets/images/banner1.jpg"}
                         alt={product?.name} />
                 </Grid>
 

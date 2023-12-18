@@ -238,7 +238,8 @@ async function createNewProductVariant(aRequest, aResponse) {
                 id: uuidv4(),
                 name: body.name,
                 price: body.price,
-                stock: body.stock
+                stock: body.stock,
+                imageUrl: body.imageUrl
             });
 
             let result = await product.save();
@@ -311,6 +312,9 @@ async function updateOneProductVariant(aRequest, aResponse) {
             }
             if (body.stock) {
                 product.variants[productVariantIndex].stock = body.stock;
+            }
+            if (body.imageUrl) {
+                product.variants[productVariantIndex].imageUrl = body.imageUrl;
             }
         }
 

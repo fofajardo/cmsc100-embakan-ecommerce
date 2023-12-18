@@ -25,6 +25,7 @@ const Product = mongoose.model("Product", {
             name: String,
             price: Number,
             stock: Number,
+            imageUrl: String
         }],
         default: []
     }

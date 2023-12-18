@@ -40,7 +40,8 @@ async function doSubmit(aEvent, aSetters) {
     const variantData = {
         name: formJson["in-variant-name"],
         price: formJson["in-variant-price"],
-        stock: parseInt(formJson["in-variant-stock"])
+        stock: parseInt(formJson["in-variant-stock"]),
+        imageUrl: formJson["in-variant-image-url"],
     };
 
     const productResult = await api.post(

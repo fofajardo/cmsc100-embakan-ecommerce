@@ -33,6 +33,7 @@ function ProductInventoryFormControl(aProps) {
     const [name, setName] = useState();
     const [price, setPrice] = useState();
     const [stock, setStock] = useState();
+    const [imageUrl, setImageUrl] = useState();
 
     useEffect(function() {
         if (!data) {
@@ -41,6 +42,7 @@ function ProductInventoryFormControl(aProps) {
         setName(data.name);
         setPrice(data.price);
         setStock(data.stock);
+        setImageUrl(data.imageUrl);
     }, [data]);
 
     return (
@@ -82,6 +84,16 @@ function ProductInventoryFormControl(aProps) {
                     setStock(event.target.value);
                 }}
                 min={0}
+                required
+                fullWidth />
+            <TextField
+                label="Image URL"
+                name="in-variant-image-url"
+                value={imageUrl}
+                disabled={readOnly}
+                onChange={function(event) {
+                    setImageUrl(event.target.value);
+                }}
                 required
                 fullWidth />
         </Stack>

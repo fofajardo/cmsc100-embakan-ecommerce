@@ -44,7 +44,7 @@ function ProductCard(aProps) {
                 <CardMedia
                     component="img"
                     height="140"
-                    image="/assets/images/banner1.jpg"
+                    image={variant?.imageUrl ? variant?.imageUrl : "/assets/images/banner1.jpg"}
                     alt="green iguana"
                 />
                 <CardContent>

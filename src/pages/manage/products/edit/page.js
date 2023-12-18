@@ -59,7 +59,8 @@ async function handleDialogSubmit(aEvent, aSetters) {
         id: formJson["in-variant-id"],
         name: formJson["in-variant-name"],
         price: formJson["in-variant-price"],
-        stock: formJson["in-variant-stock"]
+        stock: formJson["in-variant-stock"],
+        imageUrl: formJson["in-variant-image-url"],
     };
 
     var result = null;
