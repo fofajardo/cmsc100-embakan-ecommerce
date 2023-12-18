@@ -5,7 +5,7 @@ import { Outlet, useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
     Card, CardContent, CardActions,
-    Divider, Button, Typography,
+    Divider, Button, Typography, TextField,
     List, ListItem, ListItemText,
     Grid, IconButton, Container
 } from '@mui/material';
@@ -35,19 +35,25 @@ function CartListItem(aProps) {
         api.get(`${kBaseUrl}/${data.productId}`).then(function(aProduct) {
             setProduct(aProduct.data);
         });
-
         api.get(`${kBaseUrl}/${data.productId}/variants/${data.variantId}`).then(function(aVariant) {
             setVariant(aVariant.data);
         });
+        setQuantity(data?.quantity);
     }, [data]);
 
     const increaseQuantity = () => {
-        setQuantity(quantity + 1);
+        api.handleCart(product.id, variant.id, quantity + 1).then(function() {
+            setUpdate(update + 1);
+            setQuantity(quantity + 1);
+        });
     };
 
     const decreaseQuantity = () => {
         if (quantity > 1) {
-            setQuantity(quantity - 1);
+            api.handleCart(product.id, variant.id, quantity - 1).then(function() {
+                setUpdate(update + 1);
+                    setQuantity(quantity - 1);
+            });
         }
     };
 
@@ -59,7 +65,7 @@ function CartListItem(aProps) {
     }
 
     return (
-        <ListItem divider>
+        <ListItem divider >
             <ListItemText
                 primary={product?.name}
                 secondary={variant?.name}
@@ -69,6 +75,22 @@ function CartListItem(aProps) {
                 <IconButton size="small" aria-label="add" onClick={increaseQuantity}>
                     <AddIcon />
                 </IconButton>
+                <TextField
+                    size="small"
+                    value={quantity}
+                    sx={{ px: 1 }}
+                    onChange={function(aEvent) {
+                        setQuantity(aEvent.target.value);
+                    }}
+                    type="number"
+                    InputProps = {{
+                        inputProps: {
+                            min: 1,
+                            max: variant?.stock,
+                            step:1
+                        }
+                    }}>
+                </TextField>
                 <IconButton size="small" aria-label="minus" onClick={decreaseQuantity}>
                     <RemoveIcon />
                 </IconButton>
