@@ -119,6 +119,21 @@ async function blockSignedOut(aNavigate) {
 
 const kCartUrl = "http://localhost:3001/carts/";
 
+async function findCart() {
+    const user = await identify();
+    if (!user.data) {
+        return;
+    }
+
+    const cartBaseUrl = `${kCartUrl}${user?.data?.id}`;
+    var cart = await get(cartBaseUrl);
+    if (cart.data == null) {
+        cart = await post(cartBaseUrl, { items: JSON.stringify([]) });
+    }
+
+    return cart;
+}
+
 async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
     const user = await identify();
     if (!user.data) {
@@ -154,4 +169,4 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
     return cart;
 }
 
-export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, handleCart };
+export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, findCart, handleCart };
