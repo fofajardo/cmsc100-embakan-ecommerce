@@ -84,6 +84,9 @@ function ProductCard(aProps) {
                 <Typography variant="body1">
                 {variant?.name}
                 </Typography>
+                <Typography variant="body1">
+                    {variant?.stock} units left
+                </Typography>
                 <Typography variant="body2">
                 {
                     variant ? (
