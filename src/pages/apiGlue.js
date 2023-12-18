@@ -137,6 +137,16 @@ async function findCart() {
     return cart;
 }
 
+async function emptyCart() {
+    const user = await identify();
+    if (!user.data) {
+        return;
+    }
+
+    const cartBaseUrl = `${kCartUrl}${user?.data?.id}`;
+    return await del(cartBaseUrl);
+}
+
 async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
     const user = await identify();
     if (!user.data) {
@@ -172,4 +182,4 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
     return cart;
 }
 
-export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, findCart, handleCart };
+export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, findCart, emptyCart, handleCart };
