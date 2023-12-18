@@ -3,6 +3,7 @@ import * as React from "react";
 import { Fragment, useState, useEffect } from "react";
 
 import { useParams } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 import {
     Grid, Typography, Divider, Button, Box,
@@ -21,6 +22,7 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
 const kBaseUrl = "http://localhost:3001/products/";
 
 export default function ProductDetailView() {
+    const { enqueueSnackbar } = useSnackbar();
     const { slug } = useParams();
     const [product, setProduct] = useState();
     const [variant, setVariant] = useState({});
@@ -35,9 +37,11 @@ export default function ProductDetailView() {
         });
     }, [slug]);
 
-    function addToCart(){
-        // TO DO: Add a function that adds the product with its quantity to the cart.
-        alert("added to cart");
+    async function addToCart() {
+        const result = await api.handleCart(product?.id, variant?.id, quantity, true);
+        if (result.status == "OK") {
+            enqueueSnackbar("Product added to cart.");
+        }
     }
 
     return (
