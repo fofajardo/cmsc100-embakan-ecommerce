@@ -140,7 +140,7 @@ async function toConfirm (){
     "Transaction Confirmed.");
 }
 
-export default function Orders() {
+export default function ManageOrders() {
 
   const [orders, setOrders] = useState(testCases);
   // const orderLists = setOrders(testCases);

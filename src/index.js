@@ -19,19 +19,18 @@ import Details from "./pages/checkout/Details.js";
 import ReviewOrder from "./pages/checkout/ReviewOrder.js";
 import Checkout from "./pages/checkout/Checkout.js";
 
-//TODO (cart): This is to implement merchant dashboards and its view
-import MerchantAccounts from "./pages/manage/merchant-dashboard/Accounts.js"
-import MerchantOrders from "./pages/manage/merchant-dashboard/Orders.js"
-import MerchantSales from "./pages/manage/merchant-dashboard/Sales.js"
-
 import Root from "./pages/Root.js";
 import Home from "./pages/Home.js";
 
 import CustomerProductsList from "./pages/products/page.js";
 import CustomerProductDetailView from "./pages/products/slug/page.js"
+
 import ManageProductsList from "./pages/manage/products/page.js"
 import ManageProductsCreate from "./pages/manage/products/create/page.js"
 import ManageProductsEdit from "./pages/manage/products/edit/page.js"
+import ManageAccounts from "./pages/manage/accounts/page.js"
+import ManageOrders from "./pages/manage/orders/page.js"
+import ManageSales from "./pages/manage/sales/page.js"
 
 const router = createHashRouter([
     {
@@ -119,14 +118,14 @@ const router = createHashRouter([
                     },
                     {
                         path : "accounts",
-                        element:  <MerchantAccounts />
+                        element:  <ManageAccounts />
                     },
                     {
                         path : "orders",
-                        element:  <MerchantOrders />
+                        element:  <ManageOrders />
                     },  {
                         path : "sales",
-                        element:  <MerchantSales />
+                        element:  <ManageSales />
                     }
                 ]
             },

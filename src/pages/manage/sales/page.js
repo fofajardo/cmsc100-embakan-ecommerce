@@ -53,7 +53,7 @@ const rowsAnnual = [
   createData('Whole Chicken','Poultry','pcs','175','50')
 ];
 
-export default function Deposits() {
+export default function ManageSales() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 

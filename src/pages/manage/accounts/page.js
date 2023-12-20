@@ -21,7 +21,7 @@ function Counter( object ) {
 };
 
 // This will return the components for the accounts in the dashboard
-export default function Accounts() {
+export default function ManageAccounts() {
   
     //Gets the content of the users using this GET method
     const [users, setUsers] = useState();
