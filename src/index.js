@@ -84,7 +84,16 @@ const router = createHashRouter([
                     },
                     {
                         path: ":slug",
-                        element: <CustomerProductDetailView />
+                        children: [
+                            {
+                                path: "",
+                                element: <CustomerProductDetailView />                                
+                            },
+                            {
+                                path: ":variantIndex",
+                                element: <CustomerProductDetailView />                                
+                            }
+                        ]
                     },
                 ]
             },

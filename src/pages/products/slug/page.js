@@ -23,7 +23,7 @@ const kBaseUrl = `${api.kHost}products/`;
 
 export default function ProductDetailView() {
     const { enqueueSnackbar } = useSnackbar();
-    const { slug } = useParams();
+    const { slug, variantIndex } = useParams();
     const [product, setProduct] = useState();
     const [variant, setVariant] = useState({});
     const [quantity, setQuantity] = useState(1);
@@ -32,7 +32,7 @@ export default function ProductDetailView() {
         api.get(`${kBaseUrl}by/${slug}`).then(function(aProduct) {
             setProduct(aProduct.data);
             if (aProduct.data?.variants.length > 0) {
-                setVariant(aProduct.data?.variants[0]);
+                setVariant(aProduct.data?.variants[variantIndex ? variantIndex : 0]);
             }
         });
     }, [slug]);

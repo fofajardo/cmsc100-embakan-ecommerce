@@ -28,11 +28,17 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
 });
 
 function ProductCard(aProps) {
-    const { index, product, variant } = aProps;
+    const { index, variantIndex, product, variant } = aProps;
     const { enqueueSnackbar } = useSnackbar();
+    
+    var detailPageUrl = `/products/${product.slug}`;
+    if (variantIndex > 0) {
+        detailPageUrl += `/${variantIndex}`;
+    }
+    
     return (
         <Card
-            key={index}
+            key={`${index}-${variantIndex}`}
             variant="outlined"
             sx={{
                 display: "flex",
@@ -42,7 +48,7 @@ function ProductCard(aProps) {
                 opacity: variant?.stock == 0 ? 0.45 : 1,
                 pointerEvents: variant?.stock == 0 ? "none" : ""
             }}>
-            <CardActionArea component={RouterLink} to={`/products/${product.slug}`}>
+            <CardActionArea component={RouterLink} to={detailPageUrl}>
                 <CardMedia
                     component="img"
                     height="140"
@@ -127,7 +133,7 @@ function ProductList(aProps) {
                             product.variants.forEach(function(aVariant, aIndex) {
                                 cards.push(
                                     <Grid item xs={18} md={4}>
-                                        <ProductCard product={product} key={i} index={i} variant={aVariant} />
+                                        <ProductCard product={product} key={i} index={i} variantIndex={aIndex} variant={aVariant} />
                                     </Grid>
                                 );
                             });
