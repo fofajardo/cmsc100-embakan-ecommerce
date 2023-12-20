@@ -149,16 +149,21 @@ async function emptyCart() {
     return await del(cartBaseUrl);
 }
 
-async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
+async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative, aEnqueue) {
     const user = await identify();
     if (!user.data) {
         return;
     }
 
     const cartBaseUrl = `${kCartUrl}${user?.data?.id}`;
-    var cart = await get(cartBaseUrl);
+    var cart = await get(cartBaseUrl, aEnqueue);
     if (cart.data == null) {
-        cart = await post(cartBaseUrl, { items: JSON.stringify([]) });
+        cart = await post(
+            cartBaseUrl,
+            {
+                items: JSON.stringify([])
+            },
+            aEnqueue);
     }
     
     const cartItemsUrl = `${cartBaseUrl}/items`;
@@ -168,7 +173,7 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
             {
                 productId: aProductId,
                 variantId: aVariantId
-            });
+            }, aEnqueue);
     } else {
         result = await post(cartItemsUrl,
             {
@@ -176,10 +181,11 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
                 variantId: aVariantId,
                 quantity: aQuantity,
                 relative: aIsRelative
-            });
+            }, aEnqueue);
     }
 
-    cart = await get(cartBaseUrl);
+    cart = await get(cartBaseUrl, aEnqueue);
+    cart.operation = result;
 
     return cart;
 }

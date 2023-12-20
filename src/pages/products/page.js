@@ -86,8 +86,8 @@ function ProductCard(aProps) {
                     color="primary"
                     variant="contained"
                     onClick={async function(aEvent) {
-                        const result = await api.handleCart(product?.id, variant?.id, 1, true);
-                        if (result.status == "OK") {
+                        const result = await api.handleCart(product?.id, variant?.id, 1, true, enqueueSnackbar);
+                        if (result.status == "OK" && result.operation.status == "OK") {
                             enqueueSnackbar("Product added to cart.");
                         }
                     }}>

@@ -60,8 +60,8 @@ export default function ProductDetailView() {
     }, [slug, variantIndex]);
 
     async function addToCart() {
-        const result = await api.handleCart(product?.id, variant?.id, quantity, true);
-        if (result.status == "OK") {
+        const result = await api.handleCart(product?.id, variant?.id, quantity, true, enqueueSnackbar);
+        if (result.status == "OK" && result.operation.status == "OK") {
             enqueueSnackbar("Product added to cart.");
         }
     }

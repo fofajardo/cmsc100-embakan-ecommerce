@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import { Outlet, useNavigate, Link as RouterLink } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 import {
     Stack, AppBar, Toolbar,
@@ -28,6 +29,7 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
 
 function CartListItem(aProps) {
     const { data, update, setUpdate, isLast } = aProps;
+    const { enqueueSnackbar } = useSnackbar();
     const [product, setProduct] = useState("");
     const [variant, setVariant] = useState();
     const [quantity, setQuantity] = useState(1);
@@ -43,7 +45,7 @@ function CartListItem(aProps) {
     }, [data]);
 
     const increaseQuantity = () => {
-        api.handleCart(product.id, variant.id, quantity + 1).then(function() {
+        api.handleCart(product.id, variant.id, 1, true, enqueueSnackbar).then(function() {
             setUpdate(update + 1);
             setQuantity(quantity + 1);
         });
@@ -51,7 +53,7 @@ function CartListItem(aProps) {
 
     const decreaseQuantity = () => {
         if (quantity > 1) {
-            api.handleCart(product.id, variant.id, quantity - 1).then(function() {
+            api.handleCart(product.id, variant.id, quantity - 1, false, enqueueSnackbar).then(function() {
                 setUpdate(update + 1);
                 setQuantity(quantity - 1);
             });
@@ -60,7 +62,7 @@ function CartListItem(aProps) {
 
     const handleRemove = function() {
         setQuantity(0);
-        api.handleCart(product.id, variant.id, 0).then(function() {
+        api.handleCart(product.id, variant.id, 0, false, enqueueSnackbar).then(function() {
             setUpdate(update + 1);
         });
     }
@@ -113,7 +115,7 @@ function CartListItem(aProps) {
                             value = variant?.stock;
                             aEvent.target.value = variant?.stock;
                         }
-                        api.handleCart(product.id, variant.id, value).then(function() {
+                        api.handleCart(product.id, variant.id, value, enqueueSnackbar).then(function() {
                             setQuantity(value);
                             setUpdate(update + 1);
                         });

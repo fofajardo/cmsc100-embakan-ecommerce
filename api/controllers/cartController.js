@@ -1,4 +1,4 @@
-import { Cart } from "../models.js";
+import { Cart, Product } from "../models.js";
 import { sendError, sendOk } from "./utils.js";
 
 /*
@@ -143,6 +143,21 @@ async function addOrCreateCartItem(aRequest, aResponse) {
         return;
     }
 
+    var productVariant = null;
+    try {
+        let product = await Product.findOne({ id: body.productId }).exec();
+
+        let productVariantIndex = product.variants.findIndex(function (aElement) {
+            return (aElement.id == body.variantId);
+        });
+        
+        if (productVariantIndex != -1) {
+            productVariant = product.variants[productVariantIndex];
+        }
+    } catch (e) {
+        return sendError(aResponse, "Invalid product or product variant", 400);
+    }
+
     var entry = null;
     try {
         entry = await Cart.findOne({ id }).exec();
@@ -157,13 +172,19 @@ async function addOrCreateCartItem(aRequest, aResponse) {
     });
 
     var items = entry.items;
+    var finalQuantity = body.quantity;
     if (cartItemIndex != -1) {
         if (body.relative) {
-            items[cartItemIndex].quantity += body.quantity;
-        } else {
-            items[cartItemIndex].quantity = body.quantity;
+            finalQuantity = items[cartItemIndex].quantity + body.quantity;
         }
+        if (finalQuantity > productVariant.stock) {
+            return sendError(aResponse, "Cannot add more than the available stock.", 400);
+        }
+        items[cartItemIndex].quantity = finalQuantity;
     } else {
+        if (finalQuantity > productVariant.stock) {
+            return sendError(aResponse, "Cannot add more than the available stock.", 400);
+        }
         items.push({
             productId: body.productId,
             variantId: body.variantId,
