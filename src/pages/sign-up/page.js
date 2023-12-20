@@ -66,6 +66,7 @@ export default function SignUp() {
                     alignItems: "center",
                 }}>
                 <img
+                    alt="E-mbakan Logo"
                     src="/logos/logo_colored.svg"
                     width="64"
                     height="64"
