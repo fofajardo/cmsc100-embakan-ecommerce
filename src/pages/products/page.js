@@ -53,7 +53,7 @@ function ProductCard(aProps) {
                     component="img"
                     height="140"
                     image={variant?.imageUrl ? variant?.imageUrl : "/assets/images/banner1.jpg"}
-                    alt="green iguana"
+                    alt={`${product?.name} - ${variant?.name}`}
                 />
                 <CardContent>
                     <Typography variant="h5">
