@@ -172,10 +172,10 @@ async function addOrCreateCartItem(aRequest, aResponse) {
     });
 
     var items = entry.items;
-    var finalQuantity = body.quantity;
+    var finalQuantity = parseInt(body.quantity);
     if (cartItemIndex != -1) {
         if (body.relative) {
-            finalQuantity = items[cartItemIndex].quantity + body.quantity;
+            finalQuantity += items[cartItemIndex].quantity;
         }
         if (finalQuantity > productVariant.stock) {
             return sendError(aResponse, "Cannot add more than the available stock.", 400);
@@ -188,7 +188,7 @@ async function addOrCreateCartItem(aRequest, aResponse) {
         items.push({
             productId: body.productId,
             variantId: body.variantId,
-            quantity: body.quantity
+            quantity: finalQuantity
         });
     }
     aRequest.body.items = items;
