@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
+    Stack, AppBar, Toolbar,
     Card, CardContent, CardActions,
     Divider, Button, Typography, TextField,
     List, ListItem, ListItemText,
@@ -26,7 +27,7 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
 });
 
 function CartListItem(aProps) {
-    const { data, update, setUpdate } = aProps;
+    const { data, update, setUpdate, isLast } = aProps;
     const [product, setProduct] = useState("");
     const [variant, setVariant] = useState();
     const [quantity, setQuantity] = useState(1);
@@ -52,7 +53,7 @@ function CartListItem(aProps) {
         if (quantity > 1) {
             api.handleCart(product.id, variant.id, quantity - 1).then(function() {
                 setUpdate(update + 1);
-                    setQuantity(quantity - 1);
+                setQuantity(quantity - 1);
             });
         }
     };
@@ -65,26 +66,56 @@ function CartListItem(aProps) {
     }
 
     return (
-        <ListItem divider >
+        <ListItem divider={!isLast} sx={{
+            flexDirection: {
+                xs: "column",
+                md: "row"
+            },
+            alignItems: {
+                xs: "start",
+                md: "center"
+            },
+            pb: isLast ? 0 : 1
+        }}>
             <ListItemText
                 primary={product?.name}
                 secondary={variant?.name}
+                sx={{
+                    mb: isLast ? 0 : 0.75
+                }}
             />
-            <Typography variant="body2">
+            <Typography variant="body2" align="left">
                 {kCurrencyFormatter.format(variant?.price * data?.quantity)}
-                <IconButton size="small" aria-label="add" onClick={increaseQuantity}>
-                    <AddIcon />
+            </Typography>
+            <Stack direction="row" sx={{
+                alignItems: "center",
+                justifyContent: "center",
+                alignSelf: "center"
+            }}>
+                <IconButton size="small" aria-label="minus" onClick={decreaseQuantity}>
+                    <RemoveIcon />
                 </IconButton>
                 <TextField
                     size="small"
                     value={quantity}
-                    sx={{ px: 1 }}
-                    disabled={true}
+                    sx={{ px: 1, width: "30%" }}
                     onChange={function(aEvent) {
-                        setQuantity(aEvent.target.value);
+                        let value = parseInt(aEvent.target.value);
+                        if (isNaN(value) || value <= 0) {
+                            value = 1;
+                            aEvent.target.value = 1;
+                        }
+                        if (value > variant?.stock) {
+                            value = variant?.stock;
+                            aEvent.target.value = variant?.stock;
+                        }
+                        api.handleCart(product.id, variant.id, value).then(function() {
+                            setQuantity(value);
+                            setUpdate(update + 1);
+                        });
                     }}
                     type="number"
-                    InputProps = {{
+                    InputProps={{
                         inputProps: {
                             min: 1,
                             max: variant?.stock,
@@ -92,25 +123,25 @@ function CartListItem(aProps) {
                         }
                     }}>
                 </TextField>
-                <IconButton size="small" aria-label="minus" onClick={decreaseQuantity}>
-                    <RemoveIcon />
+                <IconButton size="small" aria-label="add" onClick={increaseQuantity}>
+                    <AddIcon />
                 </IconButton>
-                <Button size="small" onClick={handleRemove}>Remove</Button>
-            </Typography>
+            </Stack>
+            <Button size="small" variant="outlined" onClick={handleRemove}>Delete</Button>
         </ListItem>
     )
 }
 
 export default function Cart() {
     const [cartItems, setCartItems] = useState();
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState("");
     const [update, setUpdate] = useState(0);
 
     useEffect(function() {
         api.findCart().then(function(aCart) {
             setCartItems(aCart?.data?.items);
 
-            setTotalPrice(0);
+            setTotalPrice("");
             var price = 0;
             aCart?.data?.items.forEach(function(aItem, aIndex) {
                 api.get(`${kBaseUrl}/${aItem.productId}/variants/${aItem.variantId}`)
@@ -129,29 +160,37 @@ export default function Cart() {
                     <Typography variant="h6" gutterBottom>
                     Shopping Cart
                     </Typography>
-                    <Divider />
-                    <List>
-                        {cartItems?.map((item, index) => (
-                            <CartListItem key={index} data={item} update={update} setUpdate={setUpdate} />
-                        ))}
+                    <List sx={{ py: 0 }}>
+                    {
+                        cartItems?.map(function(item, index) {
+                            return (
+                                <CartListItem
+                                    key={index}
+                                    data={item}
+                                    update={update}
+                                    setUpdate={setUpdate}
+                                    isLast={index == cartItems.length - 1} />
+                            )
+                        })
+                    }
                     </List>
+                </CardContent>
+            </Card>
+            <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }} color="">
+                <Toolbar sx={{ justifyContent: "space-between", alignItems: "center" }}>
                     <Typography variant="h6">
                     Total: { totalPrice }
                     </Typography>
-                </CardContent>
-                <CardActions>
                     <Button
                         component={RouterLink}
                         to={`/cart/checkout`}
                         type="button"
                         disabled={cartItems?.length == 0}
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}>
+                        variant="contained">
                         Checkout
                     </Button>
-                </CardActions>
-            </Card>
+                </Toolbar>
+            </AppBar>
         </Container>
     );
 }
