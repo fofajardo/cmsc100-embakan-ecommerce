@@ -134,7 +134,7 @@ function ProductList(aProps) {
                             let cards = [];
                             if (product.variants.length == 0) {
                                 return (
-                                    <Grid item xs={18} md={4}>
+                                    <Grid key={i} item xs={18} md={4}>
                                         <ProductCard product={product} key={i} index={i} onOpenDialog={onOpenDialog} />
                                     </Grid>
                                 );
@@ -142,7 +142,7 @@ function ProductList(aProps) {
 
                             product.variants.forEach(function(aVariant, aIndex) {
                                 cards.push(
-                                    <Grid item xs={18} md={4}>
+                                    <Grid key={`${i}-${aIndex}`} item xs={18} md={4}>
                                         <ProductCard product={product} key={i} index={i} variant={aVariant} onOpenDialog={onOpenDialog} />
                                     </Grid>
                                 );

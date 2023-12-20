@@ -109,7 +109,7 @@ export default function Header() {
 
     const drawerList = drawerLinks.map(function(aLink, aIndex) {
         if (aLink.divider) {
-            return(<Divider/>)
+            return(<Divider key={aIndex}/>)
         }
         if (aLink.title) {
             return(

@@ -127,13 +127,13 @@ function ProductList(aProps) {
                             let cards = [];
                             // Hide products with no variants from view.
                             if (product.variants.length == 0) {
-                                return (<Fragment></Fragment>);
+                                return;
                             }
 
                             product.variants.forEach(function(aVariant, aIndex) {
                                 cards.push(
-                                    <Grid item xs={18} md={4}>
-                                        <ProductCard product={product} key={i} index={i} variantIndex={aIndex} variant={aVariant} />
+                                    <Grid key={`${i}-${aIndex}`} item xs={18} md={4}>
+                                        <ProductCard product={product} index={i} variantIndex={aIndex} variant={aVariant} />
                                     </Grid>
                                 );
                             });

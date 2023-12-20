@@ -47,7 +47,6 @@ function ProductInventoryFormControl(aProps) {
 
     return (
         <Stack
-            container
             gap={2}
             direction={
                 isModal ? "column" : { sm: "column", md: "row" }
@@ -55,7 +54,7 @@ function ProductInventoryFormControl(aProps) {
             <TextField
                 label="Variant/Unit Name"
                 name="in-variant-name"
-                defaultValue={useDefaultUnit ? "One Unit" : null}
+                defaultValue={useDefaultUnit ? "One Unit" : ""}
                 value={name}
                 disabled={readOnly}
                 onChange={function(event) {
@@ -277,9 +276,8 @@ function ProductInventoryListCard(aProps) {
                                 variants?.map(function(aVariant, aIndex) {
                                     let elements = [];
                                     elements.push(
-                                        <Fragment>
+                                        <Fragment key={aIndex}>
                                             <ProductInventoryDisplayCard
-                                                key={aIndex}
                                                 index={aIndex}
                                                 inventory={aVariant}
                                                 onOpenDialog={handleOpenDialog}
@@ -336,7 +334,6 @@ function ProductDetailCard(aProps) {
             <Stack
                 spacing={2}>
                 <Stack
-                    container
                     gap={2}
                     direction={{ sm: "column", md: "row" }}>
                     <TextField
@@ -363,7 +360,6 @@ function ProductDetailCard(aProps) {
                         fullWidth />
                 </Stack>
                 <Stack
-                    container
                     gap={2}
                     direction={{ sm: "column", md: "row" }}>
                     <TextField
@@ -379,7 +375,6 @@ function ProductDetailCard(aProps) {
                         fullWidth />
                 </Stack>
                 <Stack
-                    container
                     gap={2}
                     direction={{ sm: "column", md: "row" }}>
                     <FormControl fullWidth>
@@ -397,7 +392,7 @@ function ProductDetailCard(aProps) {
                             {
                                 productTypes.map(function(aType, aIndex) {
                                     return (
-                                        <MenuItem value={aType.value}>
+                                        <MenuItem key={aIndex} value={aType.value}>
                                             {aType.label}
                                         </MenuItem>
                                     )
