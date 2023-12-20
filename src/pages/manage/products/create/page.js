@@ -18,7 +18,7 @@ import productTypes from "../../../productTypes.js";
 
 import api from "../../../apiGlue.js";
 
-const kBaseUrl = "http://localhost:3001/products/";
+const kBaseUrl = `${api.kHost}products/`;
 const kParentRoute = "/manage/products";
 
 async function doSubmit(aEvent, aSetters) {

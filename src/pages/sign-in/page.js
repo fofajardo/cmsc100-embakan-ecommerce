@@ -9,11 +9,11 @@ import { useSnackbar } from "notistack";
 
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
-const kBaseUrl = "http://localhost:3001/users/";
-const kAuthUrl = "http://localhost:3001/auth/";
-const kTargetRoute = "/";
-
 import api from "../apiGlue.js";
+
+const kBaseUrl = `${api.kHost}users/`;
+const kAuthUrl = `${api.kHost}auth/`;
+const kTargetRoute = "/";
 
 export default function SignIn() {
     const { enqueueSnackbar } = useSnackbar();

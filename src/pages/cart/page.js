@@ -18,7 +18,7 @@ import {
 
 import api from "../apiGlue.js";
 
-const kBaseUrl = "http://localhost:3001/products/";
+const kBaseUrl = `${api.kHost}products/`;
 
 const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
     style: "currency",

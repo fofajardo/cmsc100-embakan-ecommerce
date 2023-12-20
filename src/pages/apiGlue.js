@@ -1,3 +1,5 @@
+const kHost = "http://localhost:3001/";
+
 async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
     if (!aEnqueue) {
         aEnqueue = console.log;
@@ -92,7 +94,7 @@ async function del(aUrl, aData, aEnqueue, aSuccessMessage) {
     }, aEnqueue, aSuccessMessage);
 }
 
-const kUserInfoUrl = "http://localhost:3001/auth/signed-in-user";
+const kUserInfoUrl = `${kHost}auth/signed-in-user`;
 
 async function identify() {
     const response = await get(kUserInfoUrl);
@@ -120,7 +122,7 @@ async function blockSignedOut(aNavigate) {
     return false;
 }
 
-const kCartUrl = "http://localhost:3001/carts/";
+const kCartUrl = `${kHost}carts/`;
 
 async function findCart() {
     const user = await identify();
@@ -182,4 +184,4 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative) {
     return cart;
 }
 
-export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, findCart, emptyCart, handleCart };
+export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, findCart, emptyCart, handleCart, kHost };

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 import {Link, Typography, Table, TableBody, TableCell, TableHead, TableRow, Container, Card, CardContent} from '@mui/material';
+import api from "../../apiGlue.js";
 
 
-const kBaseUrl = "http://localhost:3001/users/";
+const kBaseUrl = `${api.kHost}users/`;
 
 
 

@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { put } from '../../apiGlue.js';
 import {Link, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box, Button, Divider} from '@mui/material';
 
+import api from "../../apiGlue.js";
 
-const kBaseUrl = "http://localhost:3001/orders/";
+const kBaseUrl = `${api.kHost}orders/`;
 
 function preventDefault(event) {
   event.preventDefault();
