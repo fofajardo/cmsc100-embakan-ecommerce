@@ -1,4 +1,4 @@
-const kHost = "http://localhost:3001/";
+const kHost = "http://localhost:3001/api/";
 
 async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
     if (!aEnqueue) {

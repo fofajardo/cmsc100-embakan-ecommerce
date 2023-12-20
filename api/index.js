@@ -42,11 +42,11 @@ gApp.use(session({
 }));
 
 // Set up the router, which handles the endpoints.
-gApp.use("/users", userRouter);
-gApp.use("/products", productRouter);
-gApp.use("/orders", orderRouter);
-gApp.use("/carts", cartRouter);
-gApp.use("/auth", authRouter);
+gApp.use("/api/users", userRouter);
+gApp.use("/api/products", productRouter);
+gApp.use("/api/orders", orderRouter);
+gApp.use("/api/carts", cartRouter);
+gApp.use("/api/auth", authRouter);
 
 // Listen to the specified port.
 gApp.listen(kPort);
