@@ -88,7 +88,7 @@ async function updateOneCart(aRequest, aResponse) {
                 items: body.items
             }
         });
-        let wasUpdated = result.modifiedCount == 1;
+        let wasUpdated = result.modifiedCount == 1 || result.matchedCount == 1;
         if (!wasUpdated) {
             sendError(aResponse, "Document was not updated", 400);
             return;
