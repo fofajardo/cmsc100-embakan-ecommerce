@@ -62,13 +62,11 @@ export default function Header() {
     ];
 
     var drawerLinks = [
-    /*
         {
             icon: <AccountCircleOutlinedIcon />,
             to: "/account",
             label: "Account"
         },
-    */
         {
             icon: <LogoutOutlinedIcon />,
             to: "/sign-out",
