@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 
+import compression from "compression";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
@@ -16,6 +17,7 @@ const kDbPort = "27017";
 const kDbName = "embakan";
 const kDbString = `mongodb://${kDbHost}:${kDbPort}/${kDbName}`;
 const kPort = 3001;
+const kIsProduction = false;
 
 const gApp = express();
 
@@ -40,6 +42,11 @@ gApp.use(session({
         secure: false
     }
 }));
+
+if (kIsProduction) {
+    gApp.use(compression())
+    gApp.use(express.static("./build"));
+}
 
 // Set up the router, which handles the endpoints.
 gApp.use("/api/users", userRouter);
