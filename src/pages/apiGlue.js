@@ -184,10 +184,7 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative, aEnque
             }, aEnqueue);
     }
 
-    cart = await get(cartBaseUrl, aEnqueue);
-    cart.operation = result;
-
-    return cart;
+    return result;
 }
 
 export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, findCart, emptyCart, handleCart, kHost };
