@@ -9,6 +9,8 @@ router.get("/:id", orderController.getOneOrder);
 
 router.post("/", orderController.createNewOrder);
 
+router.post("/bulk", orderController.createBulkOrder);
+
 router.put("/:id", orderController.updateOneOrder);
 
 router.delete("/:id", orderController.deleteOneOrder);

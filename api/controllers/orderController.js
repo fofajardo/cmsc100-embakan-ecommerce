@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Order, Product } from "../models.js";
-import { sendError, sendOk } from "./utils.js";
+import { sendError, sendOk, hasNull } from "./utils.js";
 
 async function getAllOrders(aRequest, aResponse) {
     try {
@@ -33,17 +33,18 @@ async function getOneOrder(aRequest, aResponse) {
 
 async function createNewOrder(aRequest, aResponse) {
     const { body } = aRequest;
-    if (!body.productId ||
-        !body.variantId ||
-        !body.quantity ||
-        !body.userId ||
-        body.status == undefined) {
+
+    const requiredProps = [
+        "productId", "variantId", "quantity", "userId", "status"
+    ];
+
+    if (hasNull(body, requiredProps)) {
         sendError(aResponse, "One or more keys is missing or empty", 400);
         return;
     }
-    
+
     const productEntry = await Product.findOne({
-        id: body.productId,
+        id: aBody.productId,
     }).exec();
 
     if (!productEntry || !productEntry?.variants) {
@@ -52,21 +53,22 @@ async function createNewOrder(aRequest, aResponse) {
     }
 
     const productVariant = productEntry.variants.find(function (aElement) {
-        return aElement.id == body.variantId;
+        return aElement.id == aBody.variantId;
     });
 
-    const priceAtCheckout = body.quantity * productVariant.price;
+    const priceAtCheckout = aBody.quantity * productVariant.price;
 
     const entry = new Order({
         id: uuidv4(),
-        productId: body.productId,
-        variantId: body.variantId,
-        quantity: body.quantity,
+        productId: aBody.productId,
+        variantId: aBody.variantId,
+        groupId: aBody.groupId ? aBody.groupId : uuidv4(),
+        quantity: aBody.quantity,
         price: priceAtCheckout,
-        userId: body.userId,
-        status: body.status,
+        userId: aBody.userId,
+        status: aBody.status,
         date: new Date()
-    });
+    });    
 
     try {
         const result = await entry.save();
@@ -78,6 +80,27 @@ async function createNewOrder(aRequest, aResponse) {
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
+    }
+}
+
+async function createBulkOrder(aRequest, aResponse) {
+    const { body } = aRequest;
+    const requiredProps = ["items"];
+
+    if (hasNull(body, requiredProps)) {
+        sendError(aResponse, "One or more keys is missing or empty", 400);
+        return;
+    }
+
+    try {
+        const groupId = uuidv4();
+        for (let i = 0; i < items.length; i++) {
+            var item = items[i];
+            item.groupId = groupId;
+            createNewOrder({ body: item }, aResponse);
+        }
+    } catch (e) {
+        sendError(aResponse, e.message, 500);
     }
 }
 
@@ -139,6 +162,7 @@ export default {
     getAllOrders,
     getOneOrder,
     createNewOrder,
+    createBulkOrder,
     updateOneOrder,
     deleteOneOrder
 };

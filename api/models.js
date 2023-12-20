@@ -34,6 +34,7 @@ const Product = mongoose.model("Product", {
 // Order mongoose model
 const Order = mongoose.model("Order", {
     id: String,
+    groupId: String,
     productId: String,
     variantId: String,
     quantity: Number,
