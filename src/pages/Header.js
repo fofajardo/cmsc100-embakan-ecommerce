@@ -159,6 +159,7 @@ export default function Header() {
                 <Link component={RouterLink} to="/" underline="none" color="inherit">
                     <Stack spacing={1.5} direction="row">
                         <img
+                            alt="E-mbakan Logo"
                             height={32}
                             width={32}
                             src="logos/logo_colored.svg" />
