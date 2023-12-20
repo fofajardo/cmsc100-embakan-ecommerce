@@ -66,15 +66,14 @@ export default function ManageSales() {
     setPage(0);
   };
 
-  return (
-  <Container>
+    return (
+        <Container sx={{ py: 3 }}>
+            <Typography variant="h4" sx={{ mb: 3 }}>Sales Report</Typography>
     <Grid 
     container
     direction="column"
     justifyContent="center"
-    mt="15px"
     pb="20px">
-      <Typography variant="h3">Sales Report</Typography>
 
       <Grid item mt="15px">
       <Paper sx={{ width: '100%' }}>

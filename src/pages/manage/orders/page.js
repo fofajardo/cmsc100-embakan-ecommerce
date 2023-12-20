@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { put } from '../../apiGlue.js';
-import {Link, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box, Button, Divider} from '@mui/material';
+import { Container, Link, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box, Button, Divider} from '@mui/material';
 
 import api from "../../apiGlue.js";
 
@@ -154,8 +154,8 @@ export default function ManageOrders() {
 
 
   return (
-    <React.Fragment>
-  
+    <Container sx={{ py: 3 }}>
+        <Typography variant="h4" sx={{ mb: 3 }}>Order Fulfillment</Typography>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -217,6 +217,6 @@ export default function ManageOrders() {
         </TableBody>
       </Table>
       
-    </React.Fragment>
+    </Container>
   );
 }

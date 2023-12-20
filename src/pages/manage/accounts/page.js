@@ -36,12 +36,12 @@ export default function ManageAccounts() {
 
 
   return (
-    <Container>
-        <Card sx={{ my: 2 }}>
-        <CardContent>
-      <Typography variant="h5" gutterBottom>
+    <Container sx={{ py: 3 }}>
+      <Typography variant="h4">
       Accounts
         </Typography>
+        <Card sx={{ my: 2 }} variant="outlined">
+        <CardContent>
         <Typography variant="body1" gutterBottom>
       Total Users: {Counter(users)}
         </Typography>

@@ -4,6 +4,7 @@ import { useSnackbar } from "notistack";
 import { useNavigate, useParams, Link as RouterLink } from "react-router-dom";
 
 import {
+    Container,
     Paper, Box, Stack, Grid, Card,
     Button, IconButton, Typography,
     Link, FormControl, FormLabel, TextField, Input,
@@ -116,12 +117,12 @@ export default function ManageProductsEdit() {
     }, []);
 
     return (
-        <Box component="section" maxWidth="62.5rem" position="relative" margin="auto" sx={{ p: 2 }}>
+        <Container sx={{ py: 3 }}>
             <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
                 <IconButton component={RouterLink} to={kParentRoute} color="primary" aria-label="go back">
                     <ArrowBackIcon />
                 </IconButton>
-                <Typography variant="h5">
+                <Typography variant="h4">
                     Edit Product
                 </Typography>
             </Stack>
@@ -129,6 +130,6 @@ export default function ManageProductsEdit() {
                 product={productData}
                 onMainSubmit={(aEvent) => handleMainSubmit(aEvent, setters)}
                 onDialogSubmit={(aEvent) => handleDialogSubmit(aEvent, setters)} />
-        </Box>
+        </Container>
     );
 }
