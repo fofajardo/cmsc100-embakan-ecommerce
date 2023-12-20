@@ -25,17 +25,39 @@ export default function ProductDetailView() {
     const { enqueueSnackbar } = useSnackbar();
     const { slug, variantIndex } = useParams();
     const [product, setProduct] = useState();
-    const [variant, setVariant] = useState({});
+    const [variant, setVariant] = useState("");
+    const [variantStock, setVariantStock] = useState(0);
+    const [variantItems, setVariantItems] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
     useEffect(function() {
         api.get(`${kBaseUrl}by/${slug}`).then(function(aProduct) {
-            setProduct(aProduct.data);
-            if (aProduct.data?.variants.length > 0) {
-                setVariant(aProduct.data?.variants[variantIndex ? variantIndex : 0]);
+            const targetProduct = aProduct.data;
+            setProduct(targetProduct);
+            if (!targetProduct || targetProduct.variants.length == 0) {
+                setVariant({});
+                setVariantStock(0);
+                setVariantItems(null);
+                return;
             }
+
+            const targetVariantIndex = variantIndex != null
+                ? variantIndex
+                : 0;
+            const targetVariant = targetProduct.variants[targetVariantIndex];
+            setVariant(targetVariant);
+            setVariantStock(targetVariant.stock);
+            setVariantItems(targetProduct.variants.map(
+                function(aVariant, aIndex) {
+                    return (
+                        <MenuItem key={aIndex} value={aVariant}>
+                            {aVariant.name}
+                        </MenuItem>
+                    )
+                }
+            ));
         });
-    }, [slug]);
+    }, [slug, variantIndex]);
 
     async function addToCart() {
         const result = await api.handleCart(product?.id, variant?.id, quantity, true);
@@ -48,20 +70,46 @@ export default function ProductDetailView() {
         <Container>
             <Grid
                 container
-                spacing={5}
-                alignItems="top"
-                justifyContent="space-evenly"
-                sx={{ mt: 0 }}>
+                spacing={{
+                    xs: 2,
+                    md: 5
+                }}
+                sx={{
+                    flexDirection: {
+                        xs: "column",
+                        md: "row"
+                    },
+                    justifyContent: {
+                        xs: "unset",
+                        md: "space-between",
+                    },
+                    py: 5
+                }}>
 
-                <Grid item sx={7} alignItems="center">
+                <Grid item sx={{
+                    alignSelf: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flex: "1",
+                    width: "100%",
+                    maxHeight: {
+                        xs: "350px",
+                        md: "450px",
+                    },
+                    mb: 3
+                }}>
                     <img
-                        height={500}
-                        width={500}
                         src={variant?.imageUrl ? variant?.imageUrl : "/assets/images/banner1.jpg"}
-                        alt={product?.name} />
+                        alt={product?.name}
+                        style={{
+                            objectFit: "contain",
+                            maxHeight: "inherit",
+                            maxWidth: "100%"
+                        }} />
                 </Grid>
 
-                <Grid item sx={4}>
+                <Grid item sx={4} sx={{ flex: "1" }}>
                     <Typography variant="subtitle1">
                         {
                             product ? (
@@ -76,12 +124,13 @@ export default function ProductDetailView() {
                     <Box mt={2}>
                         <Typography variant="h3" fontWeight={"bold"}>{product?.name}</Typography>
                         <Typography variant="h4">{kCurrencyFormatter.format(variant?.price)}</Typography>
-                        <Box mt={5}>
-                            <Typography variant="subtitle1" sx={{
-                                wordBreak: "break-word"
-                            }}>
-                                {product?.description}
-                            </Typography>
+                        <Typography variant="subtitle1" sx={{
+                            wordBreak: "break-word",
+                            my: 2
+                        }}>
+                            {product?.description}
+                        </Typography>
+                        <Box>
                             <Divider />
                             <Box my={2}>
                                 <Stack spacing={1}>
@@ -96,18 +145,17 @@ export default function ProductDetailView() {
                                             onChange={function(aEvent) {
                                                 setVariant(aEvent.target.value);
                                             }}>
-                                            {
-                                                product?.variants?.map(function(aVariant, aIndex) {
-                                                    return (
-                                                        <MenuItem key={aIndex} value={aVariant}>
-                                                            {aVariant.name}
-                                                        </MenuItem>
-                                                    )
-                                                })
-                                            }
+                                            {variantItems}
                                         </Select>
                                     </FormControl>
-                                    <Typography variant="subtitle1">Stock: {variant?.stock}</Typography>
+                                    <TextField
+                                        label="Stock"
+                                        size="small"
+                                        value={variantStock}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                    />
                                     <TextField
                                         label="Quantity"
                                         size="small"
@@ -122,8 +170,7 @@ export default function ProductDetailView() {
                                                 max: variant?.stock,
                                                 step:1
                                             }
-                                        }}>
-                                    </TextField>
+                                        }} />
                                     <Button
                                         variant="contained"
                                         color="success"
