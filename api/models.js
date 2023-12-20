@@ -9,7 +9,8 @@ const User = mongoose.model("User", {
     role: Number,
     email: String,
     username: String,
-    password: String
+    password: String,
+    address: String
 }, "users");
 
 // Product mongoose model

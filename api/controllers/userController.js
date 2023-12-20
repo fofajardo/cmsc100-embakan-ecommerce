@@ -78,7 +78,8 @@ async function createNewUser(aRequest, aResponse) {
 		    role: 0,
 		    email: body.email,
 		    username: body.username,
-		    password: hashedPassword
+		    password: hashedPassword,
+            address: ""
         });
         const result = await user.save();
 
@@ -186,6 +187,19 @@ async function updateOneUser(aRequest, aResponse) {
 		        let wasUpdated = result.modifiedCount == 1;
 		        if (wasUpdated) {
 		            fieldsUpdated.push("password");
+		        }
+    		}
+    		if(body.address) {
+		        let result = await User.updateOne({
+		            id
+		        }, {
+		            $set: {
+		                address: body.address
+		            }
+		        });
+		        let wasUpdated = result.modifiedCount == 1;
+		        if (wasUpdated) {
+		            fieldsUpdated.push("address");
 		        }
     		}
     		sendOk(aResponse, fieldsUpdated);
