@@ -144,6 +144,7 @@ export default function ProductDetailView() {
                                             value={variant}
                                             onChange={function(aEvent) {
                                                 setVariant(aEvent.target.value);
+                                                setVariantStock(aEvent.target.value.stock);
                                             }}>
                                             {variantItems}
                                         </Select>
