@@ -85,7 +85,11 @@ function CartListItem(aProps) {
                 }}
             />
             <Typography variant="body2" align="left">
-                {kCurrencyFormatter.format(variant?.price * data?.quantity)}
+                {
+                    (variant && data)
+                        ? kCurrencyFormatter.format(variant?.price * data?.quantity)
+                        : ""
+                }
             </Typography>
             <Stack direction="row" sx={{
                 alignItems: "center",
