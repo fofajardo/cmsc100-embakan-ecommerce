@@ -26,8 +26,6 @@ import MerchantSales from "./pages/manage/merchant-dashboard/Sales.js"
 
 import Root from "./pages/Root.js";
 import Home from "./pages/Home.js";
-// import Subjects from "./pages/Subjects.js";
-// import SubjectDetail from "./pages/SubjectDetail.js";
 
 import CustomerProductsList from "./pages/products/page.js";
 import CustomerProductDetailView from "./pages/products/slug/page.js"
