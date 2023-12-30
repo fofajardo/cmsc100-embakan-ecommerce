@@ -205,6 +205,29 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative, aEnque
     return result;
 }
 
+async function placeOrder(aEnqueue) {
+    const user = await identify();
+    if (!user.data) {
+        return;
+    }
+
+    const cart = await findCart();
+    if (cart.data == null) {
+        return;
+    }
+
+    const orderBaseUrl = `${kHost}orders/bulk`;
+    const result = await post(orderBaseUrl,
+    {
+        userId: user.data.id,
+        items: cart.data.items
+    }, aEnqueue);
+
+    await emptyCart();
+
+    return result;
+}
+
 const gApiGlue = {
     base,
     get,
@@ -220,6 +243,7 @@ const gApiGlue = {
     findCart,
     emptyCart,
     handleCart,
+    placeOrder,
 
     host: kHost,
     currency: kCurrencyFormatter

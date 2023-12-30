@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-import { Link as RouterLink } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
     Stack, AppBar, Toolbar,
     Card, CardContent, CardActions,
     Button, Typography, TextField,
     List, ListItem, ListItemText,
-    IconButton, Container
+    IconButton, Container,
+    CircularProgress, Backdrop,
+    Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "@mui/material";
 
 import {
@@ -105,6 +107,8 @@ function CartListItem(aProps) {
 
 export default function Checkout() {
     const [user, setUser] = useState(null);
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
 
     useEffect(function() {
         api.identify().then(function(aResult) {
@@ -148,8 +152,48 @@ export default function Checkout() {
         );
     }
 
+    const [promptOpen, setPromptOpen] = React.useState(false);
+    const handlePromptOpen = function() {
+        setPromptOpen(true);
+    };
+    const handlePromptClose = function() {
+        setPromptOpen(false);
+        navigate("/");
+    };
+
+    const [backdropOpen, setBackdropOpen] = useState(false);
+    const handlePlaceOrder = function() {
+        setBackdropOpen(true);
+        api.placeOrder(enqueueSnackbar).then(function(aResult) {
+            setBackdropOpen(false);
+            if (aResult.status == "OK") {
+                setPromptOpen(true);
+                return;
+            } 
+        });
+    };
+
     return (
         <Container>
+            <Dialog
+                open={promptOpen}
+                onClose={handlePromptClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">
+                    Order Processed
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Your order has been processed and is awaiting confirmation from the seller/merchant.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handlePromptClose} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Stack spacing={2} sx={{ my: 2 }}>
                 <Card variant="outlined">
                     <CardContent>
@@ -176,14 +220,16 @@ export default function Checkout() {
                         Products Ordered
                         </Typography>
                         <List sx={{ py: 0 }}>
-                            <CartListItem isHeader={true} />
                         {
                             cartItems?.length == 0 ? (
                                 <Typography>
                                     Your cart is empty.
                                 </Typography>
                             ) : (
-                                cartItems?.map(handleCartItemsMap)
+                                <>
+                                    <CartListItem isHeader={true} />
+                                    {cartItems?.map(handleCartItemsMap)}
+                                </>
                             )
                         }
                         </List>
@@ -208,10 +254,8 @@ export default function Checkout() {
                     </CardContent>
                     <CardActions>
                         <Button
-                            component={RouterLink}
-                            to="/checkout/confirm"
+                            onClick={handlePlaceOrder}
                             type="button"
-                            align="right"
                             disabled={cartItems?.length == 0}
                             size="large"
                             variant="contained"
@@ -221,6 +265,16 @@ export default function Checkout() {
                     </CardActions>
                 </Card>
             </Stack>
+            <Backdrop
+                sx={{
+                    color: "#fff",
+                    zIndex: function(theme) {
+                        return theme.zIndex.drawer + 1;
+                    }
+                }}
+                open={backdropOpen}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Container>
     );
 }

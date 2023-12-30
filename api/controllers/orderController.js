@@ -31,7 +31,7 @@ async function getOneOrder(aRequest, aResponse) {
     }
 }
 
-async function createNewOrder(aRequest, aResponse) {
+async function createNewOrder(aRequest, aResponse, aPreventOk = false) {
     const { body } = aRequest;
 
     const requiredProps = [
@@ -52,9 +52,23 @@ async function createNewOrder(aRequest, aResponse) {
         return;
     }
 
-    const productVariant = productEntry.variants.find(function (aElement) {
+    const productVariantIndex = productEntry.variants.findIndex(function(aElement) {
         return aElement.id == body.variantId;
     });
+    const productVariant = productEntry.variants[productVariantIndex];
+
+    try {
+        console.log("pre", productEntry.variants[productVariantIndex].stock);
+        productEntry.variants[productVariantIndex].stock -= body.quantity;
+        console.log("post", productEntry.variants[productVariantIndex].stock);
+        const result = await productEntry.save();
+        let wasUpdated = productEntry === result;
+        if (!wasUpdated) {
+            return sendError(aResponse, "Failed to update product variant stock.", 400);
+        }
+    } catch (e) {
+        sendError(aResponse, e, 500);
+    }
 
     const priceAtCheckout = body.quantity * productVariant.price;
 
@@ -77,6 +91,9 @@ async function createNewOrder(aRequest, aResponse) {
             sendError(aResponse, "Document was not inserted", 400);
             return;
         }
+        if (aPreventOk) {
+            return result;
+        }
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
@@ -85,7 +102,7 @@ async function createNewOrder(aRequest, aResponse) {
 
 async function createBulkOrder(aRequest, aResponse) {
     const { body } = aRequest;
-    const requiredProps = ["items"];
+    const requiredProps = ["items", "userId"];
 
     if (hasNull(body, requiredProps)) {
         sendError(aResponse, "One or more keys is missing or empty", 400);
@@ -94,11 +111,19 @@ async function createBulkOrder(aRequest, aResponse) {
 
     try {
         const groupId = uuidv4();
+        var orders = [];
         for (let i = 0; i < body.items.length; i++) {
             var item = body.items[i];
             item.groupId = groupId;
-            createNewOrder({ body: item }, aResponse);
+            item.userId = body.userId;
+            item.status = 0;
+            const result = createNewOrder({ body: item }, aResponse, true);
+            if (!result) {
+                return;
+            }
+            orders.push(result);
         }
+        sendOk(aResponse, orders);
     } catch (e) {
         sendError(aResponse, e.message, 500);
     }
