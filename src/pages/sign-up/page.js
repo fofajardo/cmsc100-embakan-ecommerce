@@ -11,8 +11,8 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import api from "../apiGlue.js";
 
-const kBaseUrl = `${api.kHost}users/`;
-const kAuthUrl = `${api.kHost}auth/`;
+const kBaseUrl = `${api.host}users/`;
+const kAuthUrl = `${api.host}auth/`;
 const kTargetRoute = "/";
 
 export default function SignUp() {

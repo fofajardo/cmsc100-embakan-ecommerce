@@ -19,7 +19,7 @@ import productTypes from "../../productTypes.js";
 
 import api from "../../apiGlue.js";
 
-const kBaseUrl = `${api.kHost}products/`;
+const kBaseUrl = `${api.host}products/`;
 // Constant: used for formatting the price.
 const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
     style: "currency",

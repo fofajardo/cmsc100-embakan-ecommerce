@@ -3,7 +3,7 @@ import { Container, Table, TableBody, TableCell, TableHead, TableRow, Typography
 
 // import api from "../../apiGlue.js";
 
-// const kBaseUrl = `${api.kHost}orders/`;
+// const kBaseUrl = `${api.host}orders/`;
 
 const testCases = [
     {

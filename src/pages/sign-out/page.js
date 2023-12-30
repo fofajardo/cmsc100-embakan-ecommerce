@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../apiGlue.js";
 
-const kAuthUrl = `${api.kHost}auth/`;
+const kAuthUrl = `${api.host}auth/`;
 const kTargetRoute = "/sign-in";
 
 export default function SignOut() {

@@ -17,7 +17,7 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
     currency: "PHP"
 });
 
-const kBaseUrl = `${api.kHost}products/`;
+const kBaseUrl = `${api.host}products/`;
 
 export default function ProductDetailView() {
     const { enqueueSnackbar } = useSnackbar();

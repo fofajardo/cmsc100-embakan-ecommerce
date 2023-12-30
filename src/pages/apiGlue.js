@@ -187,4 +187,22 @@ async function handleCart(aProductId, aVariantId, aQuantity, aIsRelative, aEnque
     return result;
 }
 
-export default { base, get, post, put, del, identify, blockSignedIn, blockSignedOut, findCart, emptyCart, handleCart, kHost };
+const gApiGlue = {
+    base,
+    get,
+    post,
+    put,
+    del,
+
+    identify,
+    blockSignedIn,
+    blockSignedOut,
+
+    findCart,
+    emptyCart,
+    handleCart,
+
+    host: kHost
+};
+
+export default gApiGlue;

@@ -10,7 +10,7 @@ import { useSnackbar } from "notistack";
 
 import api from "../apiGlue.js";
 
-const kAuthUrl = `${api.kHost}auth/`;
+const kAuthUrl = `${api.host}auth/`;
 const kTargetRoute = "/";
 
 export default function SignIn() {

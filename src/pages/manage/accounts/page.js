@@ -3,7 +3,7 @@ import {Typography, Table, TableBody, TableCell, TableHead, TableRow, Container,
 import api from "../../apiGlue.js";
 
 
-const kBaseUrl = `${api.kHost}users/`;
+const kBaseUrl = `${api.host}users/`;
 
 // This will return the components for the accounts in the dashboard
 export default function ManageAccounts() {
