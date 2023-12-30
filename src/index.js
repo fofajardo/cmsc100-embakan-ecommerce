@@ -21,6 +21,8 @@ import Checkout from "./pages/checkout/Checkout.js";
 
 import Root from "./pages/Root.js";
 
+import Account from "./pages/account/page.js";
+
 import CustomerProductsList from "./pages/products/page.js";
 import CustomerProductDetailView from "./pages/products/slug/page.js";
 
@@ -51,6 +53,10 @@ const router = createHashRouter([
             {
                 path: "sign-up",
                 element:  <SignUp />
+            },
+            {
+                path: "account",
+                element:  <Account />
             },
             {
                 //Checkout

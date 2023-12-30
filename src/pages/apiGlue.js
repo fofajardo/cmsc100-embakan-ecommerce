@@ -109,6 +109,19 @@ async function identify() {
 const kSignedInRoute = "/";
 const kSignedOutRoute = "/sign-in";
 
+function getFriendlyRoleName(aRole) {
+    switch (aRole) {
+        case 0:
+            return "Shopper/Buyer";
+        case 1:
+            return "Seller/Merchant";
+        case 2:
+            return "Site Administrator";
+        default:
+            return "Unknown";
+    }
+}
+
 async function blockSignedIn(aNavigate) {
     const user = await identify();
     if (user.data) {
@@ -200,6 +213,7 @@ const gApiGlue = {
     del,
 
     identify,
+    getFriendlyRoleName,
     blockSignedIn,
     blockSignedOut,
 

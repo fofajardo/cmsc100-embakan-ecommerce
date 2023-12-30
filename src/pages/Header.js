@@ -59,7 +59,7 @@ export default function Header() {
         {
             icon: <AccountCircleOutlinedIcon />,
             to: "/account",
-            label: "Account"
+            label: `${user?.firstName} ${user?.lastName}`
         },
         {
             icon: <LogoutOutlinedIcon />,
