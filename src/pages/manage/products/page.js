@@ -20,11 +20,6 @@ import productTypes from "../../productTypes.js";
 import api from "../../apiGlue.js";
 
 const kBaseUrl = `${api.host}products/`;
-// Constant: used for formatting the price.
-const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP"
-});
 
 async function handleSubmit(aEvent, aSetters) {
     aEvent.preventDefault();
@@ -86,7 +81,7 @@ function ProductCard(aProps) {
                 <Typography variant="body2">
                     {
                         variant ? (
-                            kCurrencyFormatter.format(variant?.price)
+                            api.currency.format(variant?.price)
                         ) : (
                             ""
                         )

@@ -12,11 +12,6 @@ import {
 import api from "../../apiGlue.js";
 import productTypes from "../../productTypes.js";
 
-const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP"
-});
-
 const kBaseUrl = `${api.host}products/`;
 
 export default function ProductDetailView() {
@@ -121,7 +116,7 @@ export default function ProductDetailView() {
                     </Typography>
                     <Box mt={2}>
                         <Typography variant="h3" fontWeight={"bold"}>{product?.name}</Typography>
-                        <Typography variant="h4">{kCurrencyFormatter.format(variant?.price)}</Typography>
+                        <Typography variant="h4">{api.currency.format(variant?.price)}</Typography>
                         <Typography variant="subtitle1" sx={{
                             wordBreak: "break-word",
                             my: 2

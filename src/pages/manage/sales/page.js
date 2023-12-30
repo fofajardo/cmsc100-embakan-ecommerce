@@ -5,10 +5,7 @@ import {
     TableContainer, TableHead, TableRow, TablePagination, Paper, Container
 } from "@mui/material";
 
-const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP"
-});
+import api from "../../apiGlue.js";
 
 const columns = [
     { id: "Product", label: "Product", minWidth: 170 },
@@ -37,7 +34,7 @@ const columns = [
 
 function createData(Product, Category, Variant, Price, Sold ) {
     const income_unformatted = Price * Sold;
-    const Income_Generated = kCurrencyFormatter.format(income_unformatted);
+    const Income_Generated = api.currency.format(income_unformatted);
     return { Product, Category, Variant, Price, Sold, Income_Generated  };
 }
 

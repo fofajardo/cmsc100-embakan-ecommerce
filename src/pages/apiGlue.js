@@ -1,5 +1,10 @@
 const kHost = "http://localhost:3001/api/";
 
+const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP"
+});
+
 async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
     if (!aEnqueue) {
         aEnqueue = console.log;
@@ -202,7 +207,8 @@ const gApiGlue = {
     emptyCart,
     handleCart,
 
-    host: kHost
+    host: kHost,
+    currency: kCurrencyFormatter
 };
 
 export default gApiGlue;

@@ -21,11 +21,6 @@ import api from "../apiGlue.js";
 
 const kBaseUrl = `${api.host}products/`;
 
-const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP"
-});
-
 function CartListItem(aProps) {
     const { data, update, setUpdate, isLast } = aProps;
     const { enqueueSnackbar } = useSnackbar();
@@ -88,7 +83,7 @@ function CartListItem(aProps) {
             <Typography variant="body2" align="left">
                 {
                     (variant && data)
-                        ? kCurrencyFormatter.format(variant?.price * data?.quantity)
+                        ? api.currency.format(variant?.price * data?.quantity)
                         : ""
                 }
             </Typography>
@@ -152,7 +147,7 @@ export default function Cart() {
                 api.get(`${kBaseUrl}${aItem.productId}/variants/${aItem.variantId}`)
                     .then(function(aVariant) {
                         price += aVariant?.data?.price * aItem.quantity;
-                        setTotalPrice(kCurrencyFormatter.format(price));
+                        setTotalPrice(api.currency.format(price));
                     });
             });
         });
