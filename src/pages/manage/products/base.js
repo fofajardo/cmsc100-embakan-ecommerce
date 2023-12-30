@@ -1,10 +1,10 @@
-import { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 
 //base.js - > cards for edit anc reate
 import {
-    Paper, Box, Stack, Grid, Card,
-    Button, IconButton, Typography,
-    FormControl, FormLabel, TextField, Input, InputLabel, MenuItem,
+    Box, Stack, Card,
+    Button, Typography,
+    FormControl, FormLabel, TextField, InputLabel, MenuItem,
     Select, Divider,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     useTheme, useMediaQuery
@@ -101,16 +101,15 @@ function ProductInventoryFormControl(aProps) {
                 required
                 fullWidth />
         </Stack>
-    )
+    );
 }
 
 function ProductInventoryDisplayCard(aProps) {
-    const { onOpenDialog, readOnly, index, inventory } = aProps;
+    const { onOpenDialog, inventory } = aProps;
 
     const [name, setName] = useState("Default");
     const [price, setPrice] = useState();
     const [stock, setStock] = useState();
-    const [id, setId] = useState("");
 
     useEffect(function() {
         if (!inventory) {
@@ -119,7 +118,6 @@ function ProductInventoryDisplayCard(aProps) {
         setName(inventory.name);
         setPrice(inventory.price);
         setStock(inventory.stock);
-        setId(inventory.id);
     }, [inventory]);
 
     const handleClickEdit = function() {
@@ -149,25 +147,25 @@ function ProductInventoryDisplayCard(aProps) {
             <Stack
                 gap={1}
                 direction={{ sm: "column", md: "row" }}>
-            <Button
-                variant="outlined"
-                startIcon={<EditIcon />}
-                onClick={handleClickEdit}>
+                <Button
+                    variant="outlined"
+                    startIcon={<EditIcon />}
+                    onClick={handleClickEdit}>
                 Edit
-            </Button>
-            <Button
-                variant="outlined"
-                startIcon={<DeleteIcon />}
-                onClick={handleClickDelete}>
+                </Button>
+                <Button
+                    variant="outlined"
+                    startIcon={<DeleteIcon />}
+                    onClick={handleClickDelete}>
                 Delete
-            </Button>
+                </Button>
             </Stack>
         </Stack>
-    )
+    );
 }
 
 function ProductInventoryListCard(aProps) {
-    const { product, isCreateProduct, readOnly, onDialogSubmit } = aProps;
+    const { product, isCreateProduct, onDialogSubmit } = aProps;
 
     const [variants, setVariants] = useState([{}]);
 
@@ -184,7 +182,7 @@ function ProductInventoryListCard(aProps) {
     const [dialogVariantData, setDialogVariantData] = useState();
 
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleOpenDialog = function(aType, aTitle, aVariantData) {
         setDialogType(aType);
@@ -221,39 +219,39 @@ function ProductInventoryListCard(aProps) {
                 fullScreen={fullScreen}>
                 <DialogTitle>{dialogTitle} Product Unit</DialogTitle>
                 <DialogContent>
-                {
-                    <Fragment>
-                        <div style={{ display: "none" }}>
-                            <input type="text" name="in-variant-id" value={dialogVariantData?.id} readOnly />
-                            <input type="number" name="in-action" value={dialogType} readOnly />
-                        </div>
-                        {
-                            dialogType == ACTIONS.DELETE ? (
-                                <DialogContentText>
+                    {
+                        <Fragment>
+                            <div style={{ display: "none" }}>
+                                <input type="text" name="in-variant-id" value={dialogVariantData?.id} readOnly />
+                                <input type="number" name="in-action" value={dialogType} readOnly />
+                            </div>
+                            {
+                                dialogType == ACTIONS.DELETE ? (
+                                    <DialogContentText>
                                 Are you sure you want to delete this product unit?
-                                </DialogContentText>
-                            ) : (
-                                <Fragment>
-                                    <DialogContentText sx={{ mb: 4 }}>
-                                    Your changes will take effect immediately. However, this will not affect the price for confirmed orders.
                                     </DialogContentText>
-                                    <ProductInventoryFormControl isModal data={dialogVariantData} />
-                                </Fragment>
-                            )
-                        }
-                    </Fragment>
-                }
+                                ) : (
+                                    <Fragment>
+                                        <DialogContentText sx={{ mb: 4 }}>
+                                    Your changes will take effect immediately. However, this will not affect the price for confirmed orders.
+                                        </DialogContentText>
+                                        <ProductInventoryFormControl isModal data={dialogVariantData} />
+                                    </Fragment>
+                                )
+                            }
+                        </Fragment>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>
-                    {
-                        dialogType == ACTIONS.DELETE ? ("No") : ("Cancel")
-                    }
+                        {
+                            dialogType == ACTIONS.DELETE ? ("No") : ("Cancel")
+                        }
                     </Button>
                     <Button type="submit" form="dialog-form">
-                    {
-                        dialogType == ACTIONS.DELETE ? ("Yes") : ("Save")
-                    }
+                        {
+                            dialogType == ACTIONS.DELETE ? ("Yes") : ("Save")
+                        }
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -301,13 +299,12 @@ function ProductInventoryListCard(aProps) {
                 }
             </Stack>
         </Card>
-    )
+    );
 }
 
 function ProductDetailCard(aProps) {
     const { product, readOnly, cardProps } = aProps;
     
-    const [id, setId] = useState("");
     const [name, setName] = useState("");
     const [slug, setSlug] = useState("");
     const [description, setDescription] = useState("");
@@ -317,7 +314,6 @@ function ProductDetailCard(aProps) {
         if (!product) {
             return;
         }
-        setId(product.id);
         setName(product.name);
         setSlug(product.slug);
         setDescription(product.description);
@@ -395,7 +391,7 @@ function ProductDetailCard(aProps) {
                                         <MenuItem key={aIndex} value={aType.value}>
                                             {aType.label}
                                         </MenuItem>
-                                    )
+                                    );
                                 })
                             }
                         </Select>
@@ -403,11 +399,11 @@ function ProductDetailCard(aProps) {
                 </Stack>
             </Stack>
         </Card>
-    )
+    );
 }
 
 function ManageProductsBase(aProps) {
-    const { product, isCreateProduct, readOnly, onMainSubmit } = aProps;
+    const { isCreateProduct, onMainSubmit } = aProps;
 
     const mainFormProps = {
         id: "main-form",
@@ -443,7 +439,7 @@ function ManageProductsBase(aProps) {
                 </Button>
             </Stack>
         </Stack>
-    )
+    );
 }
 
 export { ManageProductsBase, ACTIONS };

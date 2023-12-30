@@ -4,12 +4,12 @@ import needle from "needle";
 
 const kBaseUrl = "http://localhost:3001/orders/";
 const kTestUserId = "29b23948-2f3c-439c-8569-2c595d604ea9";
-const kTestProductId = "298f5fa5-d1ea-4bfc-ac54-e2e642d63334";
+// const kTestProductId = "298f5fa5-d1ea-4bfc-ac54-e2e642d63334";
 
 function getRandomQuantity() {
-  return Math.floor(Math.random()
-    * (Math.floor(50) - Math.ceil(1) + 1)
-    + Math.ceil(1));
+    return Math.floor(Math.random()
+        * (Math.floor(50) - Math.ceil(1) + 1)
+        + Math.ceil(1));
 }
 
 describe("API: Orders", function() {

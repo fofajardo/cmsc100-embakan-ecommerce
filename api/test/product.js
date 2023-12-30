@@ -3,7 +3,7 @@ import needle from "needle";
 import { v4 as uuidv4 } from "uuid";
 
 const kBaseUrl = "http://localhost:3001/products/";
-const kTestUserId = "29b23948-2f3c-439c-8569-2c595d604ea9";
+// const kTestUserId = "29b23948-2f3c-439c-8569-2c595d604ea9";
 
 describe("API: Products", function() {
     var testProductId = "";
@@ -13,18 +13,18 @@ describe("API: Products", function() {
         await needle("post",
             `${kBaseUrl}`,
             {
-              name: "Kalabasa",
-              slug: "kalabasa",
-              type: 0,
-              description: "Pampalinaw ng mata",
-              variants: [
-                {
-                  id: uuidv4(),
-                  name: "San Leonardo",
-                  price: 30,
-                  stock: 100
-                }
-              ]
+                name: "Kalabasa",
+                slug: "kalabasa",
+                type: 0,
+                description: "Pampalinaw ng mata",
+                variants: [
+                    {
+                        id: uuidv4(),
+                        name: "San Leonardo",
+                        price: 30,
+                        stock: 100
+                    }
+                ]
             },
             {
                 json: true

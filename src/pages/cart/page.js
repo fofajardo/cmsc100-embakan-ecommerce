@@ -1,20 +1,19 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import { Outlet, useNavigate, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import {
     Stack, AppBar, Toolbar,
-    Card, CardContent, CardActions,
-    Divider, Button, Typography, TextField,
+    Card, CardContent,
+    Button, Typography, TextField,
     List, ListItem, ListItemText,
-    Grid, IconButton, Container
-} from '@mui/material';
+    IconButton, Container
+} from "@mui/material";
 
 import {
-  Add as AddIcon ,
-  Remove as RemoveIcon ,
+    Add as AddIcon ,
+    Remove as RemoveIcon ,
 
 } from "@mui/icons-material";
 
@@ -35,10 +34,10 @@ function CartListItem(aProps) {
     const [quantity, setQuantity] = useState(1);
 
     useEffect(function() {
-        api.get(`${kBaseUrl}/${data.productId}`).then(function(aProduct) {
+        api.get(`${kBaseUrl}${data.productId}`).then(function(aProduct) {
             setProduct(aProduct.data);
         });
-        api.get(`${kBaseUrl}/${data.productId}/variants/${data.variantId}`).then(function(aVariant) {
+        api.get(`${kBaseUrl}${data.productId}/variants/${data.variantId}`).then(function(aVariant) {
             setVariant(aVariant.data);
         });
         setQuantity(data?.quantity);
@@ -65,7 +64,7 @@ function CartListItem(aProps) {
         api.handleCart(product.id, variant.id, 0, false, enqueueSnackbar).then(function() {
             setUpdate(update + 1);
         });
-    }
+    };
 
     return (
         <ListItem divider={!isLast} sx={{
@@ -135,7 +134,7 @@ function CartListItem(aProps) {
             </Stack>
             <Button size="small" variant="outlined" onClick={handleRemove}>Delete</Button>
         </ListItem>
-    )
+    );
 }
 
 export default function Cart() {
@@ -149,12 +148,12 @@ export default function Cart() {
 
             setTotalPrice("");
             var price = 0;
-            aCart?.data?.items.forEach(function(aItem, aIndex) {
-                api.get(`${kBaseUrl}/${aItem.productId}/variants/${aItem.variantId}`)
-                .then(function(aVariant) {
-                    price += aVariant?.data?.price * aItem.quantity;
-                    setTotalPrice(kCurrencyFormatter.format(price));
-                });
+            aCart?.data?.items.forEach(function(aItem) {
+                api.get(`${kBaseUrl}${aItem.productId}/variants/${aItem.variantId}`)
+                    .then(function(aVariant) {
+                        price += aVariant?.data?.price * aItem.quantity;
+                        setTotalPrice(kCurrencyFormatter.format(price));
+                    });
             });
         });
     }, [update]);
@@ -167,18 +166,18 @@ export default function Cart() {
                     Shopping Cart
                     </Typography>
                     <List sx={{ py: 0 }}>
-                    {
-                        cartItems?.map(function(item, index) {
-                            return (
-                                <CartListItem
-                                    key={index}
-                                    data={item}
-                                    update={update}
-                                    setUpdate={setUpdate}
-                                    isLast={index == cartItems.length - 1} />
-                            )
-                        })
-                    }
+                        {
+                            cartItems?.map(function(item, index) {
+                                return (
+                                    <CartListItem
+                                        key={index}
+                                        data={item}
+                                        update={update}
+                                        setUpdate={setUpdate}
+                                        isLast={index == cartItems.length - 1} />
+                                );
+                            })
+                        }
                     </List>
                 </CardContent>
             </Card>
@@ -189,7 +188,7 @@ export default function Cart() {
                     </Typography>
                     <Button
                         component={RouterLink}
-                        to={`/cart/checkout`}
+                        to={"/cart/checkout"}
                         type="button"
                         disabled={cartItems?.length == 0}
                         variant="contained">

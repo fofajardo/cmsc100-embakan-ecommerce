@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, createHashRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
 
@@ -20,17 +20,16 @@ import ReviewOrder from "./pages/checkout/ReviewOrder.js";
 import Checkout from "./pages/checkout/Checkout.js";
 
 import Root from "./pages/Root.js";
-import Home from "./pages/Home.js";
 
 import CustomerProductsList from "./pages/products/page.js";
-import CustomerProductDetailView from "./pages/products/slug/page.js"
+import CustomerProductDetailView from "./pages/products/slug/page.js";
 
-import ManageProductsList from "./pages/manage/products/page.js"
-import ManageProductsCreate from "./pages/manage/products/create/page.js"
-import ManageProductsEdit from "./pages/manage/products/edit/page.js"
-import ManageAccounts from "./pages/manage/accounts/page.js"
-import ManageOrders from "./pages/manage/orders/page.js"
-import ManageSales from "./pages/manage/sales/page.js"
+import ManageProductsList from "./pages/manage/products/page.js";
+import ManageProductsCreate from "./pages/manage/products/create/page.js";
+import ManageProductsEdit from "./pages/manage/products/edit/page.js";
+import ManageAccounts from "./pages/manage/accounts/page.js";
+import ManageOrders from "./pages/manage/orders/page.js";
+import ManageSales from "./pages/manage/sales/page.js";
 
 const router = createHashRouter([
     {
@@ -144,7 +143,7 @@ const router = createHashRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <React.StrictMode>
+        <RouterProvider router={router} />
+    </React.StrictMode>
 );

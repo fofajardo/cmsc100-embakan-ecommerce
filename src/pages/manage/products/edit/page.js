@@ -1,14 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
 import { useNavigate, useParams, Link as RouterLink } from "react-router-dom";
 
 import {
-    Container,
-    Paper, Box, Stack, Grid, Card,
-    Button, IconButton, Typography,
-    Link, FormControl, FormLabel, TextField, Input,
-    Autocomplete, Snackbar
+    Container, Stack, IconButton, Typography
 } from "@mui/material";
 
 import {
@@ -16,8 +11,6 @@ import {
 } from "@mui/icons-material";
 
 import { ManageProductsBase, ACTIONS } from "../base.js";
-
-import productTypes from "../../../productTypes.js";
 
 import api from "../../../apiGlue.js";
 
@@ -66,29 +59,29 @@ async function handleDialogSubmit(aEvent, aSetters) {
 
     var result = null;
     switch (parseInt(formJson["in-action"])) {
-        case ACTIONS.ADD:
-            result = await api.post(
-                `${kBaseUrl}${id}/variants`,
-                data,
-                enqueueSnackbar,
-                "Product unit was added successfully."
-            );
+    case ACTIONS.ADD:
+        result = await api.post(
+            `${kBaseUrl}${id}/variants`,
+            data,
+            enqueueSnackbar,
+            "Product unit was added successfully."
+        );
         break;
-        case ACTIONS.EDIT:
-            result = await api.put(
-                `${kBaseUrl}${id}/variants/${data.id}`,
-                data,
-                enqueueSnackbar,
-                "Product unit was edited successfully."
-            );
+    case ACTIONS.EDIT:
+        result = await api.put(
+            `${kBaseUrl}${id}/variants/${data.id}`,
+            data,
+            enqueueSnackbar,
+            "Product unit was edited successfully."
+        );
         break;
-        case ACTIONS.DELETE:
-            result = await api.del(
-                `${kBaseUrl}${id}/variants/${data.id}`,
-                null,
-                enqueueSnackbar,
-                "Product unit was deleted successfully."
-            );
+    case ACTIONS.DELETE:
+        result = await api.del(
+            `${kBaseUrl}${id}/variants/${data.id}`,
+            null,
+            enqueueSnackbar,
+            "Product unit was deleted successfully."
+        );
         break;
     }
 

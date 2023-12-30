@@ -1,17 +1,15 @@
-import * as React from "react";
+import React from "react";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
-    Avatar, Button, CssBaseline, TextField, FormControlLabel,
-    Checkbox, Link, Paper, Box, Grid, Typography, Container
+    Button, CssBaseline, TextField,
+    Link, Paper, Box, Grid, Typography, Container
 } from "@mui/material";
 
 import { useSnackbar } from "notistack";
 
-import { useNavigate, Link as RouterLink } from "react-router-dom";
-
 import api from "../apiGlue.js";
 
-const kBaseUrl = `${api.kHost}users/`;
 const kAuthUrl = `${api.kHost}auth/`;
 const kTargetRoute = "/";
 

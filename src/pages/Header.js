@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-import { useLocation, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
-    Box, AppBar, Toolbar, Button, IconButton, Typography, ThemeProvider,
-    Stack, createTheme, Link, OutlinedInput, InputAdornment, FormControl,
+    Box, AppBar, Toolbar, IconButton, Typography,
+    Stack, Link,
     Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
     Divider
 } from "@mui/material";
@@ -16,24 +16,18 @@ import {
     StoreOutlined as StoreOutlinedIcon,
     EggAltOutlined as EggAltOutlinedIcon,
     GrassOutlined as GrassOutlinedIcon,
-    Search as SearchIcon,
-    LoginOutlined as LoginOutlinedIcon,
+    /* Search as SearchIcon, */
     LogoutOutlined as LogoutOutlinedIcon,
     ReceiptLongOutlined as ReceiptLongOutlinedIcon,
 
-    ShoppingCart as ShoppingCartIcon,
     People as PeopleIcon,
     BarChart as BarChartIcon,
-    Layers as LayersIcon,
-    Assignment as AssignmentIcon,
     Dashboard as DashboardIcon,
 } from "@mui/icons-material";
 
 import api from "./apiGlue.js";
 
 export default function Header() {
-    const location = useLocation();
-
     const [user, setUser] = useState();
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -109,10 +103,10 @@ export default function Header() {
 
     const drawerList = drawerLinks.map(function(aLink, aIndex) {
         if (aLink.divider) {
-            return(<Divider key={aIndex}/>)
+            return (<Divider key={aIndex}/>);
         }
         if (aLink.title) {
-            return(
+            return (
                 <ListItem key={aIndex}>
                     <Typography
                         sx={{
@@ -122,18 +116,18 @@ export default function Header() {
                         {aLink.title}
                     </Typography>
                 </ListItem>
-            )
+            );
         }
         return (
             <ListItem key={aIndex} disablePadding>
                 <ListItemButton component={RouterLink} to={aLink.to}>
                     <ListItemIcon>
-                    {aLink.icon}
+                        {aLink.icon}
                     </ListItemIcon>
                     <ListItemText primary={aLink.label} />
                 </ListItemButton>
             </ListItem>
-        )
+        );
     });
 
     const toggleDrawer = function(aEvent) {
@@ -196,5 +190,5 @@ export default function Header() {
                 </Box>
             </Drawer>
         </AppBar>
-    )
+    );
 }

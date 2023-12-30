@@ -50,9 +50,9 @@ async function createNewUser(aRequest, aResponse) {
         return;
     }
 
-	try {
-    	const emailExists = await User.exists({ email: body.email });
-    	const usernameExists = await User.exists({ username: body.username });
+    try {
+        const emailExists = await User.exists({ email: body.email });
+        const usernameExists = await User.exists({ username: body.username });
         if (emailExists) {
             sendError(aResponse, "An account with this email address already exists.", 400);
             return;
@@ -71,14 +71,14 @@ async function createNewUser(aRequest, aResponse) {
         const hashedPassword = await bcrypt.hash(body.password, SALT_ROUNDS);
 
         const user = new User({
-        	id: uuidv4(),
+            id: uuidv4(),
             firstName: body.firstName,
-		    middleName: body.middleName,
-		    lastName: body.lastName,
-		    role: 0,
-		    email: body.email,
-		    username: body.username,
-		    password: hashedPassword,
+            middleName: body.middleName,
+            lastName: body.lastName,
+            role: 0,
+            email: body.email,
+            username: body.username,
+            password: hashedPassword,
             address: ""
         });
         const result = await user.save();
@@ -88,14 +88,14 @@ async function createNewUser(aRequest, aResponse) {
             sendError(aResponse, "New user was not created", 400);
             return;
         }
-    	sendOk(aResponse, result);
-	} catch (e) {
-    	sendError(aResponse, e, 500);
+        sendOk(aResponse, result);
+    } catch (e) {
+        sendError(aResponse, e, 500);
     }
 }
 
 async function updateOneUser(aRequest, aResponse) {
-	var fieldsUpdated = [];
+    var fieldsUpdated = [];
     const { id } = aRequest.params;
     const { body } = aRequest;
     if (!id) {
@@ -103,107 +103,107 @@ async function updateOneUser(aRequest, aResponse) {
         return;
     }
     else {
-    	let found = await User.findOne({ id: id});
-    	if(!found) {
-    	    sendError(aResponse, "User not found", 400);
-        	return;
-    	}
-    	else {
-    		if(body.firstName) {
-		        let result = await User.updateOne({
-		            id
-		        }, {
-		            $set: {
-		                firstName: body.firstName
-		            }
-		        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            fieldsUpdated.push("firstName");
-		        }
-    		}
-    		if(body.middleName) {
-		        let result = await User.updateOne({
-		            id
-		        }, {
-		            $set: {
-		                middleName: body.middleName
-		            }
-		        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            fieldsUpdated.push("middleName");
-		        }
-    		}
-    		if(body.lastName) {
-		        let result = await User.updateOne({
-		            id
-		        }, {
-		            $set: {
-		                lastName: body.lastName
-		            }
-		        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            fieldsUpdated.push("lastName");
-		        }
-    		}
-    		if(body.role) {
-		        let result = await User.updateOne({
-		            id
-		        }, {
-		            $set: {
-		                role: body.role
-		            }
-		        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            fieldsUpdated.push("role");
-		        }
-    		}
-    		if(body.email) {
-		        let result = await User.updateOne({
-		            id
-		        }, {
-		            $set: {
-		                email: body.email
-		            }
-		        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            fieldsUpdated.push("email");
-		        }
-    		}
-    		if(body.password) {
+        let found = await User.findOne({ id: id});
+        if (!found) {
+            sendError(aResponse, "User not found", 400);
+            return;
+        }
+        else {
+            if (body.firstName) {
+                let result = await User.updateOne({
+                    id
+                }, {
+                    $set: {
+                        firstName: body.firstName
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    fieldsUpdated.push("firstName");
+                }
+            }
+            if (body.middleName) {
+                let result = await User.updateOne({
+                    id
+                }, {
+                    $set: {
+                        middleName: body.middleName
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    fieldsUpdated.push("middleName");
+                }
+            }
+            if (body.lastName) {
+                let result = await User.updateOne({
+                    id
+                }, {
+                    $set: {
+                        lastName: body.lastName
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    fieldsUpdated.push("lastName");
+                }
+            }
+            if (body.role) {
+                let result = await User.updateOne({
+                    id
+                }, {
+                    $set: {
+                        role: body.role
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    fieldsUpdated.push("role");
+                }
+            }
+            if (body.email) {
+                let result = await User.updateOne({
+                    id
+                }, {
+                    $set: {
+                        email: body.email
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    fieldsUpdated.push("email");
+                }
+            }
+            if (body.password) {
                 const hashedPassword = await bcrypt.hash(body.password, SALT_ROUNDS);
 
-		        let result = await User.updateOne({
-		            id
-		        }, {
-		            $set: {
-		                password: hashedPassword
-		            }
-		        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            fieldsUpdated.push("password");
-		        }
-    		}
-    		if(body.address) {
-		        let result = await User.updateOne({
-		            id
-		        }, {
-		            $set: {
-		                address: body.address
-		            }
-		        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            fieldsUpdated.push("address");
-		        }
-    		}
-    		sendOk(aResponse, fieldsUpdated);
-    	}
+                let result = await User.updateOne({
+                    id
+                }, {
+                    $set: {
+                        password: hashedPassword
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    fieldsUpdated.push("password");
+                }
+            }
+            if (body.address) {
+                let result = await User.updateOne({
+                    id
+                }, {
+                    $set: {
+                        address: body.address
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    fieldsUpdated.push("address");
+                }
+            }
+            sendOk(aResponse, fieldsUpdated);
+        }
     }
 }
 
@@ -232,7 +232,7 @@ async function deleteOneUser(aRequest, aResponse) {
 }
 
 async function getUserOrderHistory(aRequest, aResponse) {
-	const { id } = aRequest.params;
+    const { id } = aRequest.params;
     if (!id) {
         sendError(aResponse, "Parameter ':id' cannot be empty", 400);
         return;
@@ -246,7 +246,7 @@ async function getUserOrderHistory(aRequest, aResponse) {
 }
 
 export default {
-	getAllUsers,
+    getAllUsers,
     getOneUser,
     createNewUser,
     updateOneUser,

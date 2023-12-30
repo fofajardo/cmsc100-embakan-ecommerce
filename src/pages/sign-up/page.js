@@ -1,8 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import {
-    Avatar, Button, CssBaseline, TextField, FormControlLabel,
-    Checkbox, Link, Paper, Box, Grid, Typography, Container
+    Button, TextField,
+    Link, Paper, Box, Grid, Typography, Container
 } from "@mui/material";
 
 import { useSnackbar } from "notistack";
@@ -55,7 +55,6 @@ export default function SignUp() {
 
     return (
         <Container component="main" maxWidth="sm">
-            <CssBaseline />
             <Paper
                 variant="outlined"
                 sx={{

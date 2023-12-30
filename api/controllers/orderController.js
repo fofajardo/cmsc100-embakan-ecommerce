@@ -44,7 +44,7 @@ async function createNewOrder(aRequest, aResponse) {
     }
 
     const productEntry = await Product.findOne({
-        id: aBody.productId,
+        id: body.productId,
     }).exec();
 
     if (!productEntry || !productEntry?.variants) {
@@ -53,20 +53,20 @@ async function createNewOrder(aRequest, aResponse) {
     }
 
     const productVariant = productEntry.variants.find(function (aElement) {
-        return aElement.id == aBody.variantId;
+        return aElement.id == body.variantId;
     });
 
-    const priceAtCheckout = aBody.quantity * productVariant.price;
+    const priceAtCheckout = body.quantity * productVariant.price;
 
     const entry = new Order({
         id: uuidv4(),
-        productId: aBody.productId,
-        variantId: aBody.variantId,
-        groupId: aBody.groupId ? aBody.groupId : uuidv4(),
-        quantity: aBody.quantity,
+        productId: body.productId,
+        variantId: body.variantId,
+        groupId: body.groupId ? body.groupId : uuidv4(),
+        quantity: body.quantity,
         price: priceAtCheckout,
-        userId: aBody.userId,
-        status: aBody.status,
+        userId: body.userId,
+        status: body.status,
         date: new Date()
     });    
 
@@ -94,8 +94,8 @@ async function createBulkOrder(aRequest, aResponse) {
 
     try {
         const groupId = uuidv4();
-        for (let i = 0; i < items.length; i++) {
-            var item = items[i];
+        for (let i = 0; i < body.items.length; i++) {
+            var item = body.items[i];
             item.groupId = groupId;
             createNewOrder({ body: item }, aResponse);
         }

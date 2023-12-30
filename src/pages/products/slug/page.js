@@ -1,13 +1,11 @@
-import * as React from "react";
-
-import { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import {
     Grid, Typography, Divider, Button, Box,
-    TextField, Snackbar, IconButton, MenuItem,
+    TextField, MenuItem,
     FormControl, InputLabel, Select, Stack, Container
 } from "@mui/material";
 
@@ -53,7 +51,7 @@ export default function ProductDetailView() {
                         <MenuItem key={aIndex} value={aVariant}>
                             {aVariant.name}
                         </MenuItem>
-                    )
+                    );
                 }
             ));
         });
@@ -109,12 +107,12 @@ export default function ProductDetailView() {
                         }} />
                 </Grid>
 
-                <Grid item sx={4} sx={{ flex: "1" }}>
+                <Grid item sx={{ flex: "1" }}>
                     <Typography variant="subtitle1">
                         {
                             product ? (
                                 productTypes.find(function(element) {
-                                    return element.value == product?.type
+                                    return element.value == product?.type;
                                 }).label
                             ) : (
                                 ""

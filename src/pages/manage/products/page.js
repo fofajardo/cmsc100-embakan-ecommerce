@@ -1,21 +1,17 @@
-import { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { v4 as uuidv4 } from "uuid";
 import { useSnackbar } from "notistack";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
     Container,
-    Paper, Box, Stack, Grid, Card, CardContent, CardActionArea, CardActions,
-    Button, IconButton, Typography,
-    Link, FormControl, FormLabel, TextField, Input,
-    Autocomplete, Snackbar,
+    Box, Stack, Grid, Card, CardContent, CardActions,
+    Button, Typography,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     useTheme, useMediaQuery
 } from "@mui/material";
 
 import {
-    ArrowBack as ArrowBackIcon,
     Add as AddIcon
 } from "@mui/icons-material";
 
@@ -24,7 +20,6 @@ import productTypes from "../../productTypes.js";
 import api from "../../apiGlue.js";
 
 const kBaseUrl = `${api.kHost}products/`;
-const kParentRoute = "/manage";
 // Constant: used for formatting the price.
 const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
     style: "currency",
@@ -80,25 +75,25 @@ function ProductCard(aProps) {
         <Card key={index} variant="outlined">
             <CardContent>
                 <Typography variant="h5">
-                {product.name}
+                    {product.name}
                 </Typography>
                 <Typography variant="body1">
-                {variant?.name}
+                    {variant?.name}
                 </Typography>
                 <Typography variant="body1">
                     {variant?.stock} units left
                 </Typography>
                 <Typography variant="body2">
-                {
-                    variant ? (
-                        kCurrencyFormatter.format(variant?.price)
-                    ) : (
-                        ""
-                    )
-                }
+                    {
+                        variant ? (
+                            kCurrencyFormatter.format(variant?.price)
+                        ) : (
+                            ""
+                        )
+                    }
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                {product.description}
+                    {product.description}
                 </Typography>
             </CardContent>
             <CardActions>
@@ -110,7 +105,7 @@ function ProductCard(aProps) {
                 </Button>
             </CardActions>
         </Card>
-    )
+    );
 }
 
 function ProductList(aProps) {
@@ -154,11 +149,11 @@ function ProductList(aProps) {
                 }
             </Grid>
         </Box>
-    )
+    );
 }
 
 function getAllProducts(aSetProducts) {
-    const result = fetch(kBaseUrl,
+    fetch(kBaseUrl,
         {
             method: "GET",
         }
@@ -173,7 +168,7 @@ export default function ManageProductsList() {
 
     const reloadData = function() {
         getAllProducts(setProducts);
-    }
+    };
     useEffect(function() {
         reloadData();
     }, []);
@@ -184,7 +179,7 @@ export default function ManageProductsList() {
     const [dialogData, setDialogData] = useState();
 
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleOpenDialog = function(aDialogData) {
         setDialogData(aDialogData);
@@ -210,21 +205,21 @@ export default function ManageProductsList() {
                 </Typography>
             </Stack>
             <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
-            <Button startIcon={<AddIcon />} variant="outlined" component={RouterLink} to="/manage/products/create">
+                <Button startIcon={<AddIcon />} variant="outlined" component={RouterLink} to="/manage/products/create">
                 New Product
-            </Button>
+                </Button>
             </Stack>
             <Stack spacing={2} useFlexGap>
-            {
-                productTypes.map(function(aType, aIndex) {
-                    return (<ProductList
-                        key={aIndex}
-                        index={aIndex}
-                        type={aType}
-                        products={products}
-                        onOpenDialog={handleOpenDialog} />)
-                })
-            }
+                {
+                    productTypes.map(function(aType, aIndex) {
+                        return (<ProductList
+                            key={aIndex}
+                            index={aIndex}
+                            type={aType}
+                            products={products}
+                            onOpenDialog={handleOpenDialog} />);
+                    })
+                }
             </Stack>
             <Dialog
                 id="dialog-form"

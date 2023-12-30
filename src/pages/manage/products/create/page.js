@@ -1,12 +1,9 @@
+import React from "react";
 import { useSnackbar } from "notistack";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
-    Container,
-    Paper, Box, Stack, Grid, Card,
-    Button, IconButton, Typography,
-    Link, FormControl, FormLabel, TextField, Input,
-    Autocomplete, Snackbar
+    Container, Stack, IconButton, Typography,
 } from "@mui/material";
 
 import {
@@ -33,7 +30,7 @@ async function doSubmit(aEvent, aSetters) {
         name: formJson["in-name"],
         slug: formJson["in-slug"],
         type: productTypes.find(function(element) {
-            return element.value == formJson["in-type"]
+            return element.value == formJson["in-type"];
         }).value,
         description: formJson["in-description"]
     };

@@ -105,79 +105,79 @@ async function updateOneProduct(aRequest, aResponse) {
         return;
     }
     else {
-    	let productFound = await Product.findOne({ id: id});
-    	if(!productFound) {
-    	    sendError(aResponse, "Product not found", 400);
-        	return;
-    	}
-    	else {
-    		if(body.name) {
-		        let result = await Product.updateOne({
-			            id
-			        }, {
-			            $set: {
-			                name: body.name
-			            }
-			        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            productDataUpdated.push("name");
-		        }
-    		}
-    		if(body.slug) {
-		        let result = await Product.updateOne({
-			            id
-			        }, {
-			            $set: {
-			                slug: body.slug
-			            }
-			        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            productDataUpdated.push("slug");
-		        }
-    		}
-    		if(body.type) {
-		        let result = await Product.updateOne({
-			            id
-			        }, {
-			            $set: {
-			                type: body.type
-			            }
-			        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            productDataUpdated.push("type");
-		        }
-    		}
-    		if(body.price >= 0) {
-		        let result = await Product.updateOne({
-			            id
-			        }, {
-			            $set: {
-			                price: body.price
-			            }
-			        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            productDataUpdated.push("price");
-		        }
-    		}
-    		if(body.variants) {
-		        let result = await Product.updateOne({
-			            id
-			        }, {
-			            $set: {
-			                variants: body.variants
-			            }
-			        });
-		        let wasUpdated = result.modifiedCount == 1;
-		        if (wasUpdated) {
-		            productDataUpdated.push("variants");
-		        }
-    		}
-    		sendOk(aResponse, productDataUpdated);
-    	}
+        let productFound = await Product.findOne({ id: id});
+        if (!productFound) {
+            sendError(aResponse, "Product not found", 400);
+            return;
+        }
+        else {
+            if (body.name) {
+                let result = await Product.updateOne({
+                    id
+                }, {
+                    $set: {
+                        name: body.name
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    productDataUpdated.push("name");
+                }
+            }
+            if (body.slug) {
+                let result = await Product.updateOne({
+                    id
+                }, {
+                    $set: {
+                        slug: body.slug
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    productDataUpdated.push("slug");
+                }
+            }
+            if (body.type) {
+                let result = await Product.updateOne({
+                    id
+                }, {
+                    $set: {
+                        type: body.type
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    productDataUpdated.push("type");
+                }
+            }
+            if (body.price >= 0) {
+                let result = await Product.updateOne({
+                    id
+                }, {
+                    $set: {
+                        price: body.price
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    productDataUpdated.push("price");
+                }
+            }
+            if (body.variants) {
+                let result = await Product.updateOne({
+                    id
+                }, {
+                    $set: {
+                        variants: body.variants
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    productDataUpdated.push("variants");
+                }
+            }
+            sendOk(aResponse, productDataUpdated);
+        }
     }
 }
 
@@ -220,7 +220,7 @@ async function createNewProductVariant(aRequest, aResponse) {
     else {
         try {
             let product = await Product.findOne({ id });
-            if(!product) {
+            if (!product) {
                 sendError(aResponse, "Product not found", 400);
                 return;
             }
@@ -252,7 +252,7 @@ async function createNewProductVariant(aRequest, aResponse) {
             sendOk(aResponse, result);
         } catch (e) {
             sendError(aResponse, e.message, 500);
-    }
+        }
     }
 }
 

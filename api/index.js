@@ -28,7 +28,7 @@ gApp.use(express.json());
 gApp.use(express.urlencoded({ extended: false }));
 gApp.use(corsModifier);
 
-gApp.set("trust proxy", 1)
+gApp.set("trust proxy", 1);
 gApp.use(session({
     secret: "b5f8bba4-e0a3-4127-b230-dc06968b65a5",
     resave: true,
@@ -44,7 +44,7 @@ gApp.use(session({
 }));
 
 if (kIsProduction) {
-    gApp.use(compression())
+    gApp.use(compression());
     gApp.use(express.static("./build"));
 }
 

@@ -1,18 +1,14 @@
-import { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { v4 as uuidv4 } from "uuid";
 import { useSnackbar } from "notistack";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
-    Paper, Box, Stack, Grid, Card, CardContent, CardActionArea, CardActions, CardMedia,
-    Button, IconButton, Typography,
-    Link, FormControl, FormLabel, TextField, Input,
-    Autocomplete, Snackbar
+    Box, Stack, Grid, Card, CardContent, CardActionArea, CardActions, CardMedia,
+    Button, Typography,
 } from "@mui/material";
 
 import {
-    ArrowBack as ArrowBackIcon,
     Add as AddIcon
 } from "@mui/icons-material";
 
@@ -20,7 +16,6 @@ import api from "../apiGlue.js";
 import productTypes from "../productTypes.js";
 
 const kBaseUrl = `${api.kHost}products/`;
-const kParentRoute = "/manage";
 // Constant: used for formatting the price.
 const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
     style: "currency",
@@ -57,7 +52,7 @@ function ProductCard(aProps) {
                 />
                 <CardContent>
                     <Typography variant="h5">
-                    {product.name}
+                        {product.name}
                     </Typography>
                     <Typography variant="h6">
                         {variant?.name}
@@ -66,7 +61,7 @@ function ProductCard(aProps) {
                         {variant?.stock} units left
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                    {product.description}
+                        {product.description}
                     </Typography>
                 </CardContent>
             </CardActionArea>
@@ -85,7 +80,7 @@ function ProductCard(aProps) {
                     size="small"
                     color="primary"
                     variant="contained"
-                    onClick={async function(aEvent) {
+                    onClick={async function() {
                         const result = await api.handleCart(product?.id, variant?.id, 1, true, enqueueSnackbar);
                         if (result.status == "OK") {
                             enqueueSnackbar("Product added to cart.");
@@ -95,7 +90,7 @@ function ProductCard(aProps) {
                 </Button>
             </CardActions>
         </Card>
-    )
+    );
 }
 
 function ProductList(aProps) {
@@ -143,13 +138,11 @@ function ProductList(aProps) {
                 }
             </Grid>
         </Box>
-    )
+    );
 }
 
 export default function CustomerProductsList(aProps) {
     const { filterType } = aProps;
-    const navigate = useNavigate();
-    const setters = { navigate };
 
     const [products, setProducts] = useState([]);
 
@@ -173,10 +166,10 @@ export default function CustomerProductsList(aProps) {
                     src="/assets/images/banner-steps.png" />
             </Stack>
             <Stack spacing={2} useFlexGap>
-            {
-                filterType == -1 ? (
-                    <ProductList listAll products={products} />
-                ) : (
+                {
+                    filterType == -1 ? (
+                        <ProductList listAll products={products} />
+                    ) : (
                         productTypes.map(function(aType, aIndex) {
                             if (aType.isPrivate) {
                                 return;
@@ -184,10 +177,10 @@ export default function CustomerProductsList(aProps) {
                             if (filterType && aType.value != filterType) {
                                 return;
                             }
-                            return (<ProductList key={aIndex} index={aIndex} type={aType} products={products} />)
+                            return (<ProductList key={aIndex} index={aIndex} type={aType} products={products} />);
                         })
-                )
-            }
+                    )
+                }
             </Stack>
         </Box>
     );

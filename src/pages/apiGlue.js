@@ -9,10 +9,10 @@ async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
 
     try {
         const response = await fetch(aUrl,
-        {
-            ...aOptions,
-            credentials: "include"
-        });
+            {
+                ...aOptions,
+                credentials: "include"
+            });
         const jsonResponse = await response.json();
         
         if (response.ok) {
@@ -105,7 +105,7 @@ const kSignedInRoute = "/";
 const kSignedOutRoute = "/sign-in";
 
 async function blockSignedIn(aNavigate) {
-    const user = await identify()
+    const user = await identify();
     if (user.data) {
         aNavigate(kSignedInRoute);
         return true;
@@ -114,7 +114,7 @@ async function blockSignedIn(aNavigate) {
 }
 
 async function blockSignedOut(aNavigate) {
-    const user = await identify()
+    const user = await identify();
     if (!user.data) {
         aNavigate(kSignedOutRoute);
         return true;

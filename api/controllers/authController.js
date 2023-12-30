@@ -49,7 +49,7 @@ async function signIn(aRequest, aResponse) {
     sendError(aResponse, "Incorrect username, email, or password.");
 }
 
-async function signOut(aRequest, aResponse, aNext) {
+async function signOut(aRequest, aResponse) {
     aRequest.session.user = null;
     aRequest.session.isAuthenticated = false;
     aRequest.session.save(function(aError) {
@@ -68,17 +68,19 @@ async function signOut(aRequest, aResponse, aNext) {
 }
 
 async function signedInUser(aRequest, aResponse) {
-    console.log("taking");
     console.log(aRequest.session);
     if (aRequest.session.isAuthenticated) {
+        console.log("Reusing existing session.");
         sendOk(aResponse, aRequest.session.user);
         return;
     }
+    console.log("Creating new session.");
     sendOk(aResponse, false);
 }
 
 async function dumpSession(aRequest, aResponse) {
     console.log(aRequest.session);
+    console.log("Dumping session.");
     sendOk(aResponse, aRequest.session);
 }
 
