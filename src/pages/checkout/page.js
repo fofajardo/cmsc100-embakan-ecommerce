@@ -126,7 +126,7 @@ export default function Checkout() {
         api.findCart().then(function(aCart) {
             setCartItems(aCart?.data?.items);
 
-            if (aCart?.data?.items?.length == 0) {
+            if (aCart?.data?.items?.length == 0 || !aCart?.data?.items) {
                 setTotalPrice(api.currency.format(0));
                 return;
             }
@@ -221,7 +221,7 @@ export default function Checkout() {
                         </Typography>
                         <List sx={{ py: 0 }}>
                         {
-                            cartItems?.length == 0 ? (
+                            cartItems?.length == 0 || !cartItems ? (
                                 <Typography>
                                     Your cart is empty.
                                 </Typography>
@@ -256,7 +256,7 @@ export default function Checkout() {
                         <Button
                             onClick={handlePlaceOrder}
                             type="button"
-                            disabled={cartItems?.length == 0}
+                            disabled={cartItems?.length == 0 || !cartItems}
                             size="large"
                             variant="contained"
                             sx={{ ml: "auto" }}>

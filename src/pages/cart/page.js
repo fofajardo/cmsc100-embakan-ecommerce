@@ -141,7 +141,7 @@ export default function Cart() {
         api.findCart().then(function(aCart) {
             setCartItems(aCart?.data?.items);
 
-            if (aCart?.data?.items?.length == 0) {
+            if (aCart?.data?.items?.length == 0 || !aCart?.data?.items) {
                 setTotalPrice(api.currency.format(0));
                 return;
             }
@@ -178,7 +178,7 @@ export default function Cart() {
                     </Typography>
                     <List sx={{ py: 0 }}>
                     {
-                        cartItems?.length == 0 ? (
+                        cartItems?.length == 0 || !cartItems ? (
                             <Typography>
                                 Your cart is empty.
                             </Typography>
@@ -198,7 +198,7 @@ export default function Cart() {
                         component={RouterLink}
                         to="/checkout"
                         type="button"
-                        disabled={cartItems?.length == 0}
+                        disabled={cartItems?.length == 0 || !cartItems}
                         variant="contained">
                         Checkout
                     </Button>
