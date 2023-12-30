@@ -141,6 +141,11 @@ export default function Cart() {
         api.findCart().then(function(aCart) {
             setCartItems(aCart?.data?.items);
 
+            if (aCart?.data?.items?.length == 0) {
+                setTotalPrice(api.currency.format(0));
+                return;
+            }
+
             setTotalPrice("");
             var price = 0;
             aCart?.data?.items.forEach(function(aItem) {
@@ -153,6 +158,17 @@ export default function Cart() {
         });
     }, [update]);
 
+    const handleCartItemsMap = function(item, index) {
+        return (
+            <CartListItem
+                key={index}
+                data={item}
+                update={update}
+                setUpdate={setUpdate}
+                isLast={index == cartItems.length - 1} />
+        );
+    }
+
     return (
         <Container>
             <Card variant="outlined" sx={{ my: 2 }}>
@@ -161,18 +177,15 @@ export default function Cart() {
                     Shopping Cart
                     </Typography>
                     <List sx={{ py: 0 }}>
-                        {
-                            cartItems?.map(function(item, index) {
-                                return (
-                                    <CartListItem
-                                        key={index}
-                                        data={item}
-                                        update={update}
-                                        setUpdate={setUpdate}
-                                        isLast={index == cartItems.length - 1} />
-                                );
-                            })
-                        }
+                    {
+                        cartItems?.length == 0 ? (
+                            <Typography>
+                                Your cart is empty.
+                            </Typography>
+                        ) : (
+                            cartItems?.map(handleCartItemsMap)
+                        )
+                    }
                     </List>
                 </CardContent>
             </Card>
