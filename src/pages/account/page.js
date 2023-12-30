@@ -74,7 +74,7 @@ export default function Account() {
 
     const handleListItemMap = function(aItem, aIndex) {
         return (
-            <ListItem disableGutters>
+            <ListItem disableGutters key={aIndex}>
                 <ListItemText primary={aItem.label} primaryTypographyProps={{ variant: "subtitle2" }} />
                 {aItem.data}
                 {

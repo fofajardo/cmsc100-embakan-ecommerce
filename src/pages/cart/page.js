@@ -196,7 +196,7 @@ export default function Cart() {
                     </Typography>
                     <Button
                         component={RouterLink}
-                        to={"/cart/checkout"}
+                        to="/checkout"
                         type="button"
                         disabled={cartItems?.length == 0}
                         variant="contained">
