@@ -39,6 +39,9 @@
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
+        "@stylistic/eslint-plugin": "^1.5.1",
+        "eslint": "^8.56.0",
+        "eslint-plugin-react": "^7.33.2",
         "mocha": "^10.2.0",
         "r3f-pack": "^2.3.0"
     },
