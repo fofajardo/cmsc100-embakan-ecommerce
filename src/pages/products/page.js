@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 
 import api from "../apiGlue.js";
-import productTypes from "../productTypes.js";
+import { productTypes } from "../staticTypes.js";
 
 const kBaseUrl = `${api.host}products/`;
 

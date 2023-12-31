@@ -15,7 +15,7 @@ import {
     Add as AddIcon
 } from "@mui/icons-material";
 
-import productTypes from "../../productTypes.js";
+import { productTypes } from "../../staticTypes.js";
 
 import api from "../../apiGlue.js";
 

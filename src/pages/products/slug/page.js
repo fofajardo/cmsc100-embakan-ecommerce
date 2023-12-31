@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 import api from "../../apiGlue.js";
-import productTypes from "../../productTypes.js";
+import { productTypes } from "../../staticTypes.js";
 
 const kBaseUrl = `${api.host}products/`;
 

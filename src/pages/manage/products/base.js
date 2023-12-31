@@ -16,7 +16,7 @@ import {
     Delete as DeleteIcon
 } from "@mui/icons-material";
 
-import productTypes from "../../productTypes.js";
+import { productTypes } from "../../staticTypes.js";
 
 
 const ACTIONS = {

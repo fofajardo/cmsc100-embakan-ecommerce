@@ -12,7 +12,7 @@ import {
 
 import { ManageProductsBase } from "../base.js";
 
-import productTypes from "../../../productTypes.js";
+import { productTypes } from "../../../staticTypes.js";
 
 import api from "../../../apiGlue.js";
 
