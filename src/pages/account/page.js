@@ -8,6 +8,7 @@ import {
     Edit as EditIcon
 } from "@mui/icons-material";
 import api from "../apiGlue.js";
+import { getFriendlyRoleName } from "../staticTypes.js";
 
 const kBaseUrl = `${api.host}users/`;
 
@@ -44,7 +45,7 @@ export default function Account() {
         },
         {
             label: "Role",
-            data: api.getFriendlyRoleName(user?.role),
+            data: getFriendlyRoleName(user?.role),
             formCondition: user?.role == 2,
             formHandler: null
         },

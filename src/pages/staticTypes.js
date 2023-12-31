@@ -17,4 +17,30 @@ const productTypes = [
     },
 ];
 
-export { productTypes };
+const roleTypes = [
+    {
+        id: "shopper",
+        label: "Shopper/Buyer",
+        value: 0,
+    },
+    {
+        id: "seller",
+        label: "Seller/Merchant",
+        value: 1,
+    },
+    {
+        id: "administrator",
+        label: "Site Administrator",
+        value: 2,
+    },
+];
+
+function getFriendlyRoleName(aRole) {
+    if (isNaN(aRole) || aRole < 0 || aRole >= roleTypes.length) {
+        return "Invalid";
+    }
+
+    return roleTypes[aRole].label;
+}
+
+export { productTypes, getFriendlyRoleName };
