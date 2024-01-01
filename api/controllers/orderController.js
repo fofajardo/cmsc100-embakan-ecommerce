@@ -150,15 +150,13 @@ async function createNewOrder(aRequest, aResponse, aPreventOk = false) {
         false,
         aResponse);
 
-    const priceAtCheckout = body.quantity * productVariant.price;
-
     const entry = new Order({
         id: uuidv4(),
         productId: body.productId,
         variantId: body.variantId,
         groupId: body.groupId ? body.groupId : uuidv4(),
         quantity: body.quantity,
-        price: priceAtCheckout,
+        price: productVariant.price,
         userId: body.userId,
         status: body.status,
         date: new Date()
