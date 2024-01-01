@@ -46,10 +46,18 @@ async function getAllOrders(aRequest, aResponse) {
                     },
                     totalPayment: {
                         $sum: {
-                            $multiply: [
-                                "$price",
-                                "$quantity"
-                            ]
+                            $cond: {
+                                if: {
+                                    $ne: ["$status", 2]
+                                },
+                                then: {
+                                    $multiply: [
+                                        "$price",
+                                        "$quantity"
+                                    ]
+                                },
+                                else: 0
+                            }
                         }
                     },
                     children: {
