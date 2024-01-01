@@ -3,8 +3,66 @@ import { Order, Product } from "../models.js";
 import { sendError, sendOk, hasNull } from "./utils.js";
 
 async function getAllOrders(aRequest, aResponse) {
+    var { groupBy } = aRequest.query;
+    if (!groupBy) {
+        groupBy = "groupId";
+    }
+
     try {
-        let result = await Order.find({});
+        let result = await Order.aggregate([
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "productId",
+                    foreignField: "id",
+                    as: "product"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "userId",
+                    foreignField: "id",
+                    as: "user"
+                }
+            },
+            {
+                $unwind: "$product"
+            },
+            {
+                $unwind: "$user"
+            },
+            {
+                $group: {
+                    _id: `$${groupBy}`,
+                    date: {
+                        $first: "$date"
+                    },
+                    user: {
+                        $first: "$user"
+                    },
+                    target: {
+                        $first: `${groupBy}`
+                    },
+                    totalPayment: {
+                        $sum: {
+                            $multiply: [
+                                "$price",
+                                "$quantity"
+                            ]
+                        }
+                    },
+                    children: {
+                        $push: "$$ROOT"
+                    }
+                }
+            },
+            {
+                $sort: {
+                    date: -1
+                }
+            }
+        ]);
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
