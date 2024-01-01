@@ -147,22 +147,15 @@ function ProductList(aProps) {
     );
 }
 
-function getAllProducts(aSetProducts) {
-    fetch(kBaseUrl,
-        {
-            method: "GET",
-        }
-    ).then(response => response.json()
-    ).then(body => aSetProducts(body.data));
-}
-
 export default function ManageProductsList() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
 
     const reloadData = function() {
-        getAllProducts(setProducts);
+        api.get(kBaseUrl, enqueueSnackbar).then(function(aResponse) {
+            setProducts(aResponse.data);
+        });
     };
     useEffect(function() {
         reloadData();

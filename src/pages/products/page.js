@@ -138,16 +138,14 @@ function ProductList(aProps) {
 
 export default function CustomerProductsList(aProps) {
     const { filterType } = aProps;
+    const { enqueueSnackbar } = useSnackbar();
 
     const [products, setProducts] = useState([]);
 
     useEffect(function() {
-        fetch(kBaseUrl,
-            {
-                method: "GET",
-            }
-        ).then(response => response.json()
-        ).then(body => { setProducts(body.data); });
+        api.get(kBaseUrl, enqueueSnackbar).then(function(aResponse) {
+            setProducts(aResponse.data);
+        });
     }, []);
 
     return (
