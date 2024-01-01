@@ -97,6 +97,40 @@ async function getOneOrder(aRequest, aResponse) {
     }
 }
 
+async function modifyProductStock(aProductId, aVariantId, aQuantity, aIncrement, aResponse) {
+    const productEntry = await Product.findOne({
+        id: aProductId,
+    }).exec();
+
+    if (!productEntry || !productEntry?.variants) {
+        return sendError(aResponse, "Missing product or product variants", 400);
+    }
+
+    const productVariantIndex = productEntry.variants.findIndex(function(aElement) {
+        return aElement.id == aVariantId;
+    });
+    const productVariant = productEntry.variants[productVariantIndex];
+
+    try {
+        console.log("pre", productEntry.variants[productVariantIndex].stock);
+        if (aIncrement) {
+            productEntry.variants[productVariantIndex].stock += aQuantity;
+        } else {
+            productEntry.variants[productVariantIndex].stock -= aQuantity;
+        }
+        console.log("post", productEntry.variants[productVariantIndex].stock);
+        const result = await productEntry.save();
+        let wasUpdated = productEntry === result;
+        if (!wasUpdated) {
+            return sendError(aResponse, "Failed to update product variant stock.", 400);
+        }
+    } catch (e) {
+        return sendError(aResponse, e, 500);
+    }
+
+    return productVariant;
+}
+
 async function createNewOrder(aRequest, aResponse, aPreventOk = false) {
     const { body } = aRequest;
 
@@ -109,32 +143,12 @@ async function createNewOrder(aRequest, aResponse, aPreventOk = false) {
         return;
     }
 
-    const productEntry = await Product.findOne({
-        id: body.productId,
-    }).exec();
-
-    if (!productEntry || !productEntry?.variants) {
-        sendError(aResponse, "Missing product or product variants", 400);
-        return;
-    }
-
-    const productVariantIndex = productEntry.variants.findIndex(function(aElement) {
-        return aElement.id == body.variantId;
-    });
-    const productVariant = productEntry.variants[productVariantIndex];
-
-    try {
-        console.log("pre", productEntry.variants[productVariantIndex].stock);
-        productEntry.variants[productVariantIndex].stock -= body.quantity;
-        console.log("post", productEntry.variants[productVariantIndex].stock);
-        const result = await productEntry.save();
-        let wasUpdated = productEntry === result;
-        if (!wasUpdated) {
-            return sendError(aResponse, "Failed to update product variant stock.", 400);
-        }
-    } catch (e) {
-        sendError(aResponse, e, 500);
-    }
+    const productVariant = await modifyProductStock(
+        body.productId,
+        body.variantId,
+        body.quantity,
+        false,
+        aResponse);
 
     const priceAtCheckout = body.quantity * productVariant.price;
 
@@ -209,18 +223,32 @@ async function updateOneOrder(aRequest, aResponse) {
     }
     
     try {
-        let result = await Order.updateOne({
-            id
-        }, {
-            $set: {
-                status: body.status
-            }
-        });
-        let wasUpdated = result.modifiedCount == 1;
+        let entry = await Order.findOne({ id }).exec();
+        if (entry.status == 2) {
+            return sendError(aResponse, "Cannot update the status of a canceled order.", 400);
+        }
+        entry.status = body.status;
+        const result = await entry.save();
+
+        let wasUpdated = entry === result;
         if (!wasUpdated) {
             sendError(aResponse, "Document was not updated", 400);
             return;
         }
+
+        // Restore reserved stock.
+        if (body.status == 2) {
+            const productResult = await modifyProductStock(
+                entry.productId,
+                entry.variantId,
+                entry.quantity,
+                true,
+                aResponse);
+            if (!productResult) {
+                return;
+            }
+        }
+
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
