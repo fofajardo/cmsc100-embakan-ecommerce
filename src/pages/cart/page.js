@@ -171,7 +171,7 @@ export default function Cart() {
 
     return (
         <Container>
-            <Card variant="outlined" sx={{ my: 2 }}>
+            <Card variant="outlined" sx={{ mt: 2, mb: 10 }}>
                 <CardContent>
                     <Typography variant="h6" gutterBottom>
                     Shopping Cart
