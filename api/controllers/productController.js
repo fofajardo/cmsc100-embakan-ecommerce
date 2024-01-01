@@ -150,6 +150,19 @@ async function updateOneProduct(aRequest, aResponse) {
                     productDataUpdated.push("type");
                 }
             }
+            if (body.description) {
+                let result = await Product.updateOne({
+                    id
+                }, {
+                    $set: {
+                        description: body.description
+                    }
+                });
+                let wasUpdated = result.modifiedCount == 1;
+                if (wasUpdated) {
+                    productDataUpdated.push("description");
+                }
+            }
             if (body.price >= 0) {
                 let result = await Product.updateOne({
                     id
