@@ -14,11 +14,89 @@ async function getOneCart(aRequest, aResponse) {
 
     try {
         let result = null;
-        let entry = await Cart.findOne({ id }).exec();
-        if (entry) {
-            result = entry;
+        let baseEntry = await Cart.findOne({ id }).exec();
+        // Perform aggregation only if the cart is not empty.
+        if (baseEntry.items.length > 0) {
+            let entry = await Cart.aggregate([
+                // Match cart with the provided ID (same as user).
+                {
+                    $match: { id }
+                },
+                // Unwind array of cart items.
+                {
+                    $unwind: "$items"
+                },
+                // Take products matching the product ID of the cart item.
+                {
+                    $lookup: {
+                        from: "products",
+                        localField: "items.productId",
+                        foreignField: "id",
+                        as: "items.product"
+                    }
+                },
+                // Unwind array of matching products.
+                // This should only be one (1) element.
+                {
+                    $unwind: "$items.product"
+                },
+                // Unwind array of product variants.
+                {
+                    $unwind: "$items.product.variants"
+                },
+                // Remove product variants that don't match the cart item's
+                // target product variant ID.
+                {
+                    $redact: {
+                        $cond: {
+                            if: {
+                                $eq: ["$items.variantId", "$items.product.variants.id"]
+                            },
+                            then: "$$KEEP",
+                            else: "$$PRUNE"
+                        }
+                    }
+                },
+                // Re-group the cart items into an array.
+                {
+                    $group: {
+                        _id: "$id",
+                        // Cart/user ID.
+                        id: {
+                            $first: "$id"
+                        },
+                        // Compute for total payment based on cart items.
+                        totalPayment: {
+                            $sum: {
+                                $multiply: [
+                                    "$items.product.variants.price",
+                                    "$items.quantity"
+                                ]
+                            }
+                        },
+                        // Push cart item information.
+                        items: {
+                            $push: {
+                                productId: "$items.productId",
+                                product: "$items.product",
+                                variantId: "$items.variantId",
+                                quantity: "$items.quantity"
+                            }
+                        }
+                    }
+                },
+            ]);
+            // Take the first element since this should match a single and unique
+            // cart owned by a user only.
+            if (entry.length > 0) {
+                result = entry[0];
+            }
+        } else {
+            // Aggregation does not return anything if the cart is empty,
+            // so catch that case here and return the "base" cart entry.
+            result = baseEntry;
         }
-        sendOk(aResponse, result);
+        return sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
     }

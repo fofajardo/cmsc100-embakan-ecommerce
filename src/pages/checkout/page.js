@@ -32,13 +32,12 @@ function CartListItem(aProps) {
 
     if (!isHeader) {
         useEffect(function() {
-            api.get(`${kBaseUrl}${data.productId}`).then(function(aProduct) {
-                setProduct(aProduct.data);
-            });
-            api.get(`${kBaseUrl}${data.productId}/variants/${data.variantId}`).then(function(aVariant) {
-                setVariant(aVariant.data);
-            });
-            setQuantity(data?.quantity);
+            if (!data) {
+                return;
+            }
+            setProduct(data.product);
+            setVariant(data.product.variants);
+            setQuantity(data.quantity);
         }, [data]);
     }
 
@@ -124,22 +123,15 @@ export default function Checkout() {
 
     useEffect(function() {
         api.findCart().then(function(aCart) {
-            setCartItems(aCart?.data?.items);
+            const items = aCart?.data?.items;
+            setCartItems(items);
 
-            if (aCart?.data?.items?.length == 0 || !aCart?.data?.items) {
+            if (!items || items?.length == 0) {
                 setTotalPrice(api.currency.format(0));
                 return;
             }
 
-            setTotalPrice("");
-            var price = 0;
-            aCart?.data?.items.forEach(function(aItem) {
-                api.get(`${kBaseUrl}${aItem.productId}/variants/${aItem.variantId}`)
-                    .then(function(aVariant) {
-                        price += aVariant?.data?.price * aItem.quantity;
-                        setTotalPrice(api.currency.format(price));
-                    });
-            });
+            setTotalPrice(api.currency.format(aCart?.data?.totalPayment));
         });
     }, []);
 
