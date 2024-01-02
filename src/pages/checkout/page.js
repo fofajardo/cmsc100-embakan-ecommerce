@@ -206,7 +206,7 @@ export default function Checkout() {
                         <Typography>
                         {user?.email} ({user?.username})
                         </Typography>
-                        <Typography component="p">
+                        <Typography component="p" sx={{ whiteSpace: "pre-wrap" }}>
                         {user?.address}
                         </Typography>
                     </CardContent>

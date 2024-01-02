@@ -76,7 +76,7 @@ export default function Account() {
     const handleListItemMap = function(aItem, aIndex) {
         return (
             <ListItem disableGutters key={aIndex}>
-                <ListItemText primary={aItem.label} primaryTypographyProps={{ variant: "subtitle2" }} />
+                <ListItemText primary={aItem.label} primaryTypographyProps={{ variant: "subtitle2", sx: { whiteSpace: "pre-wrap" } }} />
                 {aItem.data}
                 {
                     aItem.formCondition ? (
