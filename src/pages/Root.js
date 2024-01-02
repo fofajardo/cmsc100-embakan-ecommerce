@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 
@@ -46,14 +46,40 @@ const signRoutes = [
     "/sign-out"
 ];
 
+const userRoutes = [
+    "/cart",
+    "/checkout",
+    "/products",
+    "/crops",
+    "/poultry"
+];
+
 export default function Root() {
     const location = useLocation();
     const navigate = useNavigate();
-    const isSignPage = signRoutes.indexOf(location.pathname) >= 0;
+    const path = location.pathname.toLowerCase();
+    const isSignPage = signRoutes.indexOf(path) >= 0;
 
-    if (!isSignPage) {
-        api.blockSignedOut(navigate);
-    }
+    const [authed, setAuthed] = useState(false);
+
+    useEffect(function() {
+        if (isSignPage) {
+            setAuthed(true);
+            return;
+        }
+
+        api.blockSignedOut(navigate).then(function(aResult) {
+            if (aResult) {
+                return;
+            }
+            api.blockUserRoute(navigate, path, userRoutes).then(function(aResult) {
+                if (aResult) {
+                    return;
+                }
+                setAuthed(true);
+            });
+        });
+    }, [path]);
 
     return (
         <SnackbarProvider maxSnack={3}>
@@ -66,7 +92,13 @@ export default function Root() {
                             <Header />
                         )
                     }
-                    <Outlet />
+                    {
+                        authed ? (
+                            <Outlet />
+                        ) : (
+                            null
+                        )
+                    }
                 </Box>
             </ThemeProvider>
         </SnackbarProvider>

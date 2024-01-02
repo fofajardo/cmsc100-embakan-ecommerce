@@ -38,34 +38,18 @@ export default function Header() {
         });
     }, []);
 
-    const productLinks = [
-        {
-            icon: <StoreOutlinedIcon/>,
-            to: "/products",
-            label: "All"
-        },
-        {
-            icon: <GrassOutlinedIcon/>,
-            to: "/crops",
-            label: "Crops"
-        },
-        {
-            icon: <EggAltOutlinedIcon/>,
-            to: "/poultry",
-            label: "Poultry"
-        }
-    ];
-
     var drawerLinks = [
         {
             icon: <AccountCircleOutlinedIcon />,
             to: "/account",
-            label: `${user?.firstName} ${user?.lastName}`
+            label: `${user?.firstName} ${user?.lastName}`,
         },
         {
             icon: <LocalShippingOutlinedIcon />,
             to: "/account/orders",
-            label: "Order History"
+            label: "Order History",
+            role: 0,
+            isExclusive: true
         },
         {
             icon: <LogoutOutlinedIcon />,
@@ -73,41 +57,79 @@ export default function Header() {
             label: "Sign Out"
         },
         {
-            divider: true
+            divider: true,
+            role: 0,
+            isExclusive: true
         },
-        { title: "Products" },
-        ...productLinks,
+        {
+            title: "Products",
+            role: 0,
+            isExclusive: true
+        },
+        {
+            icon: <StoreOutlinedIcon/>,
+            to: "/products",
+            label: "All",
+            role: 0,
+            isExclusive: true
+        },
+        {
+            icon: <GrassOutlinedIcon/>,
+            to: "/crops",
+            label: "Crops",
+            role: 0,
+            isExclusive: true
+        },
+        {
+            icon: <EggAltOutlinedIcon/>,
+            to: "/poultry",
+            label: "Poultry",
+            role: 0,
+            isExclusive: true
+        },
+        {
+            divider: true,
+            role: 1
+        },
+        {
+            title: "Merchant",
+            role: 1
+        },
+        {
+            icon: <DashboardIcon />,
+            to: "/manage/products",
+            label: "Products",
+            role: 1
+        },
+        {
+            icon: <BarChartIcon />,
+            to: "/manage/sales",
+            label: "Sales",
+            role: 1
+        },
+        {
+            icon: <ReceiptLongOutlinedIcon />,
+            to: "/manage/orders",
+            label: "Order Fulfillment",
+            role: 1
+        },
+        {
+            icon: <PeopleIcon />,
+            to: "/manage/accounts",
+            label: "Accounts",
+            role: 1
+        }
     ];
 
-    if (user?.role > 0) {
-        drawerLinks = [
-            ...drawerLinks,
-            { divider: true },
-            { title: "Merchant" },
-            {
-                icon: <DashboardIcon />,
-                to: "/manage/products",
-                label: "Products"
-            },
-            {
-                icon: <BarChartIcon />,
-                to: "/manage/sales",
-                label: "Sales"
-            },
-            {
-                icon: <ReceiptLongOutlinedIcon />,
-                to: "/manage/orders",
-                label: "Order Fulfillment"
-            },
-            {
-                icon: <PeopleIcon />,
-                to: "/manage/accounts",
-                label: "Accounts"
-            },
-        ];
-    }
-
     const drawerList = drawerLinks.map(function(aLink, aIndex) {
+        if (aLink.role != null) {
+            if (user?.role < aLink.role) {
+                return;
+            }
+            if (aLink.isExclusive && user?.role != aLink.role) {
+                return;
+            }
+        }
         if (aLink.divider) {
             return (<Divider key={aIndex}/>);
         }
@@ -146,9 +168,7 @@ export default function Header() {
     };
 
     return (
-        
         <AppBar position="sticky" elevation={0}>
-
             <Toolbar sx={{ justifyContent: "space-between", alignItems: "center" }}>
                 <IconButton
                     color="inherit"
@@ -173,7 +193,12 @@ export default function Header() {
                         component={RouterLink}
                         to="/cart"
                         color="inherit"
-                        aria-label="view shopping cart">
+                        aria-label="view shopping cart"
+                        sx={{
+                            visibility: user?.role == 0
+                                ? "visible"
+                                : "hidden"
+                        }}>
                         <ShoppingCartOutlinedIcon />
                     </IconButton>
                 </Stack>

@@ -5,6 +5,8 @@ const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
     currency: "PHP"
 });
 
+const kReplace = { replace: true };
+
 async function base(aUrl, aOptions, aEnqueue, aSuccessMessage) {
     if (!aEnqueue) {
         aEnqueue = console.log;
@@ -107,12 +109,16 @@ async function identify() {
 }
 
 const kSignedInRoute = "/";
+const kSignedInAdminRoute = "/manage";
 const kSignedOutRoute = "/sign-in";
 
 async function blockSignedIn(aNavigate) {
     const user = await identify();
     if (user.data) {
-        aNavigate(kSignedInRoute);
+        aNavigate(user.data.role > 0
+            ? kSignedInAdminRoute
+            : kSignedInRoute,
+            kReplace);
         return true;
     }
     return false;
@@ -121,9 +127,45 @@ async function blockSignedIn(aNavigate) {
 async function blockSignedOut(aNavigate) {
     const user = await identify();
     if (!user.data) {
-        aNavigate(kSignedOutRoute);
+        aNavigate(kSignedOutRoute, kReplace);
         return true;
     }
+    return false;
+}
+
+async function blockUserRoute(aNavigate, aPath, aUserRoutes) {
+    const user = await identify();
+    if (!user.data) {
+        return false;
+    }
+    // Check all public routes.
+    for (let i = 0; i < aUserRoutes.length; i++) {
+        let route = aUserRoutes[i];
+        // User navigates to a public route.
+        if (aPath.startsWith(route)) {
+            // User is an admin, so block.
+            if (user.data.role > 0) {
+                aNavigate(kSignedInAdminRoute, kReplace);
+                return true;
+            }
+            // Otherwise, route is not blocked.
+            return false;
+        }
+    }
+    // User navigates to root route.
+    if (aPath == "/") {
+        // Redirect to dashboard if user is admin.
+        if (user.data.role > 0) {
+            aNavigate(kSignedInAdminRoute, kReplace);
+            return true;
+        }
+    }
+    // User navigates to a private route.
+    if (aPath.startsWith("/manage") && user.data.role == 0) {
+        aNavigate(kSignedInRoute, kReplace);
+        return true;
+    }
+    // Route is not blocked.
     return false;
 }
 
@@ -225,6 +267,7 @@ const gApiGlue = {
     identify,
     blockSignedIn,
     blockSignedOut,
+    blockUserRoute,
 
     findCart,
     emptyCart,
