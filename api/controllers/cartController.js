@@ -16,7 +16,7 @@ async function getOneCart(aRequest, aResponse) {
         let result = null;
         let baseEntry = await Cart.findOne({ id }).exec();
         // Perform aggregation only if the cart is not empty.
-        if (baseEntry.items.length > 0) {
+        if (baseEntry?.items.length > 0) {
             let entry = await Cart.aggregate([
                 // Match cart with the provided ID (same as user).
                 {
