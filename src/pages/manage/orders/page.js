@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { useSnackbar } from "notistack";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
     Container, Typography, Box, Grid, Stack, colors,
-    Button,
+    Button, IconButton,
     Card, CardActions, CardContent, CardHeader, Avatar
 } from "@mui/material";
 
@@ -13,12 +14,14 @@ import {
     Check as CheckIcon,
     NotInterested as NotInterestedIcon,
     Place as PlaceIcon,
-    List as ListIcon
+    List as ListIcon,
+    ArrowBack as ArrowBackIcon
 } from "@mui/icons-material";
 
 import api from "../../apiGlue.js";
 
 const kBaseUrl = `${api.host}orders/`;
+const kParentRoute = "/manage";
 
 export default function ManageOrders() {
     const { enqueueSnackbar } = useSnackbar();
@@ -198,7 +201,12 @@ export default function ManageOrders() {
 
     return (
         <Container sx={{ py: 3 }}>
-            <Typography variant="h4" sx={{ mb: 3 }}>Order Fulfillment</Typography>
+            <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
+                <IconButton component={RouterLink} to={kParentRoute} color="primary" aria-label="go back">
+                    <ArrowBackIcon />
+                </IconButton>
+                <Typography variant="h4" sx={{ mb: 3 }}>Order Fulfillment</Typography>
+            </Stack>
             <Stack spacing={2} useFlexGap>
                 {orders?.map(handleOrdersGroup)}
             </Stack>

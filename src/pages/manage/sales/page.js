@@ -1,9 +1,16 @@
 import React from "react";
 
+import { Link as RouterLink } from "react-router-dom";
+
 import {
-    Typography, Grid, Table, TableBody, TableCell, 
-    TableContainer, TableHead, TableRow, TablePagination, Paper, Container
+    Typography, Grid, Table, TableBody, TableCell, Stack,
+    TableContainer, TableHead, TableRow, TablePagination, Paper, Container,
+    IconButton
 } from "@mui/material";
+
+import {
+    ArrowBack as ArrowBackIcon
+} from "@mui/icons-material";
 
 import api from "../../apiGlue.js";
 
@@ -53,6 +60,8 @@ const rowsAnnual = [
     createData("Whole Chicken","Poultry","pcs","175","50")
 ];
 
+const kParentRoute = "/manage";
+
 export default function ManageSales() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -68,7 +77,12 @@ export default function ManageSales() {
 
     return (
         <Container sx={{ py: 3 }}>
-            <Typography variant="h4" sx={{ mb: 3 }}>Sales Report</Typography>
+            <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
+                <IconButton component={RouterLink} to={kParentRoute} color="primary" aria-label="go back">
+                    <ArrowBackIcon />
+                </IconButton>
+                <Typography variant="h4" sx={{ mb: 3 }}>Sales Report</Typography>
+            </Stack>
             <Grid 
                 container
                 direction="column"

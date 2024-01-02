@@ -1,9 +1,22 @@
 import React, { useState } from "react";
-import {Typography, Table, TableBody, TableCell, TableHead, TableRow, Container, Card, CardContent} from "@mui/material";
+
+import { Link as RouterLink } from "react-router-dom";
+
+import {
+    Typography, Stack,
+    Table, TableBody, TableCell, TableHead, TableRow,
+    Container, Card, CardContent,
+    IconButton
+} from "@mui/material";
+
+import {
+    ArrowBack as ArrowBackIcon
+} from "@mui/icons-material";
+
 import api from "../../apiGlue.js";
 
-
 const kBaseUrl = `${api.host}users/`;
+const kParentRoute = "/manage";
 
 // This will return the components for the accounts in the dashboard
 export default function ManageAccounts() {
@@ -22,9 +35,14 @@ export default function ManageAccounts() {
 
     return (
         <Container sx={{ py: 3 }}>
-            <Typography variant="h4">
-      Accounts
-            </Typography>
+            <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
+                <IconButton component={RouterLink} to={kParentRoute} color="primary" aria-label="go back">
+                    <ArrowBackIcon />
+                </IconButton>
+                <Typography variant="h4">
+                    Accounts
+                </Typography>
+            </Stack>
             <Card sx={{ my: 2 }} variant="outlined">
                 <CardContent>
                     <Typography variant="body1" gutterBottom>

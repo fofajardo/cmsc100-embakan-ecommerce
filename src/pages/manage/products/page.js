@@ -6,13 +6,14 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
     Container,
     Box, Stack, Grid, Card, CardContent, CardActions,
-    Button, Typography,
+    Button, Typography, IconButton,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     useTheme, useMediaQuery
 } from "@mui/material";
 
 import {
-    Add as AddIcon
+    Add as AddIcon,
+    ArrowBack as ArrowBackIcon
 } from "@mui/icons-material";
 
 import { productTypes } from "../../staticTypes.js";
@@ -20,6 +21,7 @@ import { productTypes } from "../../staticTypes.js";
 import api from "../../apiGlue.js";
 
 const kBaseUrl = `${api.host}products/`;
+const kParentRoute = "/manage";
 
 async function handleSubmit(aEvent, aSetters) {
     aEvent.preventDefault();
@@ -194,6 +196,9 @@ export default function ManageProductsList() {
     return (
         <Container sx={{ py: 3 }}>
             <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
+                <IconButton component={RouterLink} to={kParentRoute} color="primary" aria-label="go back">
+                    <ArrowBackIcon />
+                </IconButton>
                 <Typography variant="h4">
                     Products
                 </Typography>
