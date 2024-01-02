@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 
 //base.js - > cards for edit anc reate
 import {
-    Box, Stack, Card,
+    Box, Stack, Card, CardActions, CardContent,
     Button, Typography,
     FormControl, FormLabel, TextField, InputLabel, MenuItem,
     Select, Divider,
@@ -164,6 +164,63 @@ function ProductInventoryDisplayCard(aProps) {
     );
 }
 
+function ProductInventoryDialog(aProps) {
+    const { onDialogSubmit, onClose, open, dialogTitle, dialogType, dialogVariantData } = aProps;
+
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+    return (
+        <Dialog
+            id="dialog-form"
+            component="form"
+            onSubmit={onDialogSubmit}
+            open={open}
+            onClose={onClose}
+            maxWidth="sm"
+            fullWidth
+            fullScreen={fullScreen}>
+            <DialogTitle>{dialogTitle} Product Unit</DialogTitle>
+            <DialogContent>
+                {
+                    <>
+                        <div style={{ display: "none" }}>
+                            <input type="text" name="in-variant-id" value={dialogVariantData?.id} readOnly />
+                            <input type="number" name="in-action" value={dialogType} readOnly />
+                        </div>
+                        {
+                            dialogType == ACTIONS.DELETE ? (
+                                <DialogContentText>
+                                    Are you sure you want to delete this product unit?
+                                </DialogContentText>
+                            ) : (
+                                <>
+                                    <DialogContentText sx={{ mb: 4 }}>
+                                        Your changes will take effect immediately. However, this will not affect the price for processed orders.
+                                    </DialogContentText>
+                                    <ProductInventoryFormControl isModal data={dialogVariantData} />
+                                </>
+                            )
+                        }
+                    </>
+                }
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose}>
+                    {
+                        dialogType == ACTIONS.DELETE ? ("No") : ("Cancel")
+                    }
+                </Button>
+                <Button type="submit" form="dialog-form">
+                    {
+                        dialogType == ACTIONS.DELETE ? ("Yes") : ("Save")
+                    }
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
 function ProductInventoryListCard(aProps) {
     const { product, isCreateProduct, onDialogSubmit } = aProps;
 
@@ -180,9 +237,6 @@ function ProductInventoryListCard(aProps) {
     const [dialogType, setDialogType] = useState(ACTIONS.ADD);
     const [dialogTitle, setDialogTitle] = useState("");
     const [dialogVariantData, setDialogVariantData] = useState();
-
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleOpenDialog = function(aType, aTitle, aVariantData) {
         setDialogType(aType);
@@ -207,104 +261,68 @@ function ProductInventoryListCard(aProps) {
     };
 
     return (
-        <Card sx={{ p: 3 }} elevation={0} variant="outlined">
-            <Dialog
-                id="dialog-form"
-                component="form"
-                onSubmit={handleDialogSubmit}
-                open={open}
-                onClose={handleClose}
-                maxWidth="sm"
-                fullWidth
-                fullScreen={fullScreen}>
-                <DialogTitle>{dialogTitle} Product Unit</DialogTitle>
-                <DialogContent>
+        <Card
+            variant="outlined">
+            <ProductInventoryDialog
+                 onDialogSubmit={handleDialogSubmit}
+                 onClose={handleClose}
+                 dialogTitle={dialogTitle}
+                 dialogType={dialogType}
+                 dialogVariantData={dialogVariantData}
+                 open={open} />
+            <CardContent>
+                <Typography variant="h6" sx={{ mb: 2 }}>Inventory</Typography>
+                <Stack spacing={2}>
                     {
-                        <Fragment>
-                            <div style={{ display: "none" }}>
-                                <input type="text" name="in-variant-id" value={dialogVariantData?.id} readOnly />
-                                <input type="number" name="in-action" value={dialogType} readOnly />
-                            </div>
-                            {
-                                dialogType == ACTIONS.DELETE ? (
-                                    <DialogContentText>
-                                Are you sure you want to delete this product unit?
-                                    </DialogContentText>
-                                ) : (
-                                    <Fragment>
-                                        <DialogContentText sx={{ mb: 4 }}>
-                                    Your changes will take effect immediately. However, this will not affect the price for confirmed orders.
-                                        </DialogContentText>
-                                        <ProductInventoryFormControl isModal data={dialogVariantData} />
+                        isCreateProduct ? (
+                            <>
+                                <ProductInventoryFormControl
+                                    useDefaultUnit
+                                    {...aProps} />
+                                <FormLabel>
+                                You may add additional units once the initial product is created.
+                                </FormLabel>
+                            </>
+                        ) : (
+                            variants?.map(function(aVariant, aIndex) {
+                                let elements = [];
+                                elements.push(
+                                    <Fragment key={aIndex}>
+                                        <ProductInventoryDisplayCard
+                                            index={aIndex}
+                                            inventory={aVariant}
+                                            onOpenDialog={handleOpenDialog}
+                                            {...aProps} />
+                                        <Divider />
                                     </Fragment>
-                                )
-                            }
-                        </Fragment>
+                                );
+                                return elements;
+                            })
+                        )
                     }
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>
-                        {
-                            dialogType == ACTIONS.DELETE ? ("No") : ("Cancel")
-                        }
-                    </Button>
-                    <Button type="submit" form="dialog-form">
-                        {
-                            dialogType == ACTIONS.DELETE ? ("Yes") : ("Save")
-                        }
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Typography variant="h6" sx={{ mb: 2 }}>Inventory</Typography>
-            <Stack
-                spacing={2}>
-                {
-                    isCreateProduct ? (
-                        <Fragment>
-                            <ProductInventoryFormControl
-                                useDefaultUnit
-                                {...aProps} />
-                            <FormLabel>
-                            You may add additional units once the initial product is created.
-                            </FormLabel>
-                        </Fragment>
-                    ) : (
-                        <Fragment>
-                            {
-                                variants?.map(function(aVariant, aIndex) {
-                                    let elements = [];
-                                    elements.push(
-                                        <Fragment key={aIndex}>
-                                            <ProductInventoryDisplayCard
-                                                index={aIndex}
-                                                inventory={aVariant}
-                                                onOpenDialog={handleOpenDialog}
-                                                {...aProps} />
-                                            <Divider />
-                                        </Fragment>
-                                    );
-                                    return elements;
-                                })
-                            }
-                            <Box>
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<AddIcon />}
-                                    onClick={handleClickAdd}>
-                                    Add new unit
-                                </Button>
-                            </Box>
-                        </Fragment>
-                    )
-                }
-            </Stack>
+                </Stack>
+            </CardContent>
+            {
+                isCreateProduct ? (
+                    <></>
+                ) : (
+                    <CardActions>
+                        <Button
+                            variant="outlined"
+                            startIcon={<AddIcon />}
+                            onClick={handleClickAdd}>
+                            Add new unit
+                        </Button>
+                    </CardActions>
+                )
+            }
         </Card>
     );
 }
 
 function ProductDetailCard(aProps) {
     const { product, readOnly, cardProps } = aProps;
-    
+
     const [name, setName] = useState("");
     const [slug, setSlug] = useState("");
     const [description, setDescription] = useState("");
@@ -323,81 +341,81 @@ function ProductDetailCard(aProps) {
     return (
         <Card
             {...cardProps}
-            sx={{ p: 3 }}
-            elevation={0}
             variant="outlined">
-            <Typography variant="h6" sx={{ mb: 2 }}>General</Typography>
-            <Stack
-                spacing={2}>
+            <CardContent>
+                <Typography variant="h6" sx={{ mb: 2 }}>General</Typography>
                 <Stack
-                    gap={2}
-                    direction={{ sm: "column", md: "row" }}>
-                    <TextField
-                        label="Name"
-                        name="in-name"
-                        helperText="The user-facing name of the product."
-                        value={name}
-                        disabled={readOnly}
-                        onChange={function(event) {
-                            setName(event.target.value);
-                        }}
-                        required
-                        fullWidth />
-                    <TextField
-                        label="Slug"
-                        name="in-slug"
-                        helperText="The name used to represent the product in the URL."
-                        value={slug}
-                        disabled={readOnly}
-                        onChange={function(event) {
-                            setSlug(event.target.value);
-                        }}
-                        required
-                        fullWidth />
-                </Stack>
-                <Stack
-                    gap={2}
-                    direction={{ sm: "column", md: "row" }}>
-                    <TextField
-                        label="Description"
-                        name="in-description"
-                        value={description}
-                        disabled={readOnly}
-                        onChange={function(event) {
-                            setDescription(event.target.value);
-                        }}
-                        required
-                        multiline
-                        fullWidth />
-                </Stack>
-                <Stack
-                    gap={2}
-                    direction={{ sm: "column", md: "row" }}>
-                    <FormControl fullWidth>
-                        <InputLabel id="in-type-label">Type</InputLabel>
-                        <Select
-                            label="Type"
-                            labelId="in-type-label"
-                            name="in-type"
-                            defaultValue={0}
-                            value={type}
+                    spacing={2}>
+                    <Stack
+                        gap={2}
+                        direction={{ sm: "column", md: "row" }}>
+                        <TextField
+                            label="Name"
+                            name="in-name"
+                            helperText="The user-facing name of the product."
+                            value={name}
                             disabled={readOnly}
                             onChange={function(event) {
-                                setType(event.target.value);
-                            }}>
-                            {
-                                productTypes.map(function(aType, aIndex) {
-                                    return (
-                                        <MenuItem key={aIndex} value={aType.value}>
-                                            {aType.label}
-                                        </MenuItem>
-                                    );
-                                })
-                            }
-                        </Select>
-                    </FormControl>
+                                setName(event.target.value);
+                            }}
+                            required
+                            fullWidth />
+                        <TextField
+                            label="Slug"
+                            name="in-slug"
+                            helperText="The name used to represent the product in the URL."
+                            value={slug}
+                            disabled={readOnly}
+                            onChange={function(event) {
+                                setSlug(event.target.value);
+                            }}
+                            required
+                            fullWidth />
+                    </Stack>
+                    <Stack
+                        gap={2}
+                        direction={{ sm: "column", md: "row" }}>
+                        <TextField
+                            label="Description"
+                            name="in-description"
+                            value={description}
+                            disabled={readOnly}
+                            onChange={function(event) {
+                                setDescription(event.target.value);
+                            }}
+                            required
+                            multiline
+                            fullWidth />
+                    </Stack>
+                    <Stack
+                        gap={2}
+                        direction={{ sm: "column", md: "row" }}>
+                        <FormControl fullWidth>
+                            <InputLabel id="in-type-label">Type</InputLabel>
+                            <Select
+                                label="Type"
+                                labelId="in-type-label"
+                                name="in-type"
+                                defaultValue={0}
+                                value={type}
+                                disabled={readOnly}
+                                onChange={function(event) {
+                                    setType(event.target.value);
+                                }}>
+                                {
+                                    productTypes.map(function(aType, aIndex) {
+                                        return (
+                                            <MenuItem key={aIndex} value={aType.value}>
+                                                {aType.label}
+                                            </MenuItem>
+                                        );
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                    </Stack>
                 </Stack>
-            </Stack>
+            </CardContent>
         </Card>
     );
 }
