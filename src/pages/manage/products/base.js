@@ -28,7 +28,7 @@ const ACTIONS = {
 
 //This can be used as editor of for number
 function ProductInventoryFormControl(aProps) {
-    const { isModal, useDefaultUnit, readOnly, data } = aProps;
+    const { isModal, useDefaultUnit, reset, readOnly, data } = aProps;
 
     const [name, setName] = useState();
     const [price, setPrice] = useState();
@@ -37,13 +37,17 @@ function ProductInventoryFormControl(aProps) {
 
     useEffect(function() {
         if (!data) {
+            setName(useDefaultUnit ? "One Unit" : "");
+            setPrice("");
+            setStock("");
+            setImageUrl("");
             return;
         }
         setName(data.name);
         setPrice(data.price);
         setStock(data.stock);
         setImageUrl(data.imageUrl);
-    }, [data]);
+    }, [data, reset]);
 
     return (
         <Stack
@@ -321,7 +325,7 @@ function ProductInventoryListCard(aProps) {
 }
 
 function ProductDetailCard(aProps) {
-    const { product, readOnly, cardProps } = aProps;
+    const { product, reset, readOnly, cardProps } = aProps;
 
     const [name, setName] = useState("");
     const [slug, setSlug] = useState("");
@@ -330,13 +334,17 @@ function ProductDetailCard(aProps) {
 
     useEffect(function() {
         if (!product) {
+            setName("");
+            setSlug("");
+            setDescription("");
+            setType(0);
             return;
         }
         setName(product.name);
         setSlug(product.slug);
         setDescription(product.description);
         setType(product.type);
-    }, [product]);
+    }, [product, reset]);
 
     return (
         <Card
@@ -431,6 +439,11 @@ function ManageProductsBase(aProps) {
     const parentBoxProps = isCreateProduct ? mainFormProps : {};
     const detailBoxProps = isCreateProduct ? {} : mainFormProps;
 
+    const [reset, setReset] = useState(0);
+    const handleReset = function() {
+        setReset(reset + 1);
+    };
+
     return (
         <Stack
             spacing={2}
@@ -438,8 +451,10 @@ function ManageProductsBase(aProps) {
             {...parentBoxProps}>
             <ProductDetailCard
                 cardProps={detailBoxProps}
+                reset={reset}
                 {...aProps} />
             <ProductInventoryListCard
+                reset={reset}
                 {...aProps} />
             <Stack
                 spacing={2}
@@ -452,7 +467,8 @@ function ManageProductsBase(aProps) {
                 </Button>
                 <Button
                     type="reset"
-                    form="main-form">
+                    form="main-form"
+                    onClick={handleReset}>
                     Reset
                 </Button>
             </Stack>
