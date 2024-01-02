@@ -31,6 +31,7 @@ import ManageProductsEdit from "./pages/manage/products/edit/page.js";
 import ManageAccounts from "./pages/manage/accounts/page.js";
 import ManageOrders from "./pages/manage/orders/page.js";
 import ManageSales from "./pages/manage/sales/page.js";
+import ManageDashboard from "./pages/manage/page.js";
 
 const router = createHashRouter([
     {
@@ -107,6 +108,10 @@ const router = createHashRouter([
             {
                 path: "manage",
                 children: [
+                    {
+                        path: "",
+                        element: <ManageDashboard />
+                    },
                     {
                         path: "products",
                         children: [
