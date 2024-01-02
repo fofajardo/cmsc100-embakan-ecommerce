@@ -39,7 +39,7 @@ const router = createHashRouter([
         children: [
             {
                 path: "/",
-                element: <CustomerProductsList />
+                element: <CustomerProductsList filterType={-1} />
             },
             {
                 path: "sign-in",
