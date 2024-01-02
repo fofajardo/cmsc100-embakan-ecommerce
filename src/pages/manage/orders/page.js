@@ -35,9 +35,6 @@ export default function ManageOrders() {
 
     const handleOrdersChild = function(aOrder, aIndex) {
         const { id, product, quantity, price, status } = aOrder;
-        const variant = product.variants.find(function(aElement) {
-            return (aElement.id == aOrder.variantId);
-        });
         var statusInfo = {};
 
         switch (status) {
@@ -100,7 +97,7 @@ export default function ManageOrders() {
                         <Grid container spacing={1} direction="column">
                             <Grid item>
                                 <Typography variant="subtitle2">Product Unit</Typography>
-                                <Typography>{product.name} - {variant?.name}</Typography>
+                                <Typography>{product.name} - {product.variants.name}</Typography>
                             </Grid>
                             <Grid item>
                                 <Typography variant="subtitle2">Quantity</Typography>

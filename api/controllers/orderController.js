@@ -10,6 +10,7 @@ async function getAllOrders(aRequest, aResponse) {
 
     try {
         let result = await Order.aggregate([
+            // Take products matching the product ID of the order.
             {
                 $lookup: {
                     from: "products",
@@ -18,6 +19,7 @@ async function getAllOrders(aRequest, aResponse) {
                     as: "product"
                 }
             },
+            // Take users matching the user ID of the order.
             {
                 $lookup: {
                     from: "users",
@@ -26,24 +28,48 @@ async function getAllOrders(aRequest, aResponse) {
                     as: "user"
                 }
             },
+            // Unwind array of matching products.
             {
                 $unwind: "$product"
             },
+            // Unwind array of matching users.
             {
                 $unwind: "$user"
             },
+            // Unwind array of product variants.
+            {
+                $unwind: "$product.variants"
+            },
+            // Remove product variants that don't match the order's
+            // target product variant ID.
+            {
+                $redact: {
+                    $cond: {
+                        if: {
+                            $eq: ["$variantId", "$product.variants.id"]
+                        },
+                        then: "$$KEEP",
+                        else: "$$PRUNE"
+                    }
+                }
+            },
+            // Group orders by their parent transaction ID (aka group ID).
             {
                 $group: {
                     _id: `$${groupBy}`,
+                    // Include order date.
                     date: {
                         $first: "$date"
                     },
+                    // Include order user.
                     user: {
                         $first: "$user"
                     },
+                    // Include group by target.
                     target: {
                         $first: `${groupBy}`
                     },
+                    // Compute for total payment based on non-canceled orders.
                     totalPayment: {
                         $sum: {
                             $cond: {
@@ -60,11 +86,13 @@ async function getAllOrders(aRequest, aResponse) {
                             }
                         }
                     },
+                    // Push suborders.
                     children: {
                         $push: "$$ROOT"
                     }
                 }
             },
+            // Sort in descending order.
             {
                 $sort: {
                     date: -1
