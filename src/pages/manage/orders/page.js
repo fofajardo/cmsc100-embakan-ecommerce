@@ -208,7 +208,11 @@ export default function ManageOrders() {
                 <Typography variant="h4" sx={{ mb: 3 }}>Order Fulfillment</Typography>
             </Stack>
             <Stack spacing={2} useFlexGap>
-                {orders?.map(handleOrdersGroup)}
+                {
+                    orders?.length > 0
+                        ? orders?.map(handleOrdersGroup)
+                        : <Typography>There are no pending orders.</Typography>
+                }
             </Stack>
         </Container>
     );

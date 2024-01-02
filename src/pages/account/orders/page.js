@@ -177,7 +177,11 @@ export default function CustomerOrders() {
                 </Typography>
             </Stack>
             <Stack spacing={2} useFlexGap>
-                {orders?.map(handleOrdersGroup)}
+                {
+                    orders?.length > 0
+                        ? orders?.map(handleOrdersGroup)
+                        : <Typography>You haven't ordered anything yet.</Typography>
+                }
             </Stack>
         </Container>
     );
