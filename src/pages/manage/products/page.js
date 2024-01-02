@@ -76,7 +76,13 @@ function ProductCard(aProps) {
                     {variant?.name}
                 </Typography>
                 <Typography variant="body1">
-                    {variant?.stock} units left
+                    {
+                        variant ? (
+                            `${variant.stock} units left`
+                        ) : (
+                            "This product has no inventory."
+                        )
+                    }
                 </Typography>
                 <Typography variant="body2">
                     {
