@@ -133,9 +133,9 @@ export default function ManageOrders() {
         const { user, date, totalPayment, children } = aGroup;
 
         return (
-            <Card variant="outlined">
+            <Card key={aIndex} variant="outlined">
                 <CardContent>
-                    <Stack key={aIndex} spacing={2} useFlexGap>
+                    <Stack spacing={2} useFlexGap>
                         <Typography variant="h5">Order #{aGroups.length - aIndex}: {new Date(date).toLocaleString()}</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={18} md={4}>
