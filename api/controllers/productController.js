@@ -7,8 +7,23 @@ import { sendError, sendOk, hasNull } from "./utils.js";
  */
 
 async function getAllProducts(aRequest, aResponse) {
+    const { flatten } = aRequest.query;
+    
     try {
-        let result = await Product.find({});
+        let result = null;
+        if (flatten) {
+            result = await Product.aggregate([
+                {
+                    $unwind: {
+                        path: "$variants",
+                        includeArrayIndex: "variantIndex",
+                        preserveNullAndEmptyArrays: true
+                    }
+                }
+            ]);
+        } else {
+            result = await Product.find({});
+        }
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);
