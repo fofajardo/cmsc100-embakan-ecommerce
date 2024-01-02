@@ -19,6 +19,7 @@ import {
     /* Search as SearchIcon, */
     LogoutOutlined as LogoutOutlinedIcon,
     ReceiptLongOutlined as ReceiptLongOutlinedIcon,
+    LocalShippingOutlined as LocalShippingOutlinedIcon,
 
     People as PeopleIcon,
     BarChart as BarChartIcon,
@@ -60,6 +61,11 @@ export default function Header() {
             icon: <AccountCircleOutlinedIcon />,
             to: "/account",
             label: `${user?.firstName} ${user?.lastName}`
+        },
+        {
+            icon: <LocalShippingOutlinedIcon />,
+            to: "/account/orders",
+            label: "Order History"
         },
         {
             icon: <LogoutOutlinedIcon />,

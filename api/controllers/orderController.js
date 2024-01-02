@@ -3,102 +3,115 @@ import { Order, Product } from "../models.js";
 import { sendError, sendOk, hasNull } from "./utils.js";
 
 async function getAllOrders(aRequest, aResponse) {
-    var { groupBy } = aRequest.query;
+    var { groupBy, isExclusive } = aRequest.query;
     if (!groupBy) {
         groupBy = "groupId";
     }
 
-    try {
-        let result = await Order.aggregate([
-            // Take products matching the product ID of the order.
-            {
-                $lookup: {
-                    from: "products",
-                    localField: "productId",
-                    foreignField: "id",
-                    as: "product"
-                }
-            },
-            // Take users matching the user ID of the order.
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "userId",
-                    foreignField: "id",
-                    as: "user"
-                }
-            },
-            // Unwind array of matching products.
-            {
-                $unwind: "$product"
-            },
-            // Unwind array of matching users.
-            {
-                $unwind: "$user"
-            },
-            // Unwind array of product variants.
-            {
-                $unwind: "$product.variants"
-            },
-            // Remove product variants that don't match the order's
-            // target product variant ID.
-            {
-                $redact: {
-                    $cond: {
-                        if: {
-                            $eq: ["$variantId", "$product.variants.id"]
-                        },
-                        then: "$$KEEP",
-                        else: "$$PRUNE"
-                    }
-                }
-            },
-            // Group orders by their parent transaction ID (aka group ID).
-            {
-                $group: {
-                    _id: `$${groupBy}`,
-                    // Include order date.
-                    date: {
-                        $first: "$date"
+    var stages = [
+        {
+            $match: {
+                userId: aRequest?.session?.user?.id
+            }
+        },
+        // Take products matching the product ID of the order.
+        {
+            $lookup: {
+                from: "products",
+                localField: "productId",
+                foreignField: "id",
+                as: "product"
+            }
+        },
+        // Take users matching the user ID of the order.
+        {
+            $lookup: {
+                from: "users",
+                localField: "userId",
+                foreignField: "id",
+                as: "user"
+            }
+        },
+        // Unwind array of matching products.
+        {
+            $unwind: "$product"
+        },
+        // Unwind array of matching users.
+        {
+            $unwind: "$user"
+        },
+        // Unwind array of product variants.
+        {
+            $unwind: "$product.variants"
+        },
+        // Remove product variants that don't match the order's
+        // target product variant ID.
+        {
+            $redact: {
+                $cond: {
+                    if: {
+                        $eq: ["$variantId", "$product.variants.id"]
                     },
-                    // Include order user.
-                    user: {
-                        $first: "$user"
-                    },
-                    // Include group by target.
-                    target: {
-                        $first: `${groupBy}`
-                    },
-                    // Compute for total payment based on non-canceled orders.
-                    totalPayment: {
-                        $sum: {
-                            $cond: {
-                                if: {
-                                    $ne: ["$status", 2]
-                                },
-                                then: {
-                                    $multiply: [
-                                        "$price",
-                                        "$quantity"
-                                    ]
-                                },
-                                else: 0
-                            }
-                        }
-                    },
-                    // Push suborders.
-                    children: {
-                        $push: "$$ROOT"
-                    }
-                }
-            },
-            // Sort in descending order.
-            {
-                $sort: {
-                    date: -1
+                    then: "$$KEEP",
+                    else: "$$PRUNE"
                 }
             }
-        ]);
+        },
+        // Group orders by their parent transaction ID (aka group ID).
+        {
+            $group: {
+                _id: `$${groupBy}`,
+                // Include order date.
+                date: {
+                    $first: "$date"
+                },
+                // Include order user.
+                user: {
+                    $first: "$user"
+                },
+                // Include group by target.
+                target: {
+                    $first: `${groupBy}`
+                },
+                // Compute for total payment based on non-canceled orders.
+                totalPayment: {
+                    $sum: {
+                        $cond: {
+                            if: {
+                                $ne: ["$status", 2]
+                            },
+                            then: {
+                                $multiply: [
+                                    "$price",
+                                    "$quantity"
+                                ]
+                            },
+                            else: 0
+                        }
+                    }
+                },
+                // Push suborders.
+                children: {
+                    $push: "$$ROOT"
+                }
+            }
+        },
+        // Sort in descending order.
+        {
+            $sort: {
+                date: -1
+            }
+        }
+    ];
+
+    // Return all orders if the user is a seller/merchant and
+    // we're not requesting the exclusive orders list.
+    if (aRequest?.session?.user?.role > 0 && !isExclusive) {
+        stages.shift();
+    }
+
+    try {
+        let result = await Order.aggregate(stages);
         sendOk(aResponse, result);
     } catch (e) {
         sendError(aResponse, e, 500);

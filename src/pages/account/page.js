@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
+
+import { Link as RouterLink } from "react-router-dom";
+
 import {
     Container, Grid,
     Typography, Card, CardContent, CardActions,
     List, ListItem, ListItemText, Button, IconButton
 } from "@mui/material";
+
 import {
     Edit as EditIcon
 } from "@mui/icons-material";
+
 import api from "../apiGlue.js";
 import { getFriendlyRoleName } from "../staticTypes.js";
 
@@ -136,7 +141,7 @@ export default function Account() {
                             Password
                             </Typography>
                             <Typography>
-                            A secure password helps secure your E-mbakan account.
+                            A strong password helps secure your E-mbakan account.
                             </Typography>
                         </CardContent>
                         <CardActions>
@@ -157,7 +162,7 @@ export default function Account() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small">
+                            <Button size="small" component={RouterLink} to="orders">
                                 View Past Orders
                             </Button>
                         </CardActions>

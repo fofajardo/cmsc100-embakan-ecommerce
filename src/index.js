@@ -21,6 +21,7 @@ import Root from "./pages/Root.js";
 
 import Account from "./pages/account/page.js";
 
+import CustomerOrders from "./pages/account/orders/page.js";
 import CustomerProductsList from "./pages/products/page.js";
 import CustomerProductDetailView from "./pages/products/slug/page.js";
 
@@ -54,7 +55,16 @@ const router = createHashRouter([
             },
             {
                 path: "account",
-                element:  <Account />
+                children: [
+                    {
+                        path: "",
+                        element: <Account />
+                    },
+                    {
+                        path: "orders",
+                        element: <CustomerOrders />
+                    }
+                ]
             },
             {
                 path: "cart",
