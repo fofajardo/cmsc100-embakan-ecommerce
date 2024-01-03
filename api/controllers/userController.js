@@ -162,6 +162,15 @@ async function updateOneUser(aRequest, aResponse) {
                 }
             }
             if (body.email) {
+                const emailExists = await User.exists({ email: body.email });
+                if (emailExists) {
+                    return sendError(aResponse, "An account with this email address already exists.", 400);
+                }
+
+                if (!emailValidator.validate(body.email)) {
+                    return sendError(aResponse, "Please use a valid email address.", 400);
+                }
+
                 let result = await User.updateOne({
                     id
                 }, {
@@ -169,6 +178,7 @@ async function updateOneUser(aRequest, aResponse) {
                         email: body.email
                     }
                 });
+
                 let wasUpdated = result.modifiedCount == 1;
                 if (wasUpdated) {
                     fieldsUpdated.push("email");
