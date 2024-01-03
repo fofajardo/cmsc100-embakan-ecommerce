@@ -68,13 +68,10 @@ async function signOut(aRequest, aResponse) {
 }
 
 async function signedInUser(aRequest, aResponse) {
-    console.log(aRequest.session);
     if (aRequest.session.isAuthenticated) {
-        console.log("Reusing existing session.");
         sendOk(aResponse, aRequest.session.user);
         return;
     }
-    console.log("Creating new session.");
     sendOk(aResponse, false);
 }
 

@@ -34,7 +34,6 @@ export default function CustomerOrders() {
             `${kBaseUrl}?isExclusive=1`,
             enqueueSnackbar)
             .then(function(aResponse) {
-                console.log(aResponse.data);
                 setOrders(aResponse.data);
             });
     }, [update]);

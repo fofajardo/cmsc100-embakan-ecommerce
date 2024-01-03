@@ -129,7 +129,6 @@ export default function ManageSales() {
             `${kBaseUrl}?confirmedOnly=1&groupBy=variantId&start=${dates.start}&end=${dates.end}`,
             enqueueSnackbar)
             .then(function(aResponse) {
-                console.log(aResponse.data);
                 setOrders(aResponse.data);
             });
     }, [tabValue]);
@@ -193,7 +192,6 @@ export default function ManageSales() {
     };
 
     const handleTabChange = function(aEvent, aNewValue) {
-        console.log(aNewValue);
         setTabValue(aNewValue);
     };
 

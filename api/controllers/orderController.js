@@ -190,13 +190,11 @@ async function modifyProductStock(aProductId, aVariantId, aQuantity, aIncrement,
     const productVariant = productEntry.variants[productVariantIndex];
 
     try {
-        console.log("pre", productEntry.variants[productVariantIndex].stock);
         if (aIncrement) {
             productEntry.variants[productVariantIndex].stock += aQuantity;
         } else {
             productEntry.variants[productVariantIndex].stock -= aQuantity;
         }
-        console.log("post", productEntry.variants[productVariantIndex].stock);
         const result = await productEntry.save();
         let wasUpdated = productEntry === result;
         if (!wasUpdated) {
