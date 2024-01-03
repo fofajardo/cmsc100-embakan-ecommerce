@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
-    Button, TextField,
-    Link, Paper, Box, Grid, Typography, Container
+    Button, TextField, Backdrop, CircularProgress,
+    Link, Paper, Box, Grid, Typography, Container,
+    FormControlLabel, Checkbox
 } from "@mui/material";
 
 import { useSnackbar } from "notistack";
@@ -10,8 +11,10 @@ import { useSnackbar } from "notistack";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import api from "../apiGlue.js";
+import sampleData from "./sampleData.js";
 
-const kBaseUrl = `${api.host}users/`;
+const kUsersUrl = `${api.host}users/`;
+const kProductsUrl = `${api.host}products/`;
 const kAuthUrl = `${api.host}auth/`;
 const kTargetRoute = "/";
 
@@ -19,21 +22,55 @@ export default function SignUp() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
 
+    const [backdropOpen, setBackdropOpen] = useState(false);
+    const [userIsMerchant, setUserIsMerchant] = useState(false);
+    const [createSampleData, setCreateSampleData] = useState(false);
+
     api.blockSignedIn(navigate);
 
     const handleSubmit = async function(aEvent) {
         aEvent.preventDefault();
+        setBackdropOpen(true);
         const formData = new FormData(aEvent.currentTarget);
         const formJson = Object.fromEntries(formData.entries());
 
         const userResult = await api.post(
-            `${kBaseUrl}`,
+            `${kUsersUrl}`,
             formJson,
             enqueueSnackbar,
             "Your account was successfully created.");
 
         if (!userResult) {
+            setBackdropOpen(false);
             return;
+        }
+
+        if (userIsMerchant) {
+            const userPromoteResult = await api.put(
+                `${kUsersUrl}${userResult.data.id}`,
+                {
+                    role: 1
+                },
+                enqueueSnackbar,
+                "Your account was promoted to seller/merchant."
+            );
+            
+            if (!userPromoteResult) {
+                setBackdropOpen(false);
+                return;
+            }
+        }
+
+        if (createSampleData) {
+            for (let i = 0; i < sampleData.length; i++) {
+                const product = sampleData[i];
+                const productResult = await api.post(
+                    `${kProductsUrl}`,
+                    product,
+                    enqueueSnackbar,
+                    `Product sample "${product.name}" was added.`
+                );
+            }
         }
 
         const signInResult = await api.post(    
@@ -49,8 +86,9 @@ export default function SignUp() {
             navigate(kTargetRoute);
             return;
         }
-        
+
         enqueueSnackbar("Failed to create and sign in to your account.");
+        setBackdropOpen(false);
     };
 
     return (
@@ -127,6 +165,23 @@ export default function SignUp() {
                                 id="password"
                                 autoComplete="new-password"/>
                         </Grid>
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox name="userIsMerchant" />
+                                }
+                                onChange={(aEvent) => setUserIsMerchant(aEvent.target.checked)}
+                                label="I am signing up as a merchant." />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox name="createSampleData" />
+                                }
+                                onChange={(aEvent) => setCreateSampleData(aEvent.target.checked)}
+                                disabled={!userIsMerchant}
+                                label="Create sample product data." />
+                        </Grid>
                     </Grid>
                     <Button
                         type="submit"
@@ -144,6 +199,16 @@ export default function SignUp() {
                     </Grid>
                 </Box>
             </Paper>
+            <Backdrop
+                sx={{
+                    color: "#fff",
+                    zIndex: function(theme) {
+                        return theme.zIndex.drawer + 1;
+                    }
+                }}
+                open={backdropOpen}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Container>
     );
 }

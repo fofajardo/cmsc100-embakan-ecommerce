@@ -19,8 +19,6 @@ import Checkout from "./pages/checkout/page.js";
 
 import Root from "./pages/Root.js";
 
-import Setup from "./pages/setup/page.js";
-
 import Account from "./pages/account/page.js";
 
 import CustomerOrders from "./pages/account/orders/page.js";
@@ -43,10 +41,6 @@ const router = createHashRouter([
             {
                 path: "/",
                 element: <CustomerProductsList filterType={-1} />
-            },
-            {
-                path: "setup",
-                element: <Setup />
             },
             {
                 path: "sign-in",
