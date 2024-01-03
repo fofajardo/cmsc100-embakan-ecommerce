@@ -1,9 +1,16 @@
 const kHost = "http://localhost:3001/api/";
 
-const kCurrencyFormatter = new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP"
-});
+const kLocale = "en-PH";
+
+const kCurrencyFormatter = new Intl.NumberFormat(
+    kLocale,
+    {
+        style: "currency",
+        currency: "PHP"
+    });
+
+const kNumberFormatter = new Intl.NumberFormat(
+    kLocale);
 
 const kReplace = { replace: true };
 
@@ -275,7 +282,8 @@ const gApiGlue = {
     placeOrder,
 
     host: kHost,
-    currency: kCurrencyFormatter
+    currency: kCurrencyFormatter,
+    num: kNumberFormatter
 };
 
 export default gApiGlue;
