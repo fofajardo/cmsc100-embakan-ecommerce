@@ -1,78 +1,200 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
+import { useSnackbar } from "notistack";
 import { Link as RouterLink } from "react-router-dom";
 
 import {
     Typography, Grid, Table, TableBody, TableCell, Stack,
     TableContainer, TableHead, TableRow, TablePagination, Paper, Container,
-    IconButton
+    IconButton, Tabs, Tab
 } from "@mui/material";
 
 import {
     ArrowBack as ArrowBackIcon
 } from "@mui/icons-material";
 
+import { getFriendlyTypeName } from "../../staticTypes.js";
+
 import api from "../../apiGlue.js";
 
 const columns = [
-    { id: "Product", label: "Product", minWidth: 170 },
-    { id: "Category", label: "Category", minWidth: 100 },
-    { id: "Variant", label: "Variant", minWidth: 170 },
     {
-        id: "Price",
+        id: "product",
+        label: "Product",
+        minWidth: 170
+    },
+    {
+        id: "variant",
+        label: "Variant",
+        minWidth: 170
+    },
+    {
+        id: "type",
+        label: "Type",
+        minWidth: 100,
+        format: getFriendlyTypeName
+    },
+    {
+        id: "price",
         label: "Price",
         minWidth: 170,
-        format: (value) => value.toLocaleString("en-US"),
+        format: api.currency.format
     },
     {
-        id: "Sold",
-        label: "Sold",
-        minWidth: 170,
-        format: (value) => value.toLocaleString("en-US"),
+        id: "unitsSold",
+        label: "Units Sold",
+        minWidth: 75,
+        format: api.num.format
     },
     {
-        id: "Income_Generated",
-        label: "Income Generated",
-        minWidth: 170,
+        id: "income",
+        label: "Income",
+        minWidth: 200,
         align: "right",
-        format: (value) => value.toLocaleString("en-US"),
+        format: api.currency.format
     }
 ];
 
-function createData(Product, Category, Variant, Price, Sold ) {
-    const income_unformatted = Price * Sold;
-    const Income_Generated = api.currency.format(income_unformatted);
-    return { Product, Category, Variant, Price, Sold, Income_Generated  };
-}
-
-const rowsWeekly = [
-    createData("kang-kong","Crop","tali","15","30"),
-    createData("Whole Chicken","Poultry","pcs","175","15")
-];
-
-const rowsMonthly = [
-    createData("kang-kong","Crop","tali","15","80"),
-    createData("Whole Chicken","Poultry","pcs","175","30")
-];
-
-const rowsAnnual = [
-    createData("kang-kong","Crop","tali","15","132"),
-    createData("Whole Chicken","Poultry","pcs","175","50")
-];
-
+const kBaseUrl = `${api.host}orders/`;
 const kParentRoute = "/manage";
 
-export default function ManageSales() {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+function getStartEndDates(aWhich) {
+    const today = new Date();
+    var dates = {
+        start: null,
+        end: null
     };
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
+    switch (aWhich) {
+        // Weekly
+        default:
+        case 0:
+            const startOfWeek = today.getDate() - today.getDay();
+            // Create Date objects for first day of current and next week.
+            const firstDayCurrentWeek = new Date(
+                today.getFullYear(), today.getMonth(),
+                startOfWeek);
+            const firstDayNextWeek = new Date(
+                firstDayCurrentWeek.getFullYear(),
+                firstDayCurrentWeek.getMonth(),
+                startOfWeek + 7);
+            dates.start = firstDayCurrentWeek.toISOString();
+            dates.end = firstDayNextWeek.toISOString();
+            break;
+        // Monthly
+        case 1:
+            // Create Date objects for first day of current and next month.
+            const firstDayCurrentMonth = new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1);
+            const firstDayNextMonth = new Date(
+                today.getFullYear(),
+                today.getMonth() + 1,
+                1);
+            dates.start = firstDayCurrentMonth.toISOString();
+            dates.end = firstDayNextMonth.toISOString();
+            break;
+        // Yearly
+        case 2:
+            // Create Date objects for first day of current and next year.
+            const firstDayCurrentYear = new Date(
+                today.getFullYear(),
+                0,
+                1);
+            const firstDayNextYear = new Date(
+                today.getFullYear() + 1,
+                0,
+                1);
+            dates.start = firstDayCurrentYear.toISOString();
+            dates.end = firstDayNextYear.toISOString();
+            break;
+    }
+
+    return dates;
+}
+
+export default function ManageSales() {
+    const { enqueueSnackbar } = useSnackbar();
+
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [orders, setOrders] = useState([]);
+    const [tabValue, setTabValue] = React.useState(0);
+
+    useEffect(function() {
+        const dates = getStartEndDates(tabValue);
+
+        api.get(
+            `${kBaseUrl}?groupBy=variantId&start=${dates.start}&end=${dates.end}`,
+            enqueueSnackbar)
+            .then(function(aResponse) {
+                console.log(aResponse.data);
+                setOrders(aResponse.data);
+            });
+    }, [tabValue]);
+
+    const handleChangePage = function(aEvent, aNewPage) {
+        setPage(aNewPage);
+    };
+
+    const handleChangeRowsPerPage = function(aEvent) {
+        setRowsPerPage(+aEvent.target.value);
         setPage(0);
+    };
+
+    const handleColumnMap = function(aColumn) {
+        return (
+            <TableCell
+                key={aColumn.id}
+                align={aColumn.align}
+                style={{ top: 57, minWidth: aColumn.minWidth }}>
+                {aColumn.label}
+            </TableCell>
+        )
+    };
+
+    const handleRowMap = function(aRow, aRowIndex) {
+        return (
+            <TableRow hover role="checkbox" tabIndex={-1} key={aRowIndex}>
+            {
+                columns.map(function(aColumn, aColumnIndex) {
+                    var value = "Missing";
+                    switch (aColumn.id) {
+                        case "product":
+                            value = aRow.children[0]?.product.name;
+                            break;
+                        case "variant":
+                            value = aRow.children[0]?.product.variants.name;
+                            break;
+                        case "type":
+                            value = aRow.children[0]?.product.type;
+                            break;
+                        case "price":
+                            value = aRow.children[0]?.price;
+                            break;
+                        case "unitsSold":
+                            value = aRow.totalUnits;
+                            break;
+                        case "income":
+                            value = api.currency.format(aRow.totalPayment);
+                            break;
+                    }
+                    const shouldFormat = (aColumn.format && typeof value === "number");
+                    return (
+                        <TableCell key={aColumn.id} align={aColumn.align}>
+                            {shouldFormat ? aColumn.format(value) : value}
+                        </TableCell>
+                    );
+                })
+            }
+            </TableRow>
+        );
+    };
+
+    const handleTabChange = function(aEvent, aNewValue) {
+        console.log(aNewValue);
+        setTabValue(aNewValue);
     };
 
     return (
@@ -81,183 +203,47 @@ export default function ManageSales() {
                 <IconButton component={RouterLink} to={kParentRoute} color="primary" aria-label="go back">
                     <ArrowBackIcon />
                 </IconButton>
-                <Typography variant="h4" sx={{ mb: 3 }}>Sales Report</Typography>
+                <Typography variant="h4">Sales Report</Typography>
             </Stack>
-            <Grid 
-                container
-                direction="column"
-                justifyContent="center"
-                pb="20px">
-
-                <Grid item mt="15px">
-                    <Paper sx={{ width: "100%" }}>
-                        <TableContainer sx={{ maxHeight: 440 }}>
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={7} sx={{ fontWeight: "bold" }}>
-                Weekly
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell
-                                                key={column.id}
-                                                align={column.align}
-                                                style={{ top: 57, minWidth: column.minWidth }}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rowsWeekly
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row) => {
-                                            return (
-                                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                                    {columns.map((column) => {
-                                                        const value = row[column.id];
-                                                        return (
-                                                            <TableCell key={column.id} align={column.align}>
-                                                                {column.format && typeof value === "number"
-                                                                    ? column.format(value)
-                                                                    : value}
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            );
-                                        })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 25, 100]}
-                            component="div"
-                            count={rowsWeekly.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
-                </Grid>
-
-                <Grid item>
-                    <Paper sx={{ width: "100%" }}>
-                        <TableContainer sx={{ maxHeight: 440 }}>
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={7} sx={{ fontWeight: "bold" }}>
-                Monthly
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell
-                                                key={column.id}
-                                                align={column.align}
-                                                style={{ top: 57, minWidth: column.minWidth }}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rowsMonthly
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row) => {
-                                            return (
-                                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                                    {columns.map((column) => {
-                                                        const value = row[column.id];
-                                                        return (
-                                                            <TableCell key={column.id} align={column.align}>
-                                                                {column.format && typeof value === "number"
-                                                                    ? column.format(value)
-                                                                    : value}
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            );
-                                        })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 25, 100]}
-                            component="div"
-                            count={rowsMonthly.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
-                </Grid>
-
-                <Grid item>
-                    <Paper mt="15px" sx={{ width: "100%" }}>
-                        <TableContainer sx={{ maxHeight: 440 }}>
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={7} sx={{ fontWeight: "bold" }}>
-                Annual
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell
-                                                key={column.id}
-                                                align={column.align}
-                                                style={{ top: 57, minWidth: column.minWidth }}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rowsAnnual
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row) => {
-                                            return (
-                                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                                    {columns.map((column) => {
-                                                        const value = row[column.id];
-                                                        return (
-                                                            <TableCell key={column.id} align={column.align}>
-                                                                {column.format && typeof value === "number"
-                                                                    ? column.format(value)
-                                                                    : value}
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            );
-                                        })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 25, 100]}
-                            component="div"
-                            count={rowsAnnual.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
-                </Grid>
-      
-            </Grid>
+            <Tabs
+                value={tabValue}
+                onChange={handleTabChange}
+                aria-label="nav tabs"
+                role="navigation"
+                variant="fullWidth"
+                centered>
+                <Tab label="Weekly" />
+                <Tab label="Monthly" />
+                <Tab label="Yearly" />
+            </Tabs>
+            <Paper variant="outlined" sx={{ width: "100%" }}>
+                <TableContainer>
+                    <Table aria-label="table">
+                        <TableHead>
+                            <TableRow>
+                                {
+                                    columns.map(handleColumnMap)
+                                }
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                orders
+                                    ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    ?.map(handleRowMap)
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={orders?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage} />
+            </Paper>
         </Container>
     );
 }

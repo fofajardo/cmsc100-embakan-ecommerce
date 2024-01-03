@@ -3,12 +3,26 @@ import { Order, Product } from "../models.js";
 import { sendError, sendOk, hasNull } from "./utils.js";
 
 async function getAllOrders(aRequest, aResponse) {
-    var { groupBy, isExclusive } = aRequest.query;
+    var { groupBy, startDate, endDate, isExclusive } = aRequest.query;
     if (!groupBy) {
         groupBy = "groupId";
     }
+    if (!startDate) {
+        startDate = 0;
+    }
+    if (!endDate) {
+        endDate = 0;
+    }
 
     var stages = [
+        {
+            $match: {
+                "date": {
+                    $gte: new Date(startDate),
+                    $lt: new Date(endDate),
+                }
+            }
+        },
         {
             $match: {
                 userId: aRequest?.session?.user?.id
@@ -90,6 +104,18 @@ async function getAllOrders(aRequest, aResponse) {
                         }
                     }
                 },
+                // Compute for total number of units.
+                totalUnits: {
+                    $sum: {
+                        $cond: {
+                            if: {
+                                $ne: ["$status", 2]
+                            },
+                            then: "$quantity",
+                            else: 0
+                        }
+                    }
+                },
                 // Push suborders.
                 children: {
                     $push: "$$ROOT"
@@ -103,6 +129,11 @@ async function getAllOrders(aRequest, aResponse) {
             }
         }
     ];
+
+    // Remove date filter if it was not specified.
+    if (startDate == 0 && endDate == 0) {
+        stages.shift();
+    }
 
     // Return all orders if the user is a seller/merchant and
     // we're not requesting the exclusive orders list.
