@@ -46,7 +46,7 @@ async function signIn(aRequest, aResponse) {
         return;
     }
 
-    sendError(aResponse, "Incorrect username, email, or password.");
+    sendError(aResponse, "Incorrect username, email, or password.", 400);
 }
 
 async function signOut(aRequest, aResponse) {
