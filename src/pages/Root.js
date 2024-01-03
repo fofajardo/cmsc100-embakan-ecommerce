@@ -43,7 +43,8 @@ const theme = createTheme({
 const signRoutes = [
     "/sign-in",
     "/sign-up",
-    "/sign-out"
+    "/sign-out",
+    "/setup"
 ];
 
 const userRoutes = [
