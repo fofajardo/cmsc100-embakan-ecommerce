@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Link as RouterLink } from "react-router-dom";
 
 import {
-    Typography, Stack,
-    Table, TableBody, TableCell, TableHead, TableRow,
+    Typography, Stack, Paper,
+    TableContainer, Table, TableBody, TableCell, TableHead, TableRow,
     Container, Card, CardContent,
     IconButton
 } from "@mui/material";
@@ -21,18 +21,13 @@ const kParentRoute = "/manage";
 
 // This will return the components for the accounts in the dashboard
 export default function ManageAccounts() {
-  
-    //Gets the content of the users using this GET method
     const [users, setUsers] = useState();
 
-    fetch(kBaseUrl,
-        {
-            method: "GET",
-        }
-    ).then(response => response.json()
-    ).then(body => setUsers(body.data));
-
-
+    useEffect(function() {
+        api.get(kBaseUrl).then(function(aResponse) {
+            setUsers(aResponse.data);
+        });
+    }, []);
 
     return (
         <Container sx={{ py: 3 }}>
@@ -44,11 +39,8 @@ export default function ManageAccounts() {
                     Accounts
                 </Typography>
             </Stack>
-            <Card sx={{ my: 2 }} variant="outlined">
-                <CardContent>
-                    <Typography variant="body1" gutterBottom>
-                        Total Users: {users ? users.length : 0}
-                    </Typography>
+            <Paper variant="outlined" sx={{ width: "100%" }}>
+                <TableContainer>
                     <Table size="small">
                         <TableHead>
                             <TableRow>
@@ -69,8 +61,16 @@ export default function ManageAccounts() {
                             ))}
                         </TableBody>
                     </Table>
-                </CardContent>
-            </Card>
+                </TableContainer>
+                <Stack 
+                    direction="row"
+                    justifyContent="flex-end"
+                    sx={{ m: 2 }}>
+                    <Typography>
+                    Total Users: {users ? users.length : 0}
+                    </Typography>
+                </Stack>
+            </Paper>
         </Container>
     );
 }
