@@ -20,6 +20,7 @@ import Checkout from "./pages/checkout/page.js";
 import Root from "./pages/Root.js";
 
 import Account from "./pages/account/page.js";
+import AccountChangePassword from "./pages/account/change-password/page.js";
 
 import CustomerOrders from "./pages/account/orders/page.js";
 import CustomerProductsList from "./pages/products/page.js";
@@ -64,6 +65,10 @@ const router = createHashRouter([
                     {
                         path: "orders",
                         element: <CustomerOrders />
+                    },
+                    {
+                        path: "change-password",
+                        element: <AccountChangePassword />
                     }
                 ]
             },

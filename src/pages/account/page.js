@@ -237,7 +237,7 @@ export default function Account() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small">
+                            <Button size="small" component={RouterLink} to="change-password">
                                 Change password
                             </Button>
                         </CardActions>
