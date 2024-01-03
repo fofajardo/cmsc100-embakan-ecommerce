@@ -43,4 +43,12 @@ function getFriendlyRoleName(aRole) {
     return roleTypes[aRole].label;
 }
 
-export { productTypes, getFriendlyRoleName };
+function getFriendlyTypeName(aType) {
+    if (isNaN(aType) || aType < 0 || aType >= productTypes.length) {
+        return "Invalid";
+    }
+
+    return productTypes[aType].label;
+}
+
+export { productTypes, getFriendlyTypeName, getFriendlyRoleName };
