@@ -14,6 +14,7 @@ import {
 } from "@mui/icons-material";
 
 import api from "../../apiGlue.js";
+import { getFriendlyRoleName } from "../../staticTypes.js";
 
 const kBaseUrl = `${api.host}users/`;
 const kParentRoute = "/manage";
@@ -54,15 +55,16 @@ export default function ManageAccounts() {
                                 <TableCell>First Name</TableCell>
                                 <TableCell>Last Name</TableCell>
                                 <TableCell>Email</TableCell>
+                                <TableCell>Role</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-        
                             {users?.map((row) => (
                                 <TableRow key={row.id}>
                                     <TableCell>{row.firstName}</TableCell>
                                     <TableCell>{row.lastName}</TableCell>
                                     <TableCell>{row.email}</TableCell>
+                                    <TableCell>{getFriendlyRoleName(row.role)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
