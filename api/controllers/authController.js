@@ -75,10 +75,25 @@ async function signedInUser(aRequest, aResponse) {
     sendOk(aResponse, false);
 }
 
+async function refresh(aRequest, aResponse) {
+    if (!aRequest.session.isAuthenticated) {
+        return sendError(aResponse, "Cannot refresh an empty session.", 400);
+    }
+
+    let user = await User.findOne({ email: aRequest.session.user.email }).exec();
+    aRequest.session.user = user;
+    aRequest.session.save(function(aError) {
+        if (aError) {
+            return sendError(aResponse, "Failed to save session.", 500);
+        }
+        return sendOk(aResponse, true);
+    });
+}
+
 async function dumpSession(aRequest, aResponse) {
     console.log(aRequest.session);
     console.log("Dumping session.");
     sendOk(aResponse, aRequest.session);
 }
 
-export default { signIn, signOut, signedInUser, dumpSession };
+export default { signIn, signOut, signedInUser, refresh, dumpSession };

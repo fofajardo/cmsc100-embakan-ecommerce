@@ -9,6 +9,8 @@ router.get("/signed-in-user", authController.signedInUser);
 
 router.get("/sign-out", authController.signOut);
 
+router.get("/refresh", authController.refresh);
+
 router.get("/dump-session", authController.dumpSession);
 
 export default router;
