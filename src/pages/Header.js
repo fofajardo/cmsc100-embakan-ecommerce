@@ -36,7 +36,7 @@ export default function Header() {
         api.identify().then(function(aUser) {
             setUser(aUser.data);
         });
-    }, []);
+    }, [drawerOpen]);
 
     var drawerLinks = [
         {
