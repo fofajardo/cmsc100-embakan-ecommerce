@@ -13,11 +13,12 @@ import {
 
 import {
     Add as AddIcon,
-    ArrowBack as ArrowBackIcon
+    ArrowBack as ArrowBackIcon,
+    Science as FlaskIcon
 } from "@mui/icons-material";
 
 import { productTypes } from "../../staticTypes.js";
-
+import sampleData from "./sampleData.js";
 import api from "../../apiGlue.js";
 
 const kBaseUrl = `${api.host}products/`;
@@ -193,6 +194,19 @@ export default function ManageProductsList() {
         }
     };
 
+    const handleAddSamples = async function(aEvent) {
+        for (let i = 0; i < sampleData.length; i++) {
+            const product = sampleData[i];
+            const productResult = await api.post(
+                `${kBaseUrl}`,
+                product,
+                enqueueSnackbar,
+                `Product sample "${product.name}" was added.`
+            );
+        }
+        reloadData();
+    }
+
     return (
         <Container sx={{ py: 3 }}>
             <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
@@ -206,6 +220,9 @@ export default function ManageProductsList() {
             <Stack spacing={2} direction="row" alignItems="center" sx={{ mb: 3 }}>
                 <Button startIcon={<AddIcon />} variant="outlined" component={RouterLink} to="/manage/products/create">
                 New Product
+                </Button>
+                <Button startIcon={<FlaskIcon />} variant="outlined" onClick={handleAddSamples}>
+                Add Samples
                 </Button>
             </Stack>
             <Stack spacing={2} useFlexGap>

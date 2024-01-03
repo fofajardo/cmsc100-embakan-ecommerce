@@ -11,10 +11,8 @@ import { useSnackbar } from "notistack";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import api from "../apiGlue.js";
-import sampleData from "./sampleData.js";
 
 const kUsersUrl = `${api.host}users/`;
-const kProductsUrl = `${api.host}products/`;
 const kAuthUrl = `${api.host}auth/`;
 const kTargetRoute = "/";
 
@@ -24,7 +22,6 @@ export default function SignUp() {
 
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [userIsMerchant, setUserIsMerchant] = useState(false);
-    const [createSampleData, setCreateSampleData] = useState(false);
 
     api.blockSignedIn(navigate);
 
@@ -58,18 +55,6 @@ export default function SignUp() {
             if (!userPromoteResult) {
                 setBackdropOpen(false);
                 return;
-            }
-        }
-
-        if (createSampleData) {
-            for (let i = 0; i < sampleData.length; i++) {
-                const product = sampleData[i];
-                const productResult = await api.post(
-                    `${kProductsUrl}`,
-                    product,
-                    enqueueSnackbar,
-                    `Product sample "${product.name}" was added.`
-                );
             }
         }
 
@@ -172,15 +157,6 @@ export default function SignUp() {
                                 }
                                 onChange={(aEvent) => setUserIsMerchant(aEvent.target.checked)}
                                 label="I am signing up as a merchant." />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox name="createSampleData" />
-                                }
-                                onChange={(aEvent) => setCreateSampleData(aEvent.target.checked)}
-                                disabled={!userIsMerchant}
-                                label="Create sample product data." />
                         </Grid>
                     </Grid>
                     <Button
