@@ -80,7 +80,7 @@ async function refresh(aRequest, aResponse) {
         return sendError(aResponse, "Cannot refresh an empty session.", 400);
     }
 
-    let user = await User.findOne({ email: aRequest.session.user.email }).exec();
+    let user = await User.findOne({ id: aRequest.session.user.id }).exec();
     aRequest.session.user = user;
     aRequest.session.save(function(aError) {
         if (aError) {
