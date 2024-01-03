@@ -19,8 +19,6 @@ import {
 
 import api from "../apiGlue.js";
 
-const kBaseUrl = `${api.host}products/`;
-
 function CartListItem(aProps) {
     const { data, update, setUpdate, isLast } = aProps;
     const { enqueueSnackbar } = useSnackbar();
@@ -159,7 +157,7 @@ export default function Cart() {
                 setUpdate={setUpdate}
                 isLast={index == cartItems.length - 1} />
         );
-    }
+    };
 
     return (
         <Container>
@@ -169,15 +167,15 @@ export default function Cart() {
                     Shopping Cart
                     </Typography>
                     <List sx={{ py: 0 }}>
-                    {
-                        cartItems?.length == 0 || !cartItems ? (
-                            <Typography>
+                        {
+                            cartItems?.length == 0 || !cartItems ? (
+                                <Typography>
                                 Your cart is empty.
-                            </Typography>
-                        ) : (
-                            cartItems?.map(handleCartItemsMap)
-                        )
-                    }
+                                </Typography>
+                            ) : (
+                                cartItems?.map(handleCartItemsMap)
+                            )
+                        }
                     </List>
                 </CardContent>
             </Card>

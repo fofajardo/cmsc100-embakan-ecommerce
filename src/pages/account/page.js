@@ -53,8 +53,7 @@ function FieldEditDialog(aProps) {
         );
 
         if (result.data) {
-            const refreshResult = await api.get(`${api.host}auth/refresh`);
-
+            await api.get(`${api.host}auth/refresh`);
             onClose();
         }
     };
@@ -90,7 +89,7 @@ function FieldEditDialog(aProps) {
                 <Button type="submit" form="dialog-form">Save</Button>
             </DialogActions>
         </Dialog>
-    )
+    );
 }
 
 export default function Account() {
@@ -161,7 +160,7 @@ export default function Account() {
     ];
 
     const handleListItemMap = function(aItem, aIndex) {
-        const handleEdit = function(aEvent) {
+        const handleEdit = function() {
             setDialogData(aItem);
             setDialogOpen(true);
         };
@@ -180,16 +179,16 @@ export default function Account() {
                     )
                 }
             </ListItem>
-        )
+        );
     };
 
     return (
         <Container sx={{ py: 3 }}>
             <FieldEditDialog
-                 onClose={handleClose}
-                 dialogData={dialogData}
-                 open={dialogOpen}
-                 user={user} />
+                onClose={handleClose}
+                dialogData={dialogData}
+                open={dialogOpen}
+                user={user} />
             <Typography variant="h4" sx={{ mb: 1 }}>
                 My Account
             </Typography>
@@ -207,7 +206,7 @@ export default function Account() {
                             Some info may be visible to people you transact with.
                             </Typography>
                             <List>
-                            { basicData.map(handleListItemMap) }
+                                { basicData.map(handleListItemMap) }
                             </List>
                         </CardContent>
                     </Card>
@@ -219,7 +218,7 @@ export default function Account() {
                             Contact info
                             </Typography>
                             <List>
-                            { contactData.map(handleListItemMap) }
+                                { contactData.map(handleListItemMap) }
                             </List>
                         </CardContent>
                     </Card>

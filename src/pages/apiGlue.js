@@ -125,7 +125,7 @@ async function blockSignedIn(aNavigate) {
         aNavigate(user.data.role > 0
             ? kSignedInAdminRoute
             : kSignedInRoute,
-            kReplace);
+        kReplace);
         return true;
     }
     return false;
@@ -254,10 +254,10 @@ async function placeOrder(aEnqueue) {
 
     const orderBaseUrl = `${kHost}orders/bulk`;
     const result = await post(orderBaseUrl,
-    {
-        userId: user.data.id,
-        items: cart.data.items
-    }, aEnqueue);
+        {
+            userId: user.data.id,
+            items: cart.data.items
+        }, aEnqueue);
 
     await emptyCart();
 

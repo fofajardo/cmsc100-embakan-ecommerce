@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 import { Link as RouterLink } from "react-router-dom";
 
 import {
-    Container, Typography, Box, Grid, Stack, colors,
+    Container, Typography, Grid, Stack, colors,
     Button, IconButton,
     Card, CardActions, CardContent, CardHeader, Avatar
 } from "@mui/material";
@@ -35,27 +35,27 @@ export default function ManageOrders() {
         });
     }, [update]);
 
-    const handleOrdersChild = function(aOrder, aIndex) {
+    const handleOrdersChild = function(aOrder) {
         const { id, product, quantity, price, status } = aOrder;
         var statusInfo = {};
 
         switch (status) {
-            default:
-            case 0:
-                statusInfo.color = colors.yellow[800];
-                statusInfo.icon = <HourglassEmptyIcon />;
-                statusInfo.label = "Pending";
-                break;
-            case 1:
-                statusInfo.color = colors.green[800];
-                statusInfo.icon = <CheckIcon />;
-                statusInfo.label = "Confirmed";
-                break;
-            case 2:
-                statusInfo.color = colors.red[800];
-                statusInfo.icon = <NotInterestedIcon />;
-                statusInfo.label = "Cancelled";
-                break;
+        default:
+        case 0:
+            statusInfo.color = colors.yellow[800];
+            statusInfo.icon = <HourglassEmptyIcon />;
+            statusInfo.label = "Pending";
+            break;
+        case 1:
+            statusInfo.color = colors.green[800];
+            statusInfo.icon = <CheckIcon />;
+            statusInfo.label = "Confirmed";
+            break;
+        case 2:
+            statusInfo.color = colors.red[800];
+            statusInfo.icon = <NotInterestedIcon />;
+            statusInfo.label = "Cancelled";
+            break;
         }
 
         const handleCancel = function() {
@@ -68,7 +68,7 @@ export default function ManageOrders() {
                 enqueueSnackbar,
                 "Suborder was canceled.");
             setUpdate(update + 1);
-        }
+        };
 
         const handleConfirm = function() {
             const data = {
@@ -80,7 +80,7 @@ export default function ManageOrders() {
                 enqueueSnackbar,
                 "Suborder was confirmed.");
             setUpdate(update + 1);
-        }
+        };
 
         return (
             <Grid key={id} item xs={18} md={4}>
@@ -112,20 +112,20 @@ export default function ManageOrders() {
                         </Grid>
                     </CardContent>
                     <CardActions>
-                    {status === 0 && (
-                        <>
-                            <Button onClick={handleConfirm} variant="contained" color="primary">
+                        {status === 0 && (
+                            <>
+                                <Button onClick={handleConfirm} variant="contained" color="primary">
                             Confirm
-                            </Button>
-                            <Button onClick={handleCancel} variant="outlined" color="primary">
+                                </Button>
+                                <Button onClick={handleCancel} variant="outlined" color="primary">
                             Cancel
-                            </Button>
-                        </>
-                    )}
+                                </Button>
+                            </>
+                        )}
                     </CardActions>
                 </Card>
             </Grid>
-        )
+        );
     };
 
     const handleOrdersGroup = function(aGroup, aIndex, aGroups) {
@@ -177,13 +177,13 @@ export default function ManageOrders() {
                                         titleTypographyProps={{ "variant": "h6" }} />
                                     <CardContent>
                                         <Typography sx={{ fontWeight: "bold" }}>
-                                        {user?.firstName} {user?.middleName} {user?.lastName}
+                                            {user?.firstName} {user?.middleName} {user?.lastName}
                                         </Typography>
                                         <Typography>
-                                        {user?.email} ({user?.username})
+                                            {user?.email} ({user?.username})
                                         </Typography>
                                         <Typography component="p" sx={{ whiteSpace: "pre-wrap" }}>
-                                        {user?.address}
+                                            {user?.address}
                                         </Typography>
                                     </CardContent>
                                 </Card>
@@ -195,7 +195,7 @@ export default function ManageOrders() {
                     </Stack>
                 </CardContent>
             </Card>
-        )
+        );
     };
 
     return (

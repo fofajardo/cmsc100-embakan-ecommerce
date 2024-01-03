@@ -194,10 +194,10 @@ export default function ManageProductsList() {
         }
     };
 
-    const handleAddSamples = async function(aEvent) {
+    const handleAddSamples = async function() {
         for (let i = 0; i < sampleData.length; i++) {
             const product = sampleData[i];
-            const productResult = await api.post(
+            await api.post(
                 `${kBaseUrl}`,
                 product,
                 enqueueSnackbar,
@@ -205,7 +205,7 @@ export default function ManageProductsList() {
             );
         }
         reloadData();
-    }
+    };
 
     return (
         <Container sx={{ py: 3 }}>

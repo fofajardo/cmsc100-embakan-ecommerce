@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 import { Link as RouterLink } from "react-router-dom";
 
 import {
-    Typography, Grid, Table, TableBody, TableCell, Stack,
+    Typography, Table, TableBody, TableCell, Stack,
     TableContainer, TableHead, TableRow, TablePagination, Paper, Container,
     IconButton, Tabs, Tab
 } from "@mui/material";
@@ -66,63 +66,66 @@ function getStartEndDates(aWhich) {
     };
 
     switch (aWhich) {
-        // Weekly
-        default:
-        case 0:
-            // Get the current day of the week (0 is Sunday, 6 is Saturday).
-            const currentDay = today.getDay();
-            // Calculate the day offset to reach the starting day of the week.
-            const startOfWeekOffset = currentDay === 0 ? 6 : currentDay - 1;
-            // Calculate the year and month for the start of the week.
-            let startOfWeekYear = today.getFullYear();
-            let startOfWeekMonth = today.getMonth();
-            // Adjust year and month if necessary due to startOfWeekOffset.
-            if (startOfWeekOffset > today.getDate()) {
-                startOfWeekMonth--;
-                if (startOfWeekMonth < 0) {
-                    startOfWeekMonth = 11;
-                    startOfWeekYear--;
-                }
+    // Weekly
+    default:
+    case 0: {
+        // Get the current day of the week (0 is Sunday, 6 is Saturday).
+        const currentDay = today.getDay();
+        // Calculate the day offset to reach the starting day of the week.
+        const startOfWeekOffset = currentDay === 0 ? 6 : currentDay - 1;
+        // Calculate the year and month for the start of the week.
+        let startOfWeekYear = today.getFullYear();
+        let startOfWeekMonth = today.getMonth();
+        // Adjust year and month if necessary due to startOfWeekOffset.
+        if (startOfWeekOffset > today.getDate()) {
+            startOfWeekMonth--;
+            if (startOfWeekMonth < 0) {
+                startOfWeekMonth = 11;
+                startOfWeekYear--;
             }
-            const firstDayCurrentWeek = new Date(
-                startOfWeekYear,
-                startOfWeekMonth,
-                today.getDate() - startOfWeekOffset);
-            const firstDayNextWeek = new Date(
-                firstDayCurrentWeek.getFullYear(),
-                firstDayCurrentWeek.getMonth(),
-                firstDayCurrentWeek.getDate() + 7);
-            dates.start = firstDayCurrentWeek.toISOString();
-            dates.end = firstDayNextWeek.toISOString();
-            break;
-        // Monthly
-        case 1:
-            // Create Date objects for first day of current and next month.
-            const firstDayCurrentMonth = new Date(
-                today.getFullYear(),
-                today.getMonth(),
-                1);
-            const firstDayNextMonth = new Date(
-                today.getFullYear(),
-                today.getMonth() + 1,
-                1);
-            dates.start = firstDayCurrentMonth.toISOString();
-            dates.end = firstDayNextMonth.toISOString();
-            break;
-        // Yearly
-        case 2:
-            // Create Date objects for first day of current and next year.
-            const firstDayCurrentYear = new Date(
-                today.getFullYear(),
-                0,
-                1);
-            const firstDayNextYear = new Date(
-                today.getFullYear() + 1,
-                0,
-                1);
-            dates.start = firstDayCurrentYear.toISOString();
-            dates.end = firstDayNextYear.toISOString();
-            break;
+        }
+        const firstDayCurrentWeek = new Date(
+            startOfWeekYear,
+            startOfWeekMonth,
+            today.getDate() - startOfWeekOffset);
+        const firstDayNextWeek = new Date(
+            firstDayCurrentWeek.getFullYear(),
+            firstDayCurrentWeek.getMonth(),
+            firstDayCurrentWeek.getDate() + 7);
+        dates.start = firstDayCurrentWeek.toISOString();
+        dates.end = firstDayNextWeek.toISOString();
+        break;
+    }
+    // Monthly
+    case 1: {
+        // Create Date objects for first day of current and next month.
+        const firstDayCurrentMonth = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            1);
+        const firstDayNextMonth = new Date(
+            today.getFullYear(),
+            today.getMonth() + 1,
+            1);
+        dates.start = firstDayCurrentMonth.toISOString();
+        dates.end = firstDayNextMonth.toISOString();
+        break;
+    }
+    // Yearly
+    case 2: {
+        // Create Date objects for first day of current and next year.
+        const firstDayCurrentYear = new Date(
+            today.getFullYear(),
+            0,
+            1);
+        const firstDayNextYear = new Date(
+            today.getFullYear() + 1,
+            0,
+            1);
+        dates.start = firstDayCurrentYear.toISOString();
+        dates.end = firstDayNextYear.toISOString();
+        break;
+    }
     }
 
     return dates;
@@ -169,16 +172,16 @@ export default function ManageSales() {
                 style={{ top: 57, minWidth: aColumn.minWidth }}>
                 {aColumn.label}
             </TableCell>
-        )
+        );
     };
 
     const handleRowMap = function(aRow, aRowIndex) {
         return (
             <TableRow hover role="checkbox" tabIndex={-1} key={aRowIndex}>
-            {
-                columns.map(function(aColumn, aColumnIndex) {
-                    var value = "Missing";
-                    switch (aColumn.id) {
+                {
+                    columns.map(function(aColumn) {
+                        var value = "Missing";
+                        switch (aColumn.id) {
                         case "product":
                             value = aRow.children[0]?.product.name;
                             break;
@@ -197,15 +200,15 @@ export default function ManageSales() {
                         case "income":
                             value = aRow.totalPayment;
                             break;
-                    }
-                    const shouldFormat = (aColumn.format && typeof value === "number");
-                    return (
-                        <TableCell key={aColumn.id} align={aColumn.align}>
-                            {shouldFormat ? aColumn.format(value) : value}
-                        </TableCell>
-                    );
-                })
-            }
+                        }
+                        const shouldFormat = (aColumn.format && typeof value === "number");
+                        return (
+                            <TableCell key={aColumn.id} align={aColumn.align}>
+                                {shouldFormat ? aColumn.format(value) : value}
+                            </TableCell>
+                        );
+                    })
+                }
             </TableRow>
         );
     };

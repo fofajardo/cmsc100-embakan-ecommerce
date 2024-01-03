@@ -4,8 +4,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import {
     Container, Grid, colors,
-    Typography, Card, CardContent, CardActionArea, CardHeader, Avatar,
-    List, ListItem, ListItemText, Button, IconButton
+    Typography, Card, CardActionArea, CardHeader, Avatar,
 } from "@mui/material";
 
 import {
@@ -16,9 +15,6 @@ import {
 } from "@mui/icons-material";
 
 import api from "../apiGlue.js";
-import { getFriendlyRoleName } from "../staticTypes.js";
-
-const kBaseUrl = `${api.host}users/`;
 
 export default function Account() {
     const [user, setUser] = useState(null);
@@ -31,73 +27,6 @@ export default function Account() {
             setUser(aResult.data);
         });
     }, []);
-
-    const basicData = [
-        {
-            label: "First Name",
-            data: user?.firstName,
-            formName: "user-first-name",
-            formCondition: true
-        },
-        {
-            label: "Middle Name",
-            data: user?.middleName,
-            formName: "user-middle-name",
-            formCondition: true
-        },
-        {
-            label: "Last Name",
-            data: user?.lastName,
-            formName: "user-last-name",
-            formCondition: true
-        },
-        {
-            label: "Role",
-            data: getFriendlyRoleName(user?.role),
-            formCondition: user?.role == 2,
-            formHandler: null
-        },
-    ];
-
-    const contactData = [
-        {
-            label: "Username",
-            data: user?.username,
-            formCondition: user?.role == 2,
-            formName: "user-username"
-        },
-        {
-            label: "Email",
-            data: user?.email,
-            formCondition: true,
-            formName: "user-email"
-        },
-        {
-            label: "Address",
-            data: user?.address,
-            formCondition: true,
-            formIsMulti: true,
-            formName: "user-address"
-        }
-    ];
-
-    const handleListItemMap = function(aItem, aIndex) {
-        return (
-            <ListItem disableGutters key={aIndex}>
-                <ListItemText primary={aItem.label} primaryTypographyProps={{ variant: "subtitle2", sx: { whiteSpace: "pre-wrap" } }} />
-                {aItem.data}
-                {
-                    aItem.formCondition ? (
-                        <IconButton sx={{ ml: 1 }} size="small">
-                            <EditIcon fontSize="small" />
-                        </IconButton>
-                    ) : (
-                        <></>
-                    )
-                }
-            </ListItem>
-        )
-    };
 
     return (
         <Container sx={{ py: 3 }}>

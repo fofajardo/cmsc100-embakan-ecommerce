@@ -169,26 +169,26 @@ function ProductList(aProps) {
             var b = aB;
 
             switch (sortBy) {
-                case kSortName:
-                    a = aA.name.toLowerCase() + aA.variants.name.toLowerCase();
-                    b = aB.name.toLowerCase() + aB.variants.name.toLowerCase();
-                    break;
-                case kSortType:
-                    a = aA.type;
-                    b = aB.type;
-                    break;
-                case kSortPrice:
-                    a = aA.variants.price;
-                    b = aB.variants.price;
-                    break;
-                case kSortStock:
-                    a = aA.variants.stock;
-                    b = aB.variants.stock;
-                    break;
-                default:
-                    a = 0;
-                    b = 0;
-                    break;
+            case kSortName:
+                a = aA.name.toLowerCase() + aA.variants.name.toLowerCase();
+                b = aB.name.toLowerCase() + aB.variants.name.toLowerCase();
+                break;
+            case kSortType:
+                a = aA.type;
+                b = aB.type;
+                break;
+            case kSortPrice:
+                a = aA.variants.price;
+                b = aB.variants.price;
+                break;
+            case kSortStock:
+                a = aA.variants.stock;
+                b = aB.variants.stock;
+                break;
+            default:
+                a = 0;
+                b = 0;
+                break;
             }
 
             if (!sortAscending) {
@@ -245,7 +245,7 @@ function ProductList(aProps) {
                                 <Grid key={aIndex} item xs={18} md={4}>
                                     <ProductCard product={aProduct} index={aIndex} />
                                 </Grid>
-                            )
+                            );
                         })
                     )
                 }

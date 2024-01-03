@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import {
     Button, TextField, Stack,
-    Link, Paper, Box, Grid, Typography, Container, IconButton,
-    FormControlLabel
+    Link, Paper, Box, Grid, Typography, Container, IconButton
 } from "@mui/material";
 
 import {
@@ -40,7 +39,7 @@ function HelpLink(aProps) {
             <Typography>{label}</Typography>
             <HelpOutlineIcon fontSize="small" />
         </Stack>
-    )
+    );
 }
 
 export default function ChangePassword() {
@@ -79,7 +78,7 @@ export default function ChangePassword() {
         );
 
         if (changePasswordResult.data) {
-            const refreshResult = await api.get(`${api.host}auth/refresh`);
+            await api.get(`${kAuthUrl}refresh`);
             navigate(kParentRoute);
             return;
         }
@@ -99,7 +98,7 @@ export default function ChangePassword() {
             </Stack>
 
             <Typography sx={{ mb: 1 }}>
-                Choose a strong password and don't reuse it for other accounts.
+                Choose a strong password and don&apos;t reuse it for other accounts.
             </Typography>
             <HelpLink href="https://support.google.com/accounts?p=pw_dont_reuse&hl=en" label="Learn more" sx={{ mb: 2 }} />
             <Paper
@@ -126,12 +125,12 @@ export default function ChangePassword() {
                                 autoComplete="new-password"/>
                         </Grid>
                         <Grid item xs={12}>
-                        <Typography>
-                            <strong>Password strength: </strong>
-                            <br/>
+                            <Typography>
+                                <strong>Password strength: </strong>
+                                <br/>
                             Use at least 8 characters. Don’t use a password from another site, or something too obvious like your pet’s name.
-                            <HelpLink href="https://support.google.com/accounts?p=pw_signup&hl=en" label="Why?" />
-                        </Typography>
+                                <HelpLink href="https://support.google.com/accounts?p=pw_signup&hl=en" label="Why?" />
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField

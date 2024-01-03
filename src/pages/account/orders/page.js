@@ -4,9 +4,9 @@ import { useSnackbar } from "notistack";
 import { Link as RouterLink } from "react-router-dom";
 
 import {
-    Container, Typography, Box, Grid, Stack, colors,
-    Button, IconButton,
-    Card, CardActions, CardContent, CardHeader, Avatar
+    Container, Typography, Grid, Stack, colors,
+    IconButton,
+    Card, CardContent, CardHeader, Avatar
 } from "@mui/material";
 
 import {
@@ -27,7 +27,6 @@ export default function CustomerOrders() {
     const { enqueueSnackbar } = useSnackbar();
 
     const [orders, setOrders] = useState([]);
-    const [update, setUpdate] = useState(0);
 
     useEffect(function() {
         api.get(
@@ -36,29 +35,29 @@ export default function CustomerOrders() {
             .then(function(aResponse) {
                 setOrders(aResponse.data);
             });
-    }, [update]);
+    }, []);
 
-    const handleOrdersChild = function(aOrder, aIndex) {
+    const handleOrdersChild = function(aOrder) {
         const { id, product, quantity, price, status } = aOrder;
         var statusInfo = {};
 
         switch (status) {
-            default:
-            case 0:
-                statusInfo.color = colors.yellow[800];
-                statusInfo.icon = <HourglassEmptyIcon />;
-                statusInfo.label = "Pending";
-                break;
-            case 1:
-                statusInfo.color = colors.green[800];
-                statusInfo.icon = <CheckIcon />;
-                statusInfo.label = "Confirmed";
-                break;
-            case 2:
-                statusInfo.color = colors.red[800];
-                statusInfo.icon = <NotInterestedIcon />;
-                statusInfo.label = "Cancelled";
-                break;
+        default:
+        case 0:
+            statusInfo.color = colors.yellow[800];
+            statusInfo.icon = <HourglassEmptyIcon />;
+            statusInfo.label = "Pending";
+            break;
+        case 1:
+            statusInfo.color = colors.green[800];
+            statusInfo.icon = <CheckIcon />;
+            statusInfo.label = "Confirmed";
+            break;
+        case 2:
+            statusInfo.color = colors.red[800];
+            statusInfo.icon = <NotInterestedIcon />;
+            statusInfo.label = "Cancelled";
+            break;
         }
 
         return (
@@ -92,7 +91,7 @@ export default function CustomerOrders() {
                     </CardContent>
                 </Card>
             </Grid>
-        )
+        );
     };
 
     const handleOrdersGroup = function(aGroup, aIndex, aGroups) {
@@ -144,13 +143,13 @@ export default function CustomerOrders() {
                                         titleTypographyProps={{ "variant": "h6" }} />
                                     <CardContent>
                                         <Typography sx={{ fontWeight: "bold" }}>
-                                        {user?.firstName} {user?.middleName} {user?.lastName}
+                                            {user?.firstName} {user?.middleName} {user?.lastName}
                                         </Typography>
                                         <Typography>
-                                        {user?.email} ({user?.username})
+                                            {user?.email} ({user?.username})
                                         </Typography>
                                         <Typography component="p" sx={{ whiteSpace: "pre-wrap" }}>
-                                        {user?.address}
+                                            {user?.address}
                                         </Typography>
                                     </CardContent>
                                 </Card>
@@ -162,7 +161,7 @@ export default function CustomerOrders() {
                     </Stack>
                 </CardContent>
             </Card>
-        )
+        );
     };
 
     return (
@@ -179,7 +178,7 @@ export default function CustomerOrders() {
                 {
                     orders?.length > 0
                         ? orders?.map(handleOrdersGroup)
-                        : <Typography>You haven't ordered anything yet.</Typography>
+                        : <Typography>You haven&apos;t ordered anything yet.</Typography>
                 }
             </Stack>
         </Container>

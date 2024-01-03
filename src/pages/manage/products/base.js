@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 
 //base.js - > cards for edit anc reate
 import {
-    Box, Stack, Card, CardActions, CardContent,
+    Stack, Card, CardActions, CardContent,
     Button, Typography,
     FormControl, FormLabel, TextField, InputLabel, MenuItem,
     Select, Divider,
@@ -222,7 +222,7 @@ function ProductInventoryDialog(aProps) {
                 </Button>
             </DialogActions>
         </Dialog>
-    )
+    );
 }
 
 function ProductInventoryListCard(aProps) {
@@ -268,12 +268,12 @@ function ProductInventoryListCard(aProps) {
         <Card
             variant="outlined">
             <ProductInventoryDialog
-                 onDialogSubmit={handleDialogSubmit}
-                 onClose={handleClose}
-                 dialogTitle={dialogTitle}
-                 dialogType={dialogType}
-                 dialogVariantData={dialogVariantData}
-                 open={open} />
+                onDialogSubmit={handleDialogSubmit}
+                onClose={handleClose}
+                dialogTitle={dialogTitle}
+                dialogType={dialogType}
+                dialogVariantData={dialogVariantData}
+                open={open} />
             <CardContent>
                 <Typography variant="h6" sx={{ mb: 2 }}>Inventory</Typography>
                 <Stack spacing={2}>

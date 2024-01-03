@@ -4,28 +4,16 @@ import { useSnackbar } from "notistack";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import {
-    Stack, AppBar, Toolbar,
-    Card, CardContent, CardActions,
-    Button, Typography, TextField,
-    List, ListItem, ListItemText,
-    IconButton, Container,
-    CircularProgress, Backdrop,
+    Stack, Card, CardContent, CardActions,
+    Button, Typography, List, ListItem, ListItemText,
+    Container, CircularProgress, Backdrop,
     Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "@mui/material";
 
-import {
-    Add as AddIcon ,
-    Remove as RemoveIcon ,
-
-} from "@mui/icons-material";
-
 import api from "../apiGlue.js";
-
-const kBaseUrl = `${api.host}products/`;
 
 function CartListItem(aProps) {
     const { data, isHeader, isLast } = aProps;
-    const { enqueueSnackbar } = useSnackbar();
     const [product, setProduct] = useState("");
     const [variant, setVariant] = useState();
     const [quantity, setQuantity] = useState(1);
@@ -87,7 +75,7 @@ function CartListItem(aProps) {
                             ? "Unit Price"
                             : ""
                 }
-                sx={{ width: colWidths[1] }} />
+            sx={{ width: colWidths[1] }} />
             <ListItemText
                 primary={isHeader ? "Quantity" : quantity}
                 sx={{ width: colWidths[2] }} />
@@ -99,7 +87,7 @@ function CartListItem(aProps) {
                             ? "Item Subtotal"
                             : ""
                 }
-                sx={{ width: colWidths[3] }} />
+            sx={{ width: colWidths[3] }} />
         </ListItem>
     );
 }
@@ -142,12 +130,9 @@ export default function Checkout() {
                 data={item}
                 isLast={index == cartItems.length - 1} />
         );
-    }
+    };
 
     const [promptOpen, setPromptOpen] = React.useState(false);
-    const handlePromptOpen = function() {
-        setPromptOpen(true);
-    };
     const handlePromptClose = function() {
         setPromptOpen(false);
         navigate("/");
@@ -193,13 +178,13 @@ export default function Checkout() {
                         Delivery Address
                         </Typography>
                         <Typography sx={{ fontWeight: "bold" }}>
-                        {user?.firstName} {user?.middleName} {user?.lastName}
+                            {user?.firstName} {user?.middleName} {user?.lastName}
                         </Typography>
                         <Typography>
-                        {user?.email} ({user?.username})
+                            {user?.email} ({user?.username})
                         </Typography>
                         <Typography component="p" sx={{ whiteSpace: "pre-wrap" }}>
-                        {user?.address}
+                            {user?.address}
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -212,18 +197,18 @@ export default function Checkout() {
                         Products Ordered
                         </Typography>
                         <List sx={{ py: 0 }}>
-                        {
-                            cartItems?.length == 0 || !cartItems ? (
-                                <Typography>
+                            {
+                                cartItems?.length == 0 || !cartItems ? (
+                                    <Typography>
                                     Your cart is empty.
-                                </Typography>
-                            ) : (
-                                <>
-                                    <CartListItem isHeader={true} />
-                                    {cartItems?.map(handleCartItemsMap)}
-                                </>
-                            )
-                        }
+                                    </Typography>
+                                ) : (
+                                    <>
+                                        <CartListItem isHeader={true} />
+                                        {cartItems?.map(handleCartItemsMap)}
+                                    </>
+                                )
+                            }
                         </List>
                     </CardContent>
                 </Card>
