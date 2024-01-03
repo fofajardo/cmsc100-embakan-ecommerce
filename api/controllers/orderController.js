@@ -25,19 +25,6 @@ async function getAllOrders(aRequest, aResponse) {
     }
 
     var stages = [
-        {
-            $match: {
-                "date": {
-                    $gte: new Date(startDate),
-                    $lt: new Date(endDate),
-                }
-            }
-        },
-        {
-            $match: {
-                userId: aRequest?.session?.user?.id
-            }
-        },
         // Take products matching the product ID of the order.
         {
             $lookup: {
@@ -137,14 +124,34 @@ async function getAllOrders(aRequest, aResponse) {
     ];
 
     // Remove date filter if it was not specified.
-    if (startDate == 0 && endDate == 0) {
-        stages.shift();
+    if (startDate != 0 && endDate != 0) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        stages = [
+            {
+                $match: {
+                    date: {
+                        $gte: start,
+                        $lt: end,
+                    }
+                }
+            },
+            ...stages
+        ];
     }
 
     // Return all orders if the user is a seller/merchant and
     // we're not requesting the exclusive orders list.
-    if (aRequest?.session?.user?.role > 0 && !isExclusive) {
-        stages.shift();
+    if (aRequest?.session?.user?.role <= 0 || isExclusive) {
+        stages = [
+            {
+                $match: {
+                    userId: aRequest?.session?.user?.id
+                }
+            },
+            ...stages
+        ];
     }
 
     try {

@@ -69,15 +69,29 @@ function getStartEndDates(aWhich) {
         // Weekly
         default:
         case 0:
-            const startOfWeek = today.getDate() - today.getDay();
-            // Create Date objects for first day of current and next week.
+            // Get the current day of the week (0 is Sunday, 6 is Saturday).
+            const currentDay = today.getDay();
+            // Calculate the day offset to reach the starting day of the week.
+            const startOfWeekOffset = currentDay === 0 ? 6 : currentDay - 1;
+            // Calculate the year and month for the start of the week.
+            let startOfWeekYear = today.getFullYear();
+            let startOfWeekMonth = today.getMonth();
+            // Adjust year and month if necessary due to startOfWeekOffset.
+            if (startOfWeekOffset > today.getDate()) {
+                startOfWeekMonth--;
+                if (startOfWeekMonth < 0) {
+                    startOfWeekMonth = 11;
+                    startOfWeekYear--;
+                }
+            }
             const firstDayCurrentWeek = new Date(
-                today.getFullYear(), today.getMonth(),
-                startOfWeek);
+                startOfWeekYear,
+                startOfWeekMonth,
+                today.getDate() - startOfWeekOffset);
             const firstDayNextWeek = new Date(
                 firstDayCurrentWeek.getFullYear(),
                 firstDayCurrentWeek.getMonth(),
-                startOfWeek + 7);
+                firstDayCurrentWeek.getDate() + 7);
             dates.start = firstDayCurrentWeek.toISOString();
             dates.end = firstDayNextWeek.toISOString();
             break;
@@ -127,7 +141,7 @@ export default function ManageSales() {
         const dates = getStartEndDates(tabValue);
 
         api.get(
-            `${kBaseUrl}?confirmedOnly=1&groupBy=variantId&start=${dates.start}&end=${dates.end}`,
+            `${kBaseUrl}?confirmedOnly=1&groupBy=variantId&startDate=${dates.start}&endDate=${dates.end}`,
             enqueueSnackbar)
             .then(function(aResponse) {
                 const computedGrossIncome = aResponse.data.reduce(function(aAccumulator, aCurrentValue) {
