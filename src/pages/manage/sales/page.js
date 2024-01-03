@@ -121,6 +121,7 @@ export default function ManageSales() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [orders, setOrders] = useState([]);
     const [tabValue, setTabValue] = React.useState(0);
+    const [grossIncome, setGrossIncome] = React.useState(0);
 
     useEffect(function() {
         const dates = getStartEndDates(tabValue);
@@ -129,7 +130,11 @@ export default function ManageSales() {
             `${kBaseUrl}?confirmedOnly=1&groupBy=variantId&start=${dates.start}&end=${dates.end}`,
             enqueueSnackbar)
             .then(function(aResponse) {
+                const computedGrossIncome = aResponse.data.reduce(function(aAccumulator, aCurrentValue) {
+                    return aAccumulator + aCurrentValue.totalPayment;
+                }, 0);
                 setOrders(aResponse.data);
+                setGrossIncome(computedGrossIncome);
             });
     }, [tabValue]);
 
@@ -176,7 +181,7 @@ export default function ManageSales() {
                             value = aRow.totalUnits;
                             break;
                         case "income":
-                            value = api.currency.format(aRow.totalPayment);
+                            value = aRow.totalPayment;
                             break;
                     }
                     const shouldFormat = (aColumn.format && typeof value === "number");
@@ -241,6 +246,14 @@ export default function ManageSales() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage} />
+                <Stack 
+                    direction="row"
+                    justifyContent="flex-end"
+                    sx={{ m: 2 }}>
+                    <Typography>
+                        Gross income: {api.currency.format(grossIncome)}
+                    </Typography>
+                </Stack>
             </Paper>
             <Typography sx={{ my: 2 }}>
                 Only completed orders are counted in the sales report.
