@@ -126,7 +126,7 @@ export default function ManageSales() {
         const dates = getStartEndDates(tabValue);
 
         api.get(
-            `${kBaseUrl}?groupBy=variantId&start=${dates.start}&end=${dates.end}`,
+            `${kBaseUrl}?confirmedOnly=1&groupBy=variantId&start=${dates.start}&end=${dates.end}`,
             enqueueSnackbar)
             .then(function(aResponse) {
                 console.log(aResponse.data);
@@ -244,6 +244,9 @@ export default function ManageSales() {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage} />
             </Paper>
+            <Typography sx={{ my: 2 }}>
+                Only completed orders are counted in the sales report.
+            </Typography>
         </Container>
     );
 }

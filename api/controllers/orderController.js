@@ -3,7 +3,7 @@ import { Order, Product } from "../models.js";
 import { sendError, sendOk, hasNull } from "./utils.js";
 
 async function getAllOrders(aRequest, aResponse) {
-    var { groupBy, startDate, endDate, isExclusive } = aRequest.query;
+    var { groupBy, startDate, endDate, confirmedOnly, isExclusive } = aRequest.query;
     if (!groupBy) {
         groupBy = "groupId";
     }
@@ -12,6 +12,16 @@ async function getAllOrders(aRequest, aResponse) {
     }
     if (!endDate) {
         endDate = 0;
+    }
+
+    var statusCondition = {
+        $ne: ["$status", 2]
+    };
+
+    if (confirmedOnly) {
+        statusCondition = {
+            $eq: ["$status", 1]
+        };
     }
 
     var stages = [
@@ -91,9 +101,7 @@ async function getAllOrders(aRequest, aResponse) {
                 totalPayment: {
                     $sum: {
                         $cond: {
-                            if: {
-                                $ne: ["$status", 2]
-                            },
+                            if: statusCondition,
                             then: {
                                 $multiply: [
                                     "$price",
@@ -108,9 +116,7 @@ async function getAllOrders(aRequest, aResponse) {
                 totalUnits: {
                     $sum: {
                         $cond: {
-                            if: {
-                                $ne: ["$status", 2]
-                            },
+                            if: statusCondition,
                             then: "$quantity",
                             else: 0
                         }
