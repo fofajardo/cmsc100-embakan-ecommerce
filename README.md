@@ -15,14 +15,14 @@ A list of technologies utilized in the project:
 # Features:
 ***
 ## Accounts and User Types 
-● An account is required for the general public to be able to access E-mbakan e-commerce website's offered features.
-● Users can create their account using their email and input their information along with credentials authentication(existing email or username).
-● All user accounts can view their account's information, and have the capability to edit their account's information and change their password. They can also look at their order history. 
-● When creating their account, users have the option to select as a merchant user. User accounts are automatically signed as customer user upon account creation.
-● A dedicated User Interface/User Experience(UI/UX) is developed for customer and merchant users.
+* An account is required for the general public to be able to access E-mbakan e-commerce website's offered features.
+* Users can create their account using their email and input their information along with credentials authentication(existing email or username).
+* All user accounts can view their account's information, and have the capability to edit their account's information and change their password. They can also look at their order history. 
+* When creating their account, users have the option to select as a merchant user. User accounts are automatically signed as customer user upon account creation.
+* A dedicated User Interface/User Experience(UI/UX) is developed for customer and merchant users.
 
 ## Shop (Customer Users)
-● User accounts with customer role are able to view the product listings and make purchases in E-mbakan. Customer users have the functionalities to manage their shopping cart.
+* User accounts with customer role are able to view the product listings and make purchases in E-mbakan. Customer users have the functionalities to manage their shopping cart.
 ### Manage Shopping Cart
 - Add or remove an item
 - View the item's information
@@ -31,11 +31,11 @@ A list of technologies utilized in the project:
 - Check out to confirm to purchase the items and total amount of all the items
 - Additionally, the products added to the shopping cart of a customer user will remain even if the user signs out and signs in unless removed or placed as an order.
 ### Placing an Order
-● When the customer user places an order, the following information are listed in the receipt:
+* When the customer user places an order, the following information are listed in the receipt:
 - Customer's name, username, email, and delivery address(able to be changed)
 - Products ordered and its information, unit price, quantity, and item subtotal
 - Merchandise total, shipping fee total, and total amount payable
-● The order will be fulfilled by the merchant user and can be paid via cash on delivery method.
+* The order will be fulfilled by the merchant user and can be paid via cash on delivery method.
 ### Order History
 - Customer users can view order they placed, order information, status, and total payment and suborder
 - The orders are sorted by time with the order number, time and date placed
@@ -47,7 +47,7 @@ A list of technologies utilized in the project:
 
 ## E-commerce management (Administrator or Merchant Users)
 ***
-● User accounts with merchant role have dashboards for the different features of E-mbakan management. It consist of the following functionalities:
+* User accounts with merchant role have dashboards for the different features of E-mbakan management. It consist of the following functionalities:
 ### Products
 - The products are categorized by crop or poultry
 - Add a new product, or add samples
@@ -64,4 +64,4 @@ A list of technologies utilized in the project:
 - The total created users is also shown.
 
 ## Additional Notes
-● The sessions(logged in/logged out state) are handled through utilizing cookies. There is an update in web browsers that blocks cross-origin cookie requests if the connection is not secure. Since E-mbakan is hosted in the localhost and by nature is not secure as it uses HTTP, Chrome refuses to honor the cookie request and the login session does not work correctly. However, it works in Firefox as it has not yet deprecated or blocks that behavior.
+* The sessions(logged in/logged out state) are handled through utilizing cookies. There is an update in web browsers that blocks cross-origin cookie requests if the connection is not secure. Since E-mbakan is hosted in the localhost and by nature is not secure as it uses HTTP, Chrome refuses to honor the cookie request and the login session does not work correctly. However, it works in Firefox as it has not yet deprecated or blocks that behavior.
