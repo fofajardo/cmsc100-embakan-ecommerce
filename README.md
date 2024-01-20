@@ -1,12 +1,6 @@
-<div style="text-align: center">
-
 ![Logo](./public/logos/verticallogo_colored.svg)
 
-</div>
-
-# Project Title: E-mbakan
-
-**Project Description:** E-mbakan is a "farm-to-table" e-commerce website. It aims to facilitate the transactions between farmers and customers directly that will be utilized by the Department of Agriculture.
+E-mbakan is a "farm-to-table" e-commerce website. It aims to facilitate transactions between farmers and consumers directly, if it were to be utilized by the Philippines' Department of Agriculture.
 
 **Video Demonstration - Presentation:** Watch it on YouTube: https://youtu.be/MntXkmDEjrE
 
@@ -28,7 +22,7 @@ A list of technologies utilized in the project:
 * A dedicated User Interface/User Experience(UI/UX) is developed for customer and merchant users.
 
 ### Shop (Customer Users)
- User accounts with customer role are able to view the product listings and make purchases in E-mbakan. Customer users have the functionalities to manage their shopping cart.
+User accounts with customer role are able to view the product listings and make purchases in E-mbakan. Customer users have the functionalities to manage their shopping cart.
 
 #### Manage Shopping Cart
 * Add or remove an item
