@@ -4,7 +4,7 @@ E-mbakan is a "farm-to-table" e-commerce website. It aims to facilitate transact
 
 **Video Demonstration - Presentation:** Watch it on YouTube: https://youtu.be/MntXkmDEjrE
 
-**Screenshots:** View [screenshots](./README%20Screenshots) directory.
+**Screenshots:** View [screenshots](./docs/screenshots) directory.
 
 ## Technology Stack
 A list of technologies utilized in the project:
